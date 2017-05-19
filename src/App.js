@@ -9,23 +9,31 @@ import db from './firebaseThing'
 const jerel = db.ref('jerel')
 const jonathan = db.ref('jonathan/second')
 
-
 class App extends Component {
-  constructor(props) {
-    super(props);
-    // this.state = {
-    //   database: props.database
-    // }
+  constructor (props) {
+    super(props)
+    this.state = {
+      database: null
+    }
     this.updateJerel = this.updateJerel.bind(this)
     this.updateJon = this.updateJon.bind(this)
   }
-  updateJerel() {
-  jerel.child('-KkRJiM2djzl30ZLfi9T').push({hello:10, mighty: 'duck', where: 'have', you: 'gone'})
+  componentDidMount () {
+    // console.log(db.ref());
+    db.ref().on('value', (snapshot) => {
+      this.setState({
+        database: snapshot.val()
+      })
+      // console.log();
+    })
+  }
+  updateJerel () {
+    jerel.child('-KkRJiM2djzl30ZLfi9T').remove()
     // this.props.jerel.child('-KkRJiM2djzl30ZLfi9T').once('value', thing=>{
     //   console.log(thing.val());
     // })
   }
-  updateJon() {
+  updateJon () {
     jonathan.push({jonathan: 1})
   }
   render () {
@@ -37,7 +45,7 @@ class App extends Component {
           <h2>Welcome to React</h2>
         </div>
         <div className='App-intro'>
-          <Database database={this.props.database} />
+          <Database database={this.state.database} />
           jerel:
           <button onClick={this.updateJerel}>addJerel</button>
           {/* {JSON.stringify(this.props.jerel)} */}
@@ -51,10 +59,3 @@ class App extends Component {
 }
 
 export default App
-
-// const addLocation = data => database.child('locations').push(data, response => response);
-// const updateLocation = (id, data) => database.child(`locations/${id}`).update(data, response => response);
-// const actions = {
-//   addLocation,
-//   updateLocation,
-// };

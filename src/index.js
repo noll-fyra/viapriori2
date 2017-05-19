@@ -7,7 +7,7 @@ import db from './firebaseThing'
 
 db.ref().on('value', snapshot => {
   ReactDOM.render(
-    <App database={snapshot.val()} />,
+    <App />,
     document.getElementById('root')
   )
 })
