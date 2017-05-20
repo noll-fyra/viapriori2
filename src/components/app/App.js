@@ -3,8 +3,9 @@ import {BrowserRouter as Router, Route, Redirect} from 'react-router-dom'
 import Nav from '../nav/Nav'
 import Login from '../login/Login'
 import Database from '../database/Database'
-import AddTrip from '../trip/AddTrip'
-import MyTrips from '../trip/MyTrips'
+import Trips from '../trip/Trips'
+// import MyTrips from '../trip/MyTrips'
+import TestTrip from '../trip/TestTrip'
 import db, {auth, storageKey, isAuthenticated} from '../../utils/firebase'
 
 const jerel = db.ref('jerel')
@@ -24,14 +25,12 @@ class App extends Component {
     auth.onAuthStateChanged(user => {
       if (user) {
         window.localStorage.setItem(storageKey, user.uid)
-        this.setState({uid: user.uid})
+        // this.setState({uid: user.uid})
       } else {
         window.localStorage.removeItem(storageKey)
-        this.setState({uid: null})
+        // this.setState({uid: null})
       }
-
     })
-console.log(auth.currentUser);
     db.ref().on('value', (snapshot) => {
       this.setState({
         database: snapshot.val()
@@ -57,22 +56,18 @@ console.log(auth.currentUser);
           <Nav />
           <Route path='/login' component={Login} />
           <Route path='/database' component={() => <Database database={this.state.database} />} />
-          {/* <Route path='/myTrips' component={() => <MyTrips database={this.state.database} />} /> */}
-          <PrivateRoute path='/myTrips' component={()=><MyTrips names='thomas' />}  />
-          {/* <Route path='/addTrip' component={AddTrip} /> */}
-          <PrivateRoute path='/addTrip' component={AddTrip} />
-          {/* <MatchWhenAuthorized pattern='/protected' component={AddTrip} /> */}
+          <PrivateRoute exact path='/trips' component={Trips} />
+          <PrivateRoute path='/trips/:id' component={TestTrip} />
+          {/* <PrivateRoute path='/addTrip' component={AddTrip} /> */}
           {/* jerel:
           <button onClick={this.updateJerel}>addJerel</button>
           jonathan:
           <button onClick={this.updateJon}>addJonathan</button> */}
-
         </div>
       </Router>
     )
   }
 }
-
 
 const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route {...rest} render={props => (

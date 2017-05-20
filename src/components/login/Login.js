@@ -84,7 +84,7 @@ class Login extends React.Component {
 
     if (this.state.redirectToReferrer) {
       return (
-        <Redirect to={from}/>
+        <Redirect to={from} />
       )
     }
     return (
