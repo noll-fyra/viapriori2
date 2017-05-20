@@ -1,5 +1,4 @@
 import React from 'react'
-// import * as firebase from 'firebase'
 
 function Database (props) {
   return (

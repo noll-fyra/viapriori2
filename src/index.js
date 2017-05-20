@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import App from './App'
+import App from './components/app/App'
 import './index.css'
 
 
@@ -27,5 +27,6 @@ const profile = [
 
   ReactDOM.render(
     <App trips = {trips} profile = {profile} planned = {planned} favorites = {favorites}/>,
+
     document.getElementById('root')
   )

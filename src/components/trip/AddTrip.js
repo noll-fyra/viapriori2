@@ -1,0 +1,75 @@
+import React from 'react'
+import db, {auth} from '../../utils/firebase'
+
+class AddTrip extends React.Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      title: null,
+      details: null,
+      start: null,
+      end: null
+
+    }
+    this.handleChangeTitle = this.handleChangeTitle.bind(this)
+    this.handleChangeDetails = this.handleChangeDetails.bind(this)
+    this.handleChangeStart = this.handleChangeStart.bind(this)
+    this.handleChangeEnd = this.handleChangeEnd.bind(this)
+    this.handleClick = this.handleClick.bind(this)
+  }
+
+  handleChangeTitle (e) {
+    this.setState({
+      title: e.target.value
+    })
+  }
+
+  handleChangeDetails (e) {
+    this.setState({
+      details: e.target.value
+    })
+  }
+
+  handleChangeStart (e) {
+    this.setState({
+      start: e.target.value
+    })
+  }
+
+  handleChangeEnd (e) {
+    this.setState({
+      end: e.target.value
+    })
+  }
+
+  handleClick () {
+    let trips = db.ref('trips/' + auth.currentUser.uid)
+    let newRef = trips.push()
+    newRef.set({
+      title: this.state.title,
+      details: this.state.details,
+      start: this.state.start,
+      end: this.state.end
+    })
+    let key = newRef.key
+    let obj = {}
+    obj[key] = true
+    db.ref('users/' + auth.currentUser.uid + '/trips').push(obj)
+    window.location = '/trips/' + key
+  }
+
+  render () {
+    return (
+      <div>
+          <input type='text' onChange={(e) => this.handleChangeTitle(e)} placeholder='Where did you go?' />
+          <input type='date' onChange={(e) => this.handleChangeStart(e)} placeholder='Start Date' />
+          <input type='date' onChange={(e) => this.handleChangeEnd(e)} placeholder='End Date' />
+          <textarea onChange={(e) => this.handleChangeDetails(e)} placeholder='Trip Details' />
+          <button onClick={this.handleClick}>Add Trip</button>
+      </div>
+    )
+  }
+
+}
+
+export default AddTrip
