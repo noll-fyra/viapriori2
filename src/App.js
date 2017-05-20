@@ -6,6 +6,19 @@ import Database from './Database'
 // import * as firebase from 'firebase'
 // const db = firebase.database().ref()
 import db from './firebaseThing'
+import TripList from './components/triplist/TripList'
+import LoginNav from './components/loginnav/LoginNav'
+//
+// import {
+//   BrowserRouter as Router,
+//   Route,
+//   Link
+// } from 'react-router-dom'
+
+
+
+
+
 const jerel = db.ref('jerel')
 const jonathan = db.ref('jonathan/second')
 
@@ -42,7 +55,7 @@ class App extends Component {
         <Login />
         <div className='App-header'>
           <img src={logo} className='App-logo' alt='logo' />
-          <h2>Welcome to React</h2>
+          <h2>Welcome to React2</h2>
         </div>
         <div className='App-intro'>
           <Database database={this.state.database} />
@@ -53,6 +66,8 @@ class App extends Component {
           <button onClick={this.updateJon}>addJonathan</button>
           {/* {JSON.stringify(this.props.jonathan)} */}
         </div>
+        <LoginNav profile = {this.props.profile} planned = {this.props.planned} favorites = {this.props.favorites} trips = {this.props.trips}/>
+        {/* <TripList trips = {this.props.trips}/> */}
       </div>
     )
   }
