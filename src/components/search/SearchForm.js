@@ -1,6 +1,6 @@
 import React from 'react';
 
-const TripSearchForm = (props) => (
+const SearchForm = (props) => (
 
     <form>
       {/* <label>Search Movie {''}</label> */}
@@ -10,4 +10,4 @@ const TripSearchForm = (props) => (
 );
 
 
-export default TripSearchForm;
+export default SearchForm;
