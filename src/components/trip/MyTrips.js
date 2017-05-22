@@ -11,7 +11,7 @@ class MyTrips extends React.Component {
   }
 
   componentDidMount () {
-    db.ref('trips/' + auth.currentUser.uid).on('value', (snapshot) => {
+    db.ref('trips').on('value', (snapshot) => {
       this.setState({
         database: snapshot.val()
       })
@@ -22,8 +22,10 @@ class MyTrips extends React.Component {
     const keys = []
     const details = []
     for (var key in this.state.database) {
+      if(this.state.database[key].user === auth.currentUser.uid) {
       keys.push(key)
       details.push(this.state.database[key])
+}
     }
     return details.map((trip, index) => {
       let path = '/trips/' + keys[index]

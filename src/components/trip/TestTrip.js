@@ -1,5 +1,5 @@
 import React from 'react'
-import db, {auth} from '../../utils/firebase'
+import db from '../../utils/firebase'
 import AddSection from './AddSection'
 
 class TestTrip extends React.Component {
@@ -17,7 +17,7 @@ class TestTrip extends React.Component {
 
   render () {
     let trip
-    db.ref('trips/' + auth.currentUser.uid + '/' + this.props.match.params.id).on('value', data => {
+    db.ref('trips/' + this.props.match.params.id).on('value', data => {
       trip = data.val()
     })
 

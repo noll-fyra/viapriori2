@@ -44,18 +44,22 @@ class AddTrip extends React.Component {
   }
 
   handleClick () {
-    let trips = db.ref('trips/' + auth.currentUser.uid)
+    let trips = db.ref('trips')
     let newRef = trips.push()
     newRef.set({
+      user: auth.currentUser.uid,
       title: this.state.title,
       details: this.state.details,
       start: this.state.start,
       end: this.state.end
     })
     let key = newRef.key
-    let obj = {}
-    obj[key] = true
-    db.ref('users/' + auth.currentUser.uid + '/trips').push(obj)
+
+    db.ref('users/' + auth.currentUser.uid + '/trips').once('value', snap => {
+      let newObj = snap.val() || {}
+      newObj[key] = true
+      db.ref('users/' + auth.currentUser.uid + '/trips').set(newObj)
+    })
     window.location = '/trips/' + key
   }
 
