@@ -1,7 +1,7 @@
 import React from 'react'
 
 const SearchForm = (props) => (
-  <input type='text' placeholder='Search by Activities, Location or User' onChange={props.onChange} />
+  <input type='text' placeholder={props.placeholder} onChange={props.onChange} onKeyUp={props.onKeyUp}/>
 )
 
 export default SearchForm

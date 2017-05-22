@@ -1,6 +1,7 @@
 import React from 'react'
 import SearchForm from '../search/SearchForm'
 import TripItem from '../tripitem/TripItem'
+import search from '../../utils/search'
 
 const trips = [
   'Vietnam',
@@ -12,8 +13,10 @@ class TripList extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      tripDisplayed: trips
+      tripDisplayed: trips,
+      searchQuery: props.searchQuery
     }
+    this.search = search.bind(this)
   }
 
   tripSearch (e) {
@@ -51,8 +54,8 @@ class TripList extends React.Component {
   render () {
     return (
       <div>
-        <SearchForm onChange={(e) => this.tripSearch(e)} />
-        <h1> Featured Trips</h1>
+        {/* <SearchForm onChange={(e) => this.search(e)} /> */}
+        <h1>Featured</h1>
         {this.state.tripDisplayed &&
           <TripItem tripItems={this.state.tripDisplayed} tripDetails={(e) => this.tripDetails(e)} />
         }
