@@ -1,20 +1,17 @@
 import React from 'react'
+import db, {auth} from '../../utils/firebase'
+import search from '../../utils/search'
 import SearchForm from '../search/SearchForm'
 import TripItem from '../tripitem/TripItem'
 import ProfileDetails from './ProfileDetails'
-import search from '../../utils/search'
-
-const profile = [
-  'Name',
-  'email',
-  'age'
-]
+import Nav from '../nav/Nav'
+import Trips from '../trip/Trips'
 
 class Profile extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      userDisplayed: profile,
+      userDisplayed: "asd",
       tripDisplayed: ['america', 'russia', 'iceland'],
       searchQuery: ''
     }
@@ -27,9 +24,10 @@ class Profile extends React.Component {
       <div>
         <SearchForm onChange={(e) => this.search(e)} />
         <h1> User Profile</h1>
-        <ProfileDetails profileDetails={profile} />
+        {/* <ProfileDetails profileDetails={profile} /> */}
         <TripItem tripItems={this.state.tripDisplayed.filter((trip) => { return trip.includes(this.state.searchQuery) })} />
-      </div>
+      {/* <Trips/> */}
+    </div>
     )
   }
 }

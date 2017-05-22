@@ -4,7 +4,7 @@ import TripItem from '../tripitem/TripItem'
 import db from '../../utils/firebase'
 import search from '../../utils/search'
 
-class SearchResults extends React.Component {
+class Featured extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -97,4 +97,4 @@ class SearchResults extends React.Component {
   }
 }
 
-export default SearchResults
+export default Featured

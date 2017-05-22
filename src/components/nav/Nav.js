@@ -3,6 +3,7 @@ import {Link} from 'react-router-dom'
 import SearchForm from '../search/SearchForm'
 
 const Nav = (props) => (
+
   <nav className='topNav'>
     <Link to='/'>VIA PRIORI</Link>
     <SearchForm placeholder='Search' onChange={props.onChange} onKeyUp={props.onKeyUp} />

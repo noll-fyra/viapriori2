@@ -8,6 +8,8 @@ const TripItem = (props) => (
         })
       }
     </ul>
+
+    
 );
 
 
