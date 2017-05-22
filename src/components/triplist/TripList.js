@@ -32,40 +32,10 @@ class TripList extends React.Component {
         database: snapshot.val(),
         tripDisplayed: allTrips
       })
-      console.log(this.state.database)
-      console.log(this.state.tripDisplayed)
+      // console.log(this.state.database)
+      // console.log(this.state.tripDisplayed)
     })
   }
-
-  displayAllTrips () {
-  // const keys = []
-  // const details = []
-  // for (var key in this.state.database) {
-  //   keys.push(key)
-  //   details.push(this.state.database[key])
-  // }
-  // console.log(details, 'hi')
-  }
-
-  // tripSearch (e) {
-  //   let searchQuery = e.target.value.toLowerCase()
-    // }
-
-    // this.setState((prevState, props) => {
-    // to edit details.tripName to field in the database
-      // let searchedTrips = details.tripName.filter((trip) => {
-      //   let lowercaseTrip = trip.toLowerCase()
-      //   return lowercaseTrip.includes(searchQuery)
-
-    // to add in the filters for the other properties of trips(activities name/User name, when database tables are up)
-      // })
-      // return {
-      //   allTrips: details,
-      //   tripDisplayed: searchedTrips
-      // }
-  // console.log(this.state.tripSearch)
-    // })
-  // }
 
   tripDetails (e) {
   // console.log(key)
@@ -92,7 +62,7 @@ class TripList extends React.Component {
         <SearchForm onChange={(e) => this.search(e)} />
 
         <h1> Featured Trips</h1>
-          <TripItem tripItems={this.state.tripDisplayed.filter((trip) => {
+          <TripItem database= {this.state.database} tripItems={this.state.tripDisplayed.filter((trip) => {
             // {console.log(this.state.searchQuery)}
             return trip.toLowerCase().includes(this.state.searchQuery.toLowerCase()) })} />
 
