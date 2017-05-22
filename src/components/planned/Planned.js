@@ -1,32 +1,33 @@
 import React from 'react'
 // import TripSearchForm from '../tripsearchform/TripSearchForm'
 // import TripItem from '../tripitem/TripItem'
-const favorites = [
-  'Favorites1',
-  'Favorites2',
-  'Favorites3'
+const planned = [
+  'Planned1',
+  'Planned2',
+  'Planned3'
 ]
 
-class FavoritesList extends React.Component {
+class Planned extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      favoritesDisplayed: ['america', 'russia', 'iceland']
+      plannedDisplayed: planned
     }
   }
 
   render () {
     return (
       <div>
+
         {/* <TripSearchForm handleSearch= {
           (e) => this.tripSearch(e)
         }/> */}
-        <h1> FavoritesList Trip</h1>
-        <p>{favorites}</p>
+        <h1> Planned Trip</h1>
+        <p>{this.state.plannedDisplayed}</p>
         {/* <TripItem tripItems= {this.state.tripDisplayed}/> */}
       </div>
     )
   }
 }
 
-export default FavoritesList
+export default Planned

@@ -5,9 +5,11 @@ import Login from '../login/Login'
 import TripList from '../triplist/TripList'
 import Trips from '../trip/Trips'
 import TestTrip from '../trip/TestTrip'
-import UserProfile from '../userprofile/UserProfile'
-import PlannedList from '../plannedtrips/PlannedTripsList'
-import FavoritesList from '../favoriteslist/FavoritesList'
+import Profile from '../user/Profile'
+import Planned from '../planned/Planned'
+import Saved from '../saved/Saved'
+import TripSearchForm from '../nav/tripsearchform/TripSearchForm'
+
 import db, {auth, storageKey, isAuthenticated} from '../../utils/firebase'
 
 
@@ -43,11 +45,11 @@ class App extends Component {
         <div>
           <Nav />
           <Route exact path='/' component={TripList} />
-          <Route path='/planned' component={PlannedList} />
-          <Route path='/favorites' component={FavoritesList} />
+          <Route path='/planned' component={Planned} />
+          <Route path='/saved' component={Saved} />
           <PrivateRoute exact path='/trips' component={Trips} />
           <PrivateRoute path='/trips/:id' component={TestTrip} />
-          <Route path='/profile' component={UserProfile} />
+          <Route path='/profile' component={Profile} />
           <Route path='/login' component={Login} />
         </div>
       </Router>

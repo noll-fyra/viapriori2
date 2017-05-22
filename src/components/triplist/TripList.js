@@ -1,5 +1,4 @@
 import React from 'react'
-import TripSearchForm from '../tripsearchform/TripSearchForm'
 import TripItem from '../tripitem/TripItem'
 import db, {auth} from '../../utils/firebase'
 
@@ -79,7 +78,7 @@ class TripList extends React.Component {
   render () {
     return (
       <div>
-        <TripSearchForm handleSearch={(e) => this.tripSearch(e)} />
+        {/* <TripSearchForm handleSearch={(e) => this.tripSearch(e)} /> */}
         <h1> Featured Trips</h1>
         {this.state.tripDisplayed &&
           <TripItem tripItems={this.state.tripDisplayed} tripDetails={(e) => this.tripDetails(e)} />

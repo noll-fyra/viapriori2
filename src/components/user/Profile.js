@@ -1,19 +1,14 @@
 import React from 'react'
-import TripSearchForm from '../tripsearchform/TripSearchForm'
+import TripSearchForm from '../nav/tripsearchform/TripSearchForm'
 import TripItem from '../tripitem/TripItem'
-import UserProfileDetails from '../userprofiledetails/UserProfileDetails'
+import ProfileDetails from './ProfileDetails'
 
-const profile = [
-  'Name',
-  'email',
-  'age'
-]
 
-class UserProfile extends React.Component {
+class Profile extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      userDisplayed: profile,
+      userDisplayed: "profile",
       tripDisplayed: ['america', 'russia', 'iceland'],
       userTrips: ['america', 'russia', 'iceland']
     }
@@ -35,16 +30,15 @@ class UserProfile extends React.Component {
   render () {
     return (
       <div>
-
         <TripSearchForm handleSearch={
           (e) => this.tripSearch(e)
         } />
         <h1> User Profile</h1>
-        <UserProfileDetails profileDetails={profile} />
+        <ProfileDetails  />
         <TripItem tripItems={this.state.tripDisplayed} />
       </div>
     )
   }
 }
 
-export default UserProfile
+export default Profile
