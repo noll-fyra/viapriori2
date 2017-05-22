@@ -16,9 +16,11 @@ class SearchResults extends React.Component {
   }
 
   componentDidMount () {
+    // console.log('mount')
     db.ref('trips').on('value', (snapshot) => {
       const keys = []
       const allTrips = []
+      // console.log(this.state.database, 'hi')
       for (var key in snapshot.val()) {
         keys.push(key)
         let tripEnd = new Date(snapshot.val()[key].end)
@@ -29,46 +31,26 @@ class SearchResults extends React.Component {
       }
       this.setState({
         database: snapshot.val(),
+        tripId: keys,
         tripDisplayed: allTrips
       })
-      // console.log(this.state.database)
-      // console.log(this.state.tripDisplayed)
+      console.log(this.state.tripDisplayed)
     })
   }
 
-  tripDetails (e) {
-  // console.log(key)
-    let tripDisplayed = this.state.tripSearch
-    let index = e.target.getAttribute('name')
-    let selectedTrip = tripDisplayed[index]
-  // let searchQuery = e.target.value.toLowerCase()
-    this.setState((prevState, props) => {
-      let selectedTrips = this.state.tripSearch.filter((trip) => {
-        let lowercaseTrip = trip.toLowerCase()
-        return lowercaseTrip.includes(selectedTrip)
-      })
-      return {
-        tripSearch: selectedTrip
-      }
-    })
-  }
-//
 
 
   render () {
     return (
       <div>
-        <SearchForm onChange={(e) => this.search(e)} />
 
         <h1>Search Results</h1>
-          <TripItem tripItems={this.state.tripDisplayed.filter((trip) => {
-
-            // {console.log(this.state.searchQuery)}
-            if (this.state.searchQuery) {
+          <TripItem tripId={this.state.tripId}  tripItems={this.state.tripDisplayed.filter((trip) => {
+            // if (this.state.searchQuery) {
             return trip.toLowerCase().includes(this.state.searchQuery.toLowerCase())
-          } else {
-            return null
-          }
+          // } else {
+          //   return null
+          // }
         })
       } />
       </div>
