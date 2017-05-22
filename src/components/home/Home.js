@@ -2,7 +2,7 @@ import React from 'react'
 // import TripItem from '../tripitem/TripItem'
 import db from '../../utils/firebase'
 
-class Featured extends React.Component {
+class Home extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -94,10 +94,10 @@ class Featured extends React.Component {
           }
         })
           } /> */}
-          featured
+          Featured
       </div>
     )
   }
 }
 
-export default Featured
+export default Home

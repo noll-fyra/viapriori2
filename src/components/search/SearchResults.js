@@ -1,5 +1,5 @@
 import React from 'react'
-import TripItem from '../tripitem/TripItem'
+import TripOverview from '../trip/TripOverview'
 import db from '../../utils/firebase'
 
 class SearchResults extends React.Component {
@@ -8,6 +8,7 @@ class SearchResults extends React.Component {
     this.state = {
       searchQuery: props.searchQuery,
       database: {},
+      tripdId: [],
       tripDisplayed: []
     }
   }
@@ -26,75 +27,21 @@ class SearchResults extends React.Component {
       }
       this.setState({
         database: snapshot.val(),
+        tripId: keys,
         tripDisplayed: allTrips
       })
-      // console.log(this.state.database)
-      // console.log(this.state.tripDisplayed)
+      console.log(this.state.tripDisplayed)
     })
   }
 
-  displayAllTrips () {
-  // const keys = []
-  // const details = []
-  // for (var key in this.state.database) {
-  //   keys.push(key)
-  //   details.push(this.state.database[key])
-  // }
-  // console.log(details, 'hi')
-  }
-
-  // tripSearch (e) {
-  //   let searchQuery = e.target.value.toLowerCase()
-    // }
-
-    // this.setState((prevState, props) => {
-    // to edit details.tripName to field in the database
-      // let searchedTrips = details.tripName.filter((trip) => {
-      //   let lowercaseTrip = trip.toLowerCase()
-      //   return lowercaseTrip.includes(searchQuery)
-
-    // to add in the filters for the other properties of trips(activities name/User name, when database tables are up)
-      // })
-      // return {
-      //   allTrips: details,
-      //   tripDisplayed: searchedTrips
-      // }
-  // console.log(this.state.tripSearch)
-    // })
-  // }
-
-//   tripDetails (e) {
-//   // console.log(key)
-//     let tripDisplayed = this.state.tripSearch
-//     let index = e.target.getAttribute('name')
-//     let selectedTrip = tripDisplayed[index]
-//   // let searchQuery = e.target.value.toLowerCase()
-//     this.setState((prevState, props) => {
-//       let selectedTrips = this.state.tripSearch.filter((trip) => {
-//         let lowercaseTrip = trip.toLowerCase()
-//         return lowercaseTrip.includes(selectedTrip)
-//       })
-//       return {
-//         tripSearch: selectedTrip
-//       }
-//     })
-//   }
-// //
-
   render () {
+    const trips = this.state.tripDisplayed.filter((trip) => {
+      return trip.toLowerCase().includes(this.state.searchQuery.toLowerCase())
+    })
     return (
       <div>
         <h1>Search Results</h1>
-        <TripItem tripItems={this.state.tripDisplayed.filter((trip) => {
-            // {console.log(this.state.searchQuery)}
-          // if (this.state.searchQuery) {
-            return trip.toLowerCase().includes(this.state.searchQuery.toLowerCase())
-          // } else {
-          //   return null
-          // }
-
-        })
-      } />
+        <TripOverview tripId={this.state.tripId} tripItems={trips} />
       </div>
     )
   }

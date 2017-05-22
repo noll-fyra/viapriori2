@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import {BrowserRouter as Router, Route, Redirect} from 'react-router-dom'
 import Nav from '../nav/Nav'
 import Login from '../login/Login'
-import Featured from '../featured/Featured'
+import Home from '../home/Home'
 import SearchResults from '../search/SearchResults'
 import Trips from '../trip/Trips'
 import TestTrip from '../trip/TestTrip'
@@ -42,12 +42,11 @@ class App extends Component {
   }
 
   render () {
-    // const linkclick = null
     return (
       <Router>
         <div>
           <Nav onChange={this.search} onKeyUp={(e) => this.handleSearch(e)} linkToSearch={(ref) => { this.linkToSearch = ref }} />
-          <Route exact path='/' component={Featured} />
+          <Route exact path='/' component={Home} />
           <Route path='/search' component={() => <SearchResults searchQuery={this.state.searchQuery} />} />
           <Route path='/planned' component={Planned} />
           <Route path='/saved' component={Saved} />

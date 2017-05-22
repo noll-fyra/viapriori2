@@ -4,4 +4,5 @@ function search (e) {
     searchQuery: searchQuery
   })
 }
+
 export default search
