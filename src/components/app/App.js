@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import {BrowserRouter as Router, Route, Redirect} from 'react-router-dom'
 import Nav from '../nav/Nav'
-import LoginNav from '../loginnav/LoginNav'
 import Login from '../login/Login'
 import TripList from '../triplist/TripList'
 import Trips from '../trip/Trips'
@@ -41,16 +40,12 @@ class App extends Component {
       <Router>
         <div>
           <Nav />
-          {/* <LoginNav profile={this.props.profile} planned={this.props.planned} favorites={this.props.favorites} trips={this.props.trips} /> */}
-          <Route exact path='/' component={() => <TripList trips={this.props.trips} />} />
-
-
-          <Route path='/planned' component={() => <PlannedList planned={this.props.planned} />} />
-          <Route path='/favorites' component={() => <FavoritesList favorites={this.props.favorites} />} />
-
+          <Route exact path='/' component={TripList} />
+          <Route path='/planned' component={PlannedList} />
+          <Route path='/favorites' component={FavoritesList} />
           <PrivateRoute exact path='/trips' component={Trips} />
           <PrivateRoute path='/trips/:id' component={TestTrip} />
-          <Route path='/profile' component={() => <UserProfile profile={this.props.profile} />} />
+          <Route path='/profile' component={UserProfile} />
           <Route path='/login' component={Login} />
         </div>
       </Router>
