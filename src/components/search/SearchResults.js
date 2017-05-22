@@ -1,8 +1,6 @@
 import React from 'react'
-import SearchForm from './SearchForm'
 import TripItem from '../tripitem/TripItem'
 import db from '../../utils/firebase'
-import search from '../../utils/search'
 
 class SearchResults extends React.Component {
   constructor (props) {
@@ -12,7 +10,6 @@ class SearchResults extends React.Component {
       database: {},
       tripDisplayed: []
     }
-    this.search = search.bind(this)
   }
 
   componentDidMount () {
@@ -22,9 +19,9 @@ class SearchResults extends React.Component {
       for (var key in snapshot.val()) {
         keys.push(key)
         let tripEnd = new Date(snapshot.val()[key].end)
-        let tripStart = new Date( snapshot.val()[key].start)
-        let tripDuration = (tripEnd - tripStart)/86400000
-        let text = tripDuration + ' days: '+ snapshot.val()[key].title
+        let tripStart = new Date(snapshot.val()[key].start)
+        let tripDuration = (tripEnd - tripStart) / 86400000
+        let text = tripDuration + ' days: ' + snapshot.val()[key].title
         allTrips.push(text.toString())
       }
       this.setState({
@@ -87,15 +84,15 @@ class SearchResults extends React.Component {
   render () {
     return (
       <div>
-        <SearchForm onChange={(e) => this.search(e)} />
         <h1>Search Results</h1>
-          <TripItem tripItems={this.state.tripDisplayed.filter((trip) => {
+        <TripItem tripItems={this.state.tripDisplayed.filter((trip) => {
             // {console.log(this.state.searchQuery)}
-            if (this.state.searchQuery) {
+          // if (this.state.searchQuery) {
             return trip.toLowerCase().includes(this.state.searchQuery.toLowerCase())
-          } else {
-            return null
-          }
+          // } else {
+          //   return null
+          // }
+
         })
       } />
       </div>

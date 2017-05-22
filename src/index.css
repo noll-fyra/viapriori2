@@ -52,3 +52,7 @@ outline: -webkit-focus-ring-color auto 5px;
   .topNav a {
     margin: 0px 10px;
   }
+
+  .searchButton {
+    background-color: red;
+  }

@@ -1,18 +1,14 @@
 import React from 'react'
-// import SearchForm from '../search/SearchForm'
-import TripItem from '../tripitem/TripItem'
+// import TripItem from '../tripitem/TripItem'
 import db from '../../utils/firebase'
-// import search from '../../utils/search'
 
 class Featured extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      // searchQuery: props.searchQuery,
       database: {},
       tripDisplayed: []
     }
-    // this.search = search.bind(this)
   }
 
   componentDidMount () {

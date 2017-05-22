@@ -20,6 +20,7 @@ class App extends Component {
     }
     this.search = search.bind(this)
     this.handleSearch = this.handleSearch.bind(this)
+    this.linkToSearch = null
   }
 
   componentDidMount () {
@@ -36,15 +37,16 @@ class App extends Component {
 
   handleSearch (e) {
     if (e.key === 'Enter') {
-      window.location = '/search'
+      this.linkToSearch.handleClick(new window.MouseEvent('click'))
     }
   }
 
   render () {
+    // const linkclick = null
     return (
       <Router>
         <div>
-          <Nav onChange={this.search} onKeyUp={(e) => this.handleSearch(e)} />
+          <Nav onChange={this.search} onKeyUp={(e) => this.handleSearch(e)} linkToSearch={(ref) => { this.linkToSearch = ref }} />
           <Route exact path='/' component={Featured} />
           <Route path='/search' component={() => <SearchResults searchQuery={this.state.searchQuery} />} />
           <Route path='/planned' component={Planned} />
