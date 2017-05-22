@@ -1,15 +1,15 @@
 import React, { Component } from 'react'
 import {BrowserRouter as Router, Route, Redirect} from 'react-router-dom'
 import Nav from '../nav/Nav'
+import LoginNav from '../loginnav/LoginNav'
 import Login from '../login/Login'
-import Database from '../database/Database'
+import TripList from '../triplist/TripList'
 import Trips from '../trip/Trips'
-// import MyTrips from '../trip/MyTrips'
 import TestTrip from '../trip/TestTrip'
+import UserProfile from '../userprofile/UserProfile'
+import PlannedList from '../plannedtrips/PlannedTripsList'
+import FavoritesList from '../favoriteslist/FavoritesList'
 import db, {auth, storageKey, isAuthenticated} from '../../utils/firebase'
-
-const jerel = db.ref('jerel')
-const jonathan = db.ref('jonathan')
 
 class App extends Component {
   constructor (props) {
@@ -17,8 +17,6 @@ class App extends Component {
     this.state = {
       database: null
     }
-    this.updateJerel = this.updateJerel.bind(this)
-    this.updateJon = this.updateJon.bind(this)
   }
 
   componentDidMount () {
@@ -38,31 +36,22 @@ class App extends Component {
     })
   }
 
-  updateJerel () {
-    jerel.child('-KkRJiM2djzl30ZLfi9T').remove()
-    // this.props.jerel.child('-KkRJiM2djzl30ZLfi9T').once('value', thing=>{
-    //   console.log(thing.val());
-    // })
-  }
-
-  updateJon () {
-    jonathan.push({jonathan: 1})
-  }
-
   render () {
     return (
       <Router>
         <div>
           <Nav />
-          <Route path='/login' component={Login} />
-          <Route path='/database' component={() => <Database database={this.state.database} />} />
+          {/* <LoginNav profile={this.props.profile} planned={this.props.planned} favorites={this.props.favorites} trips={this.props.trips} /> */}
+          <Route exact path='/' component={() => <TripList trips={this.props.trips} />} />
+
+
+          <Route path='/planned' component={() => <PlannedList planned={this.props.planned} />} />
+          <Route path='/favorites' component={() => <FavoritesList favorites={this.props.favorites} />} />
+
           <PrivateRoute exact path='/trips' component={Trips} />
           <PrivateRoute path='/trips/:id' component={TestTrip} />
-          {/* <PrivateRoute path='/addTrip' component={AddTrip} /> */}
-          {/* jerel:
-          <button onClick={this.updateJerel}>addJerel</button>
-          jonathan:
-          <button onClick={this.updateJon}>addJonathan</button> */}
+          <Route path='/profile' component={() => <UserProfile profile={this.props.profile} />} />
+          <Route path='/login' component={Login} />
         </div>
       </Router>
     )

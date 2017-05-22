@@ -32,7 +32,6 @@ class Trips extends React.Component {
         <button onClick={this.openAddTrip}>New Trip</button>
         <AddTrip isOpen={this.state.addTripIsOpen} onOpen={this.openAddTrip} onClose={this.closeAddTrip} />
         <MyTrips />
-        hello
       </div>
     )
   }
