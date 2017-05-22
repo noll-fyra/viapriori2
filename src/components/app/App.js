@@ -8,7 +8,6 @@ import TestTrip from '../trip/TestTrip'
 import Profile from '../user/Profile'
 import Planned from '../planned/Planned'
 import Saved from '../saved/Saved'
-import TripSearchForm from '../nav/tripsearchform/TripSearchForm'
 
 import db, {auth, storageKey, isAuthenticated} from '../../utils/firebase'
 
