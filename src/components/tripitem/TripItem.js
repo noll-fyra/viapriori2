@@ -6,7 +6,7 @@ const TripItem = (props) => (
         props.tripItems.map((trip,index)=>{
           let path = '/trips/' + props.tripId[index]
 
-          return <div key = {index}><Link to={path}> {trip}</Link></div>
+          return <div key={index}><Link to={path}> {trip}</Link></div>
 
         })
       }
