@@ -3,14 +3,19 @@ import TripSearchForm from '../tripsearchform/TripSearchForm'
 import TripItem from '../tripitem/TripItem'
 import UserProfileDetails from '../userprofiledetails/UserProfileDetails'
 
+const profile = [
+  'Name',
+  'email',
+  'age'
+]
 
 class UserProfile extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      userDisplayed: props.profile,
+      userDisplayed: profile,
       tripDisplayed: ['america', 'russia', 'iceland'],
-      userTrips:['america', 'russia', 'iceland']
+      userTrips: ['america', 'russia', 'iceland']
     }
   }
 
@@ -35,44 +40,11 @@ class UserProfile extends React.Component {
           (e) => this.tripSearch(e)
         } />
         <h1> User Profile</h1>
-        <UserProfileDetails profileDetails={this.props.profile} />
+        <UserProfileDetails profileDetails={profile} />
         <TripItem tripItems={this.state.tripDisplayed} />
       </div>
     )
   }
-  // componentDidUpdate(){
-  //   fetch('http://www.omdbapi.com/?s=Batman')
-  //   .then((response)=>{
-  //     console.log('this is from the first then', response)
-  //     return response.json()
-  //   })
-  //   .then((json)=>{
-  //     console.log('actual data', json)
-  //     let results = json.Search
-  //     let batmans = results.map((batmanMovie,index)=>{
-  //       return batmanMovie.Title
-  //     })
-  //     this.setState({
-  //   movieDisplayed: batmans
-  //     })
-
-    // let searchQuery = e.target.value.toLowerCase()
-      // this.setState((prevState, batmans) => {
-        // let searchedMovies = prevState.movies.filter((movie) => {
-        //   let lowercaseMovie = movie.toLowerCase()
-          // return batmans
-          // lowercaseMovie.includes(searchQuery)
-        // })
-      // return{
-      //   movieDisplayed: batmans
-      // }
-
-    // })
-    // .catch((error)=>{
-    //   alert(error)
-    // })
-  // }
-
 }
 
 export default UserProfile

@@ -8,15 +8,30 @@ class Trips extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      form: []
+      addTripIsOpen: false
     }
+    this.openAddTrip = this.openAddTrip.bind(this)
+    this.closeAddTrip = this.closeAddTrip.bind(this)
   }
+
+  openAddTrip () {
+    this.setState({
+      addTripIsOpen: true
+    })
+  }
+
+  closeAddTrip () {
+    this.setState({
+      addTripIsOpen: false
+    })
+  }
+
   render () {
     return (
       <div>
+        <button onClick={this.openAddTrip}>New Trip</button>
+        <AddTrip isOpen={this.state.addTripIsOpen} onOpen={this.openAddTrip} onClose={this.closeAddTrip} />
         <MyTrips />
-        <AddTrip />
-        hello
       </div>
     )
   }
