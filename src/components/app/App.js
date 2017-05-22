@@ -8,8 +8,13 @@ import Trips from '../trip/Trips'
 import TestTrip from '../trip/TestTrip'
 import db, {auth, storageKey, isAuthenticated} from '../../utils/firebase'
 
-const jerel = db.ref('jerel')
-const jonathan = db.ref('jonathan')
+//Jerel's imports
+// import TripList from '../triplist/TripList'
+import LoginNav from '../loginnav/LoginNav'
+
+
+// const jerel = db.ref('jerel')
+// const jonathan = db.ref('jonathan')
 
 class App extends Component {
   constructor (props) {
@@ -17,8 +22,8 @@ class App extends Component {
     this.state = {
       database: null
     }
-    this.updateJerel = this.updateJerel.bind(this)
-    this.updateJon = this.updateJon.bind(this)
+    // this.updateJerel = this.updateJerel.bind(this)
+    // this.updateJon = this.updateJon.bind(this)
   }
 
   componentDidMount () {
@@ -38,16 +43,16 @@ class App extends Component {
     })
   }
 
-  updateJerel () {
-    jerel.child('-KkRJiM2djzl30ZLfi9T').remove()
+  // updateJerel () {
+  //   jerel.child('-KkRJiM2djzl30ZLfi9T').remove()
     // this.props.jerel.child('-KkRJiM2djzl30ZLfi9T').once('value', thing=>{
     //   console.log(thing.val());
     // })
-  }
+  // }
 
-  updateJon () {
-    jonathan.push({jonathan: 1})
-  }
+  // updateJon () {
+  //   jonathan.push({jonathan: 1})
+  // }
 
   render () {
     return (
@@ -63,6 +68,8 @@ class App extends Component {
           <button onClick={this.updateJerel}>addJerel</button>
           jonathan:
           <button onClick={this.updateJon}>addJonathan</button> */}
+          <LoginNav/>
+
         </div>
       </Router>
     )

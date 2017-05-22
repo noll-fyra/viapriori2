@@ -20,10 +20,10 @@ const LoginNav = (props) => (
       <Link to='/profile'>Profile</Link>{' '}
       <Link to='/planned'>Planned Trips</Link>{' '}
       <Link to='/favorites'>Favorites</Link>
-    <Route exact path="/" component={()=> <TripList trips={props.trips} />}/>
-    <Route path="/profile" component={()=> <UserProfile profile={props.profile} />}/>
-    <Route path="/planned" component={()=> <PlannedList planned={props.planned} />}/>
-    <Route path="/favorites" component={()=> <FavoritesList favorites={props.favorites} />}/>
+    <Route exact path="/" component={()=> <TripList/>}/>
+    <Route path="/profile" component={()=> <UserProfile/>}/>
+    <Route path="/planned" component={()=> <PlannedList/>}/>
+    <Route path="/favorites" component={()=> <FavoritesList/>}/>
 
     </div>
       </Router>
