@@ -1,16 +1,15 @@
 import React from 'react'
-
-import search from '../../utils/search'
-import SearchForm from '../search/SearchForm'
+import SearchForm from './SearchForm'
 import TripItem from '../tripitem/TripItem'
-import db, {auth} from '../../utils/firebase'
+import db from '../../utils/firebase'
+import search from '../../utils/search'
 
-class TripList extends React.Component {
+class SearchResults extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
+      searchQuery: props.searchQuery,
       database: {},
-      searchQuery: '',
       tripDisplayed: []
     }
     this.search = search.bind(this)
@@ -55,23 +54,26 @@ class TripList extends React.Component {
   }
 //
 
+
   render () {
     return (
       <div>
-
         <SearchForm onChange={(e) => this.search(e)} />
 
-        <h1> Featured Trips</h1>
-          <TripItem database= {this.state.database} tripItems={this.state.tripDisplayed.filter((trip) => {
-            // {console.log(this.state.searchQuery)}
-            return trip.toLowerCase().includes(this.state.searchQuery.toLowerCase()) })} />
+        <h1>Search Results</h1>
+          <TripItem tripItems={this.state.tripDisplayed.filter((trip) => {
 
-           {/* <TripItem tripItems={this.state.tripDisplayed} tripDetails={(e) => this.tripDetails(e)} />
-         }
-        {this.state.tripDetails} */}
+            // {console.log(this.state.searchQuery)}
+            if (this.state.searchQuery) {
+            return trip.toLowerCase().includes(this.state.searchQuery.toLowerCase())
+          } else {
+            return null
+          }
+        })
+      } />
       </div>
     )
   }
 }
 
-export default TripList
+export default SearchResults

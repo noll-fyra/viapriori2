@@ -63,11 +63,6 @@ class AddTrip extends React.Component {
     window.location = '/trips/' + key
   }
 
-  // close(e) {
-  //   e.preventDefault()
-  //   if (this.props.on)
-  // }
-
   render () {
     if (!this.props.isOpen) {
       return null
@@ -81,7 +76,7 @@ class AddTrip extends React.Component {
           <input type='date' onChange={(e) => this.handleChangeEnd(e)} placeholder='End Date' />
           <textarea onChange={(e) => this.handleChangeDetails(e)} placeholder='Trip Details' />
           <button onClick={this.handleClick}>Add Trip</button>
-          {/* <button onClick={this.props.onClose}>Close Modal</button> */}
+          <button onClick={this.props.onClose}>Close Modal</button>
         </div>
       </div>
     )

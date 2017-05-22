@@ -22,19 +22,22 @@ class MyTrips extends React.Component {
     const keys = []
     const details = []
     for (var key in this.state.database) {
-      if(this.state.database[key].user === auth.currentUser.uid) {
-      keys.push(key)
-      details.push(this.state.database[key])
-}
+      if (this.state.database[key].user === auth.currentUser.uid) {
+        keys.push(key)
+        details.push(this.state.database[key])
+      }
     }
     return details.map((trip, index) => {
       let path = '/trips/' + keys[index]
       return (
         <li key={keys[index]}>
           <p><Link to={path}>name: {trip.title}</Link></p>
-          <p>details: {trip.details}</p>
-          <p>start: {new Date(trip.start).toLocaleDateString()}</p>
-          <p>end: {new Date(trip.end).toLocaleDateString()}</p>
+          {trip.details &&
+          <p>details: {trip.details}</p>}
+          {trip.start &&
+          <p>start: {new Date(trip.start).toLocaleDateString()}</p>}
+          {trip.end &&
+          <p>end: {new Date(trip.end).toLocaleDateString()}</p>}
         </li>
       )
     })

@@ -2,23 +2,24 @@ import React, { Component } from 'react'
 import {BrowserRouter as Router, Route, Redirect} from 'react-router-dom'
 import Nav from '../nav/Nav'
 import Login from '../login/Login'
-import TripList from '../triplist/TripList'
+import Featured from '../featured/Featured'
+import SearchResults from '../search/SearchResults'
 import Trips from '../trip/Trips'
 import TestTrip from '../trip/TestTrip'
 import Profile from '../user/Profile'
 import Planned from '../planned/Planned'
 import Saved from '../saved/Saved'
-
-import db, {auth, storageKey, isAuthenticated} from '../../utils/firebase'
-
+import {auth, storageKey, isAuthenticated} from '../../utils/firebase'
+import search from '../../utils/search'
 
 class App extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      database: null
+      searchQuery: ''
     }
-
+    this.search = search.bind(this)
+    this.handleSearch = this.handleSearch.bind(this)
   }
 
   componentDidMount () {
@@ -31,19 +32,21 @@ class App extends Component {
         // this.setState({uid: null})
       }
     })
-    db.ref().on('value', (snapshot) => {
-      this.setState({
-        database: snapshot.val()
-      })
-    })
+  }
+
+  handleSearch (e) {
+    if (e.key === 'Enter') {
+      window.location = '/search'
+    }
   }
 
   render () {
     return (
       <Router>
         <div>
-          <Nav />
-          <Route exact path='/' component={TripList} />
+          <Nav onChange={this.search} onKeyUp={(e) => this.handleSearch(e)} />
+          <Route exact path='/' component={Featured} />
+          <Route path='/search' component={() => <SearchResults searchQuery={this.state.searchQuery} />} />
           <Route path='/planned' component={Planned} />
           <Route path='/saved' component={Saved} />
           <PrivateRoute exact path='/trips' component={Trips} />
