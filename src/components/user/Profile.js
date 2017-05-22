@@ -1,7 +1,8 @@
 import React from 'react'
-import TripSearchForm from '../tripsearchform/TripSearchForm'
+import SearchForm from '../search/SearchForm'
 import TripItem from '../tripitem/TripItem'
 import ProfileDetails from './ProfileDetails'
+import search from '../../utils/search'
 
 const profile = [
   'Name',
@@ -15,32 +16,19 @@ class Profile extends React.Component {
     this.state = {
       userDisplayed: profile,
       tripDisplayed: ['america', 'russia', 'iceland'],
-      userTrips: ['america', 'russia', 'iceland']
+      searchQuery: ''
     }
-  }
 
-  tripSearch (e) {
-    let searchQuery = e.target.value.toLowerCase()
-    this.setState((prevState, props) => {
-      let searchedTrips = prevState.userTrips.filter((trip) => {
-        let lowercaseTrip = trip.toLowerCase()
-        return lowercaseTrip.includes(searchQuery)
-      })
-      return {
-        tripDisplayed: searchedTrips
-      }
-    })
+    this.search = search.bind(this)
   }
 
   render () {
     return (
       <div>
-        <TripSearchForm handleSearch={
-          (e) => this.tripSearch(e)
-        } />
+        <SearchForm onChange={(e) => this.search(e)} />
         <h1> User Profile</h1>
         <ProfileDetails profileDetails={profile} />
-        <TripItem tripItems={this.state.tripDisplayed} />
+        <TripItem tripItems={this.state.tripDisplayed.filter((trip) => { return trip.includes(this.state.searchQuery) })} />
       </div>
     )
   }

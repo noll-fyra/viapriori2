@@ -1,13 +1,7 @@
-import React from 'react';
+import React from 'react'
 
 const SearchForm = (props) => (
+  <input type='text' placeholder='Search by Activities, Location or User' onChange={props.onChange} />
+)
 
-    <form>
-      {/* <label>Search Movie {''}</label> */}
-      <input type='text' placeholder="Search by Activities, Location or User
-" onChange={props.handleSearch}/>
-    </form>
-);
-
-
-export default SearchForm;
+export default SearchForm
