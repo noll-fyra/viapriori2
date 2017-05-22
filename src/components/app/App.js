@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import {BrowserRouter as Router, Route, Redirect} from 'react-router-dom'
 import Nav from '../nav/Nav'
 import Login from '../login/Login'
-import TripList from '../triplist/TripList'
+import Featured from '../featured/Featured'
 import SearchResults from '../search/SearchResults'
 import Trips from '../trip/Trips'
 import TestTrip from '../trip/TestTrip'
@@ -36,7 +36,7 @@ class App extends Component {
 
   handleSearch (e) {
     if (e.key === 'Enter') {
-      window.location = '/'
+      window.location = '/search'
     }
   }
 
@@ -45,8 +45,8 @@ class App extends Component {
       <Router>
         <div>
           <Nav onChange={this.search} onKeyUp={(e) => this.handleSearch(e)} />
-          <Route exact path='/' component={() => <TripList searchQuery={this.state.searchQuery} />} />
-          <Route path='/search' component={SearchResults} />
+          <Route exact path='/' component={Featured} />
+          <Route path='/search' component={() => <SearchResults searchQuery={this.state.searchQuery} />} />
           <Route path='/planned' component={Planned} />
           <Route path='/saved' component={Saved} />
           <PrivateRoute exact path='/trips' component={Trips} />

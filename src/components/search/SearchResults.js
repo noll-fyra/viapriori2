@@ -1,5 +1,5 @@
 import React from 'react'
-import SearchForm from '../search/SearchForm'
+import SearchForm from './SearchForm'
 import TripItem from '../tripitem/TripItem'
 import db from '../../utils/firebase'
 import search from '../../utils/search'
@@ -31,8 +31,8 @@ class SearchResults extends React.Component {
         database: snapshot.val(),
         tripDisplayed: allTrips
       })
-      console.log(this.state.database)
-      console.log(this.state.tripDisplayed)
+      // console.log(this.state.database)
+      // console.log(this.state.tripDisplayed)
     })
   }
 
@@ -88,10 +88,16 @@ class SearchResults extends React.Component {
     return (
       <div>
         <SearchForm onChange={(e) => this.search(e)} />
-        <h1>Featured</h1>
+        <h1>Search Results</h1>
           <TripItem tripItems={this.state.tripDisplayed.filter((trip) => {
             // {console.log(this.state.searchQuery)}
-            return trip.toLowerCase().includes(this.state.searchQuery.toLowerCase()) })} />
+            if (this.state.searchQuery) {
+            return trip.toLowerCase().includes(this.state.searchQuery.toLowerCase())
+          } else {
+            return null
+          }
+        })
+      } />
       </div>
     )
   }

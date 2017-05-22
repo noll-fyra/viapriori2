@@ -1,18 +1,18 @@
 import React from 'react'
-import SearchForm from '../search/SearchForm'
+// import SearchForm from '../search/SearchForm'
 import TripItem from '../tripitem/TripItem'
 import db from '../../utils/firebase'
-import search from '../../utils/search'
+// import search from '../../utils/search'
 
 class Featured extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      searchQuery: props.searchQuery,
+      // searchQuery: props.searchQuery,
       database: {},
       tripDisplayed: []
     }
-    this.search = search.bind(this)
+    // this.search = search.bind(this)
   }
 
   componentDidMount () {
@@ -22,17 +22,17 @@ class Featured extends React.Component {
       for (var key in snapshot.val()) {
         keys.push(key)
         let tripEnd = new Date(snapshot.val()[key].end)
-        let tripStart = new Date( snapshot.val()[key].start)
-        let tripDuration = (tripEnd - tripStart)/86400000
-        let text = tripDuration + ' days: '+ snapshot.val()[key].title
+        let tripStart = new Date(snapshot.val()[key].start)
+        let tripDuration = (tripEnd - tripStart) / 86400000
+        let text = tripDuration + ' days: ' + snapshot.val()[key].title
         allTrips.push(text.toString())
       }
       this.setState({
         database: snapshot.val(),
         tripDisplayed: allTrips
       })
-      console.log(this.state.database)
-      console.log(this.state.tripDisplayed)
+      // console.log(this.state.database)
+      // console.log(this.state.tripDisplayed)
     })
   }
 
@@ -87,11 +87,18 @@ class Featured extends React.Component {
   render () {
     return (
       <div>
-        <SearchForm onChange={(e) => this.search(e)} />
+        {/* <SearchForm onChange={(e) => this.search(e)} />
         <h1>Featured</h1>
-          <TripItem tripItems={this.state.tripDisplayed.filter((trip) => {
+        <TripItem tripItems={this.state.tripDisplayed.filter((trip) => {
             // {console.log(this.state.searchQuery)}
-            return trip.toLowerCase().includes(this.state.searchQuery.toLowerCase()) })} />
+          if (this.state.searchQuery) {
+            return trip.toLowerCase().includes(this.state.searchQuery.toLowerCase())
+          } else {
+            return null
+          }
+        })
+          } /> */}
+          featured
       </div>
     )
   }
