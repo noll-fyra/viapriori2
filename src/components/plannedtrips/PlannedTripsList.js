@@ -1,14 +1,14 @@
-import React from 'react';
+import React from 'react'
 // import TripSearchForm from '../tripsearchform/TripSearchForm'
 // import TripItem from '../tripitem/TripItem'
 
 class PlannedTripsList extends React.Component {
-constructor(props){
-  super(props);
-  this.state = {
-    plannedDisplayed:['america','russia', 'iceland']
-  };
-}
+  constructor (props) {
+    super(props)
+    this.state = {
+      plannedDisplayed: ['america', 'russia', 'iceland']
+    }
+  }
 //
 // tripSearch(e){
 //   let searchQuery = e.target.value.toLowerCase()
@@ -23,8 +23,7 @@ constructor(props){
 //   })
 // }
 
-  render() {
-
+  render () {
     return (
       <div>
 
@@ -35,7 +34,7 @@ constructor(props){
         <p>{this.props.planned}</p>
         {/* <TripItem tripItems= {this.state.tripDisplayed}/> */}
       </div>
-    );
+    )
   }
   // componentDidUpdate(){
   //   fetch('http://www.omdbapi.com/?s=Batman')
@@ -72,4 +71,4 @@ constructor(props){
 
 }
 
-export default PlannedTripsList;
+export default PlannedTripsList

@@ -16,6 +16,7 @@ class AddTrip extends React.Component {
     this.handleChangeStart = this.handleChangeStart.bind(this)
     this.handleChangeEnd = this.handleChangeEnd.bind(this)
     this.handleClick = this.handleClick.bind(this)
+    // this.close = this.close.bind(this)
   }
 
   handleChangeTitle (e) {
@@ -58,14 +59,26 @@ class AddTrip extends React.Component {
     window.location = '/trips/' + key
   }
 
+  // close(e) {
+  //   e.preventDefault()
+  //   if (this.props.on)
+  // }
+
   render () {
+    if (!this.props.isOpen) {
+      return null
+    }
     return (
       <div>
+        <div className='backdrop' onClick={this.props.onClose} />
+        <div className='modal'>
           <input type='text' onChange={(e) => this.handleChangeTitle(e)} placeholder='Where did you go?' />
           <input type='date' onChange={(e) => this.handleChangeStart(e)} placeholder='Start Date' />
           <input type='date' onChange={(e) => this.handleChangeEnd(e)} placeholder='End Date' />
           <textarea onChange={(e) => this.handleChangeDetails(e)} placeholder='Trip Details' />
           <button onClick={this.handleClick}>Add Trip</button>
+          {/* <button onClick={this.props.onClose}>Close Modal</button> */}
+        </div>
       </div>
     )
   }
