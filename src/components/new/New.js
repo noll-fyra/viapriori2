@@ -2,6 +2,9 @@ import React from 'react'
 import db, {auth, storage} from '../../utils/firebase'
 import EXIF from 'exif-js'
 import geocoder from 'geocoder'
+import latLng, {location} from '../../utils/geocoding'
+import formatDate from '../../utils/format'
+import Rating from '../rating/Rating'
 
 class New extends React.Component {
   constructor (props) {
@@ -9,35 +12,24 @@ class New extends React.Component {
     this.state = {
       title: '',
       imagePath: '',
-      imageName: 'Add an image',
-      imageLocation: '',
-      imageDate: '',
+      imageName: '',
+      imageLatLng: '',
+      date: '',
       description: '',
-      image: ''
+      image: '',
+      location: '',
+      rating: 0
     }
     this.addedTitle = this.addedTitle.bind(this)
-    this.addedStart = this.addedStart.bind(this)
-    this.addedEnd = this.addedEnd.bind(this)
     this.addedFile = this.addedFile.bind(this)
     this.addedDescription = this.addedDescription.bind(this)
+    this.starClick = this.starClick.bind(this)
     this.addActivity = this.addActivity.bind(this)
   }
 
   addedTitle (e) {
     this.setState({
       title: e.target.value
-    })
-  }
-
-  addedStart (e) {
-    this.setState({
-      start: e.target.value
-    })
-  }
-
-  addedEnd (e) {
-    this.setState({
-      end: e.target.value
     })
   }
 
@@ -50,28 +42,29 @@ class New extends React.Component {
       })
     })
     reader.readAsDataURL(image)
-
+    console.log(image)
     this.setState({
       imagePath: image,
       imageName: image.name
     })
 
     EXIF.getData(image, () => {
-      var date = image.exifdata.DateTime
-      console.log(image.exifdata);
-      var gpsTemp = [image.exifdata.GPSLatitude, image.exifdata.GPSLongitude]
-      var gps = [gpsTemp[0][0].numerator, gpsTemp[0][1].numerator, gpsTemp[0][2].numerator, gpsTemp[1][0].numerator, gpsTemp[1][1].numerator, gpsTemp[1][2].numerator]
-      var combined = [gps[0], gps[1]/60, gps[2] / 360000, gps[3], gps[4]/60, gps[5] / 360000]
       this.setState({
-        imageDate: date,
-        imageLocation: {lat: combined[0] + combined[1] + combined[2], lng: combined[3] + combined[4] + combined[5]}
+        date: formatDate(image.exifdata.DateTime),
+        imageLatLng: {lat: latLng(image).lat, lng: latLng(image).lng}
       })
-      console.log(this.state.imageLocation);
-      geocoder.reverseGeocode(this.state.imageLocation.lat, this.state.imageLocation.lng, (err, data) => {
-
-        if (err) { console.log(err) }
-        console.log(data.results[0])
-      })
+      // console.log(image.exifdata)
+      if (this.state.imageLatLng.lat && this.state.imageLatLng.lng) {
+        geocoder.reverseGeocode(this.state.imageLatLng.lat, this.state.imageLatLng.lng, (err, data) => {
+          if (err) { console.log(err) }
+          if (data.results[0]) {
+            let loc = location(data.results[0])[0] + ', ' + location(data.results[0])[1]
+            this.setState({
+              location: loc
+            })
+          }
+        })
+      }
     })
   }
 
@@ -81,46 +74,61 @@ class New extends React.Component {
     })
   }
 
+  starClick (number) {
+    this.setState({
+      stars: number
+    })
+  }
+
   addActivity () {
     console.log(this.state.imagePath)
     storage.ref(auth.currentUser.uid + '/' + this.props.tripid + '/images/' + this.state.imageName).put(this.state.imagePath).then((snap) => {
-      db.ref('trips/' + auth.currentUser.uid + '/' + this.props.tripid + '/sections').push({
+      db.ref('activities/').push({
+        trip: this.props.tripid,
+        section: 5,
+        user: auth.currentUser.uid,
         title: this.state.title,
-        start: this.state.start,
-        end: this.state.end,
+        date: this.state.date,
+        location: this.state.location,
+        imageLatLng: this.state.imageLatLng,
         image: auth.currentUser.uid + '/' + this.props.tripid + '/images/' + this.state.imageName,
-        description: this.state.description
+        description: this.state.description,
+        rating: this.state.rating
       })
     })
   }
 
   render () {
     return (
-      <div>
+      <div className='modalWrapper'>
         <div className='backdrop' onClick={this.props.onClose} />
 
         {this.state.imagePath === '' &&
         <div className='modal'>
-          <label>
-            <span>{this.state.imageName}</span>
+          <label className='imageLabel'>
+            <span>Post a photo</span>
             <input className='fileInput' type='file' onChange={(e) => this.addedFile(e)} />
           </label>
         </div>
         }
 
         {this.state.imagePath !== '' &&
-        <div>
+        <div >
 
-          <div className='modal' style={{backgroundImage: `url(${this.state.image})`, backgroundSize: 'cover'}}>
-            {/* <img src={this.state.image} alt='' /> */}
+          <div className='modal'>
+            <label className='imageLabelActive' style={{backgroundImage: `url(${this.state.image})`, backgroundSize: 'cover'}}>
+              <span>Post a photo</span>
+              <input className='fileInput' type='file' onChange={(e) => this.addedFile(e)} />
+            </label>
 
           </div>
           <div className='modal modal2'>
-            <p><input type='text' onChange={(e) => this.addedTitle(e)} placeholder='Title' /></p>
-            <p><input type='date' onChange={(e) => this.addedStart(e)} /></p>
-            <p><input type='date' onChange={(e) => this.addedEnd(e)} /></p>
-            <p><textarea onChange={(e) => this.addedDescription(e)} /></p>
-            <button onClick={this.addActivity}>Post</button>
+            <p>Activity: <input type='text' onChange={(e) => this.addedTitle(e)} placeholder='' /></p>
+            <p>Date: <b>{this.state.date}</b></p>
+            <p>Location: <b>{this.state.location}</b></p>
+            <p>Caption: <textarea onChange={(e) => this.addedDescription(e)} /></p>
+            <Rating stars={this.state.rating} starClick={this.starClick} />
+            <button onClick={this.addActivity}>Share</button>
           </div>
         </div>
         }
