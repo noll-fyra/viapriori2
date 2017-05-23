@@ -13,6 +13,7 @@ const Nav = (props) => (
     <Link to='/trips'>My Trips</Link>
     <Link to='/profile'>Profile</Link>
     <Link to='/login'>Login</Link>
+
   </nav>
 )
 

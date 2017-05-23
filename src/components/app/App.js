@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import {BrowserRouter as Router, Route, Redirect} from 'react-router-dom'
 import Nav from '../nav/Nav'
 import Login from '../login/Login'
+import Register from '../register/Register'
 import Home from '../home/Home'
 import SearchResults from '../search/SearchResults'
 import Trips from '../trip/Trips'
@@ -54,6 +55,7 @@ class App extends Component {
           <PrivateRoute path='/trips/:id' component={TestTrip} />
           <Route path='/profile' component={Profile} />
           <Route path='/login' component={Login} />
+          <Route path='/register' component={Register} />
         </div>
       </Router>
     )
