@@ -2,7 +2,7 @@ import React from 'react'
 // import db, {auth} from '../../utils/firebase'
 // import search from '../../utils/search'
 // import SearchForm from '../search/SearchForm'
-import TripOverview from '../trip/TripOverview'
+// import TripOverview from '../trip/TripOverview'
 // import ProfileDetails from './ProfileDetails'
 
 class Profile extends React.Component {
@@ -36,7 +36,7 @@ class Profile extends React.Component {
   //   })
   // }
   render () {
-    const trips = this.state.tripDisplayed.filter((trip) => { return trip.includes(this.state.searchQuery) })
+    // const trips = this.state.tripDisplayed.filter((trip) => { return trip.includes(this.state.searchQuery) })
     return (
       <div>
         <h1> User Profile</h1>

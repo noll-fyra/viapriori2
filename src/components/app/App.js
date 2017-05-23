@@ -5,6 +5,7 @@ import Login from '../login/Login'
 import Register from '../register/Register'
 import Home from '../home/Home'
 import SearchResults from '../search/SearchResults'
+import New from '../new/New'
 import Trips from '../trip/Trips'
 import TestTrip from '../trip/TestTrip'
 import Profile from '../user/Profile'
@@ -49,6 +50,7 @@ class App extends Component {
           <Nav onChange={this.search} onKeyUp={(e) => this.handleSearch(e)} linkToSearch={(ref) => { this.linkToSearch = ref }} />
           <Route exact path='/' component={Home} />
           <Route path='/search' component={() => <SearchResults searchQuery={this.state.searchQuery} />} />
+          <Route path='/new' component={New} />
           <Route path='/planned' component={Planned} />
           <Route path='/saved' component={Saved} />
           <PrivateRoute exact path='/trips' component={Trips} />
