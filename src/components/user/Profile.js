@@ -15,7 +15,26 @@ class Profile extends React.Component {
     }
     // this.search = search.bind(this)
   }
-
+  // componentDidMount () {
+  //   db.ref('users').on('value', (snapshot) => {
+  //     const keys = []
+  //     const allUsers = []
+  //     for (var key in snapshot.val()) {
+  //       keys.push(key)
+  //       let tripEnd = new Date(snapshot.val()[key].end)
+  //       let tripStart = new Date(snapshot.val()[key].start)
+  //       let tripDuration = (tripEnd - tripStart) / 86400000
+  //       let text = tripDuration + ' days: ' + snapshot.val()[key].title
+  //       allTrips.push(text.toString())
+  //     }
+  //     this.setState({
+  //       database: snapshot.val(),
+  //       tripId: keys,
+  //       tripDisplayed: allTrips
+  //     })
+  //     console.log(this.state.tripDisplayed)
+  //   })
+  // }
   render () {
     // const trips = this.state.tripDisplayed.filter((trip) => { return trip.includes(this.state.searchQuery) })
     return (
