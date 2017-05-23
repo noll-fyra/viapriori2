@@ -1,9 +1,7 @@
 function search (e) {
   let searchQuery = e.target.value.toLowerCase()
-  this.setState((prevState, props) => {
-    return {
-      searchQuery: searchQuery
-    }
+  this.setState({
+    searchQuery: searchQuery
   })
 }
 

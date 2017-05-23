@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import {BrowserRouter as Router, Route, Redirect} from 'react-router-dom'
 import Nav from '../nav/Nav'
 import Login from '../login/Login'
-import Featured from '../featured/Featured'
+import Home from '../home/Home'
 import SearchResults from '../search/SearchResults'
 import Trips from '../trip/Trips'
 import TestTrip from '../trip/TestTrip'
@@ -20,6 +20,7 @@ class App extends Component {
     }
     this.search = search.bind(this)
     this.handleSearch = this.handleSearch.bind(this)
+    this.linkToSearch = null
   }
 
   componentDidMount () {
@@ -36,7 +37,7 @@ class App extends Component {
 
   handleSearch (e) {
     if (e.key === 'Enter') {
-      window.location = '/search'
+      this.linkToSearch.handleClick(new window.MouseEvent('click'))
     }
   }
 
@@ -44,8 +45,8 @@ class App extends Component {
     return (
       <Router>
         <div>
-          <Nav onChange={this.search} onKeyUp={(e) => this.handleSearch(e)} />
-          <Route exact path='/' component={Featured} />
+          <Nav onChange={this.search} onKeyUp={(e) => this.handleSearch(e)} linkToSearch={(ref) => { this.linkToSearch = ref }} />
+          <Route exact path='/' component={Home} />
           <Route path='/search' component={() => <SearchResults searchQuery={this.state.searchQuery} />} />
           <Route path='/planned' component={Planned} />
           <Route path='/saved' component={Saved} />

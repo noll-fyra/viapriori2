@@ -1,8 +1,6 @@
 import React from 'react'
-import SearchForm from './SearchForm'
-import TripItem from '../tripitem/TripItem'
+import TripOverview from '../trip/TripOverview'
 import db from '../../utils/firebase'
-import search from '../../utils/search'
 
 class SearchResults extends React.Component {
   constructor (props) {
@@ -10,23 +8,21 @@ class SearchResults extends React.Component {
     this.state = {
       searchQuery: props.searchQuery,
       database: {},
+      tripdId: [],
       tripDisplayed: []
     }
-    this.search = search.bind(this)
   }
 
   componentDidMount () {
-    // console.log('mount')
     db.ref('trips').on('value', (snapshot) => {
       const keys = []
       const allTrips = []
-      // console.log(this.state.database, 'hi')
       for (var key in snapshot.val()) {
         keys.push(key)
         let tripEnd = new Date(snapshot.val()[key].end)
-        let tripStart = new Date( snapshot.val()[key].start)
-        let tripDuration = (tripEnd - tripStart)/86400000
-        let text = tripDuration + ' days: '+ snapshot.val()[key].title
+        let tripStart = new Date(snapshot.val()[key].start)
+        let tripDuration = (tripEnd - tripStart) / 86400000
+        let text = tripDuration + ' days: ' + snapshot.val()[key].title
         allTrips.push(text.toString())
       }
       this.setState({
@@ -38,21 +34,14 @@ class SearchResults extends React.Component {
     })
   }
 
-
-
   render () {
+    const trips = this.state.tripDisplayed.filter((trip) => {
+      return trip.toLowerCase().includes(this.state.searchQuery.toLowerCase())
+    })
     return (
       <div>
-
         <h1>Search Results</h1>
-          <TripItem tripId={this.state.tripId}  tripItems={this.state.tripDisplayed.filter((trip) => {
-            // if (this.state.searchQuery) {
-            return trip.toLowerCase().includes(this.state.searchQuery.toLowerCase())
-          // } else {
-          //   return null
-          // }
-        })
-      } />
+        <TripOverview tripId={this.state.tripId} tripItems={trips} />
       </div>
     )
   }
