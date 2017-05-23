@@ -25,6 +25,27 @@ label {
   align-items: center;
 }
 
+.profile {
+  font-size: 1.25em;
+  font-weight: 700;
+  border-radius: 85%;
+  width: 40%;
+  height: 40%;
+  color: white;
+  background-color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.profileDiv {
+  width: 50%;
+  height: 50%;
+  position: absolute;
+  top: 10%;
+  left: 40%;
+  z-index: 9999;
+}
+
 label:focus {
   outline: 1px dotted #000;
   outline: -webkit-focus-ring-color auto 5px;
