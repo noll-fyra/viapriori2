@@ -30,7 +30,6 @@ class SearchResults extends React.Component {
         tripId: keys,
         tripDisplayed: allTrips
       })
-      console.log(this.state.tripDisplayed)
     })
   }
 
