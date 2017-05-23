@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "exif": "^0.6.0",
     "exif-js": "^2.2.1",
     "firebase": "^4.0.0",
     "prop-types": "^15.5.10",
