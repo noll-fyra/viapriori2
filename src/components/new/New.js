@@ -1,7 +1,7 @@
 import React from 'react'
 import db, {auth, storage} from '../../utils/firebase'
 import EXIF from 'exif-js'
-var ExifImage = require('exif').ExifImage
+import geocoder from 'geocoder'
 
 class New extends React.Component {
   constructor (props) {
@@ -42,44 +42,37 @@ class New extends React.Component {
   }
 
   addedFile (e) {
+    let image = e.target.files[0]
     var reader = new window.FileReader()
     reader.addEventListener('load', () => {
       this.setState({
-      //   // imagePath: e.target.files[0],
-      //   // imageName: e.target.files[0].name,
         image: reader.result
       })
-
-
     })
-    reader.readAsDataURL(e.target.files[0])
+    reader.readAsDataURL(image)
 
-    // var x = reader.readAsDataURL(e.target.files[0])
     this.setState({
-      imagePath: e.target.files[0],
-      imageName: e.target.files[0].name
+      imagePath: image,
+      imageName: image.name
     })
-    let image = e.target.files[0]
-  EXIF.getData(image, () => {
-    var date = image.exifdata.DateTime
-    console.log(image.exifdata);
-    });
 
-    // EXIF.getData(this.state.image, () => {
-    //   var x = EXIF.getTag(this.state.image, 'Model')
-    //   console.log(x)
-    // })
+    EXIF.getData(image, () => {
+      var date = image.exifdata.DateTime
+      console.log(image.exifdata);
+      var gpsTemp = [image.exifdata.GPSLatitude, image.exifdata.GPSLongitude]
+      var gps = [gpsTemp[0][0].numerator, gpsTemp[0][1].numerator, gpsTemp[0][2].numerator, gpsTemp[1][0].numerator, gpsTemp[1][1].numerator, gpsTemp[1][2].numerator]
+      var combined = [gps[0], gps[1]/60, gps[2] / 360000, gps[3], gps[4]/60, gps[5] / 360000]
+      this.setState({
+        imageDate: date,
+        imageLocation: {lat: combined[0] + combined[1] + combined[2], lng: combined[3] + combined[4] + combined[5]}
+      })
+      console.log(this.state.imageLocation);
+      geocoder.reverseGeocode(this.state.imageLocation.lat, this.state.imageLocation.lng, (err, data) => {
 
-      // new ExifImage({image: 'image.jpg'}, (err,data) => {
-      //   if(err) {
-      //     console.log(err.message);
-      //     console.log('hi');
-      //   } else {
-      //     console.log(data);
-      //     console.log('bye');
-      //   }
-      // })
-
+        if (err) { console.log(err) }
+        console.log(data.results[0])
+      })
+    })
   }
 
   addedDescription (e) {
