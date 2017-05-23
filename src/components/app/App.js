@@ -55,7 +55,7 @@ class App extends Component {
           <Route path='/saved' component={Saved} />
           <PrivateRoute exact path='/trips' component={Trips} />
           <PrivateRoute path='/trips/:id' component={TestTrip} />
-          <Route path='/profile' component={Profile} />
+          <PrivateRoute path='/profile' component={Profile} />
           <Route path='/login' component={Login} />
           <Route path='/register' component={Register} />
         </div>

@@ -59,16 +59,16 @@ class Register extends React.Component {
     const authPromise = auth.createUserWithEmailAndPassword(this.state.email, this.state.password)
     authPromise
     .then((user) => {
-      db.ref('users').push({
+      db.ref('users/' + auth.currentUser.uid+ '/details').set({
         email: this.state.email,
         uid: auth.currentUser.uid,
         username: this.state.username,
         // dob: null,
-        tripsCompleted: [],
-        tripsSaved: [],
-        tripsFavourited: [],
-        following: [],
-        followedBy: []
+        // tripsCompleted: [],
+        // tripsSaved: [],
+        // tripsFavourited: [],
+        // following: [],
+        // followedBy: []
       })
       this.setState({
         currentUser: auth.currentUser,
