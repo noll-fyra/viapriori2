@@ -1,5 +1,6 @@
 import React from 'react'
-import {Redirect} from 'react-router-dom'
+import {Link, Redirect} from 'react-router-dom'
+// import {Link} from 'react-router-dom'
 import db, {auth} from '../../utils/firebase'
 
 class Register extends React.Component {
@@ -12,25 +13,24 @@ class Register extends React.Component {
       // currentUser: auth.currentUser,
       redirectToReferrer: false
     }
-    this.handleEmail = this.handleEmail.bind(this)
     this.handleUsername = this.handleUsername.bind(this)
+    this.handleEmail = this.handleEmail.bind(this)
     this.handlePassword = this.handlePassword.bind(this)
-    // this.handleLogin = this.handleLogin.bind(this)
     this.handleSignup = this.handleSignup.bind(this)
     this.handleLogout = this.handleLogout.bind(this)
+    this.linkToRegister = null
   }
-
+  handleUsername (e) {
+    this.setState({
+      username: e.target.value
+    })
+  }
   handleEmail (e) {
     this.setState({
       email: e.target.value
     })
   }
 
-  handleUsername (e) {
-    this.setState({
-      username: e.target.value
-    })
-  }
   handlePassword (e) {
     this.setState({
       password: e.target.value
@@ -52,6 +52,10 @@ class Register extends React.Component {
   // }
 
   handleSignup (e) {
+      // this.linkToRegister.handleClick(new window.MouseEvent('click'))
+    // }
+
+    //
     const authPromise = auth.createUserWithEmailAndPassword(this.state.email, this.state.password)
     authPromise
     .then((user) => {
@@ -59,6 +63,7 @@ class Register extends React.Component {
         email: this.state.email,
         uid: auth.currentUser.uid,
         username: this.state.username,
+        // dob: null,
         tripsCompleted: [],
         tripsSaved: [],
         tripsFavourited: [],
@@ -95,16 +100,23 @@ class Register extends React.Component {
     }
     return (
       <div>
+        {/* {this.state.currentUser &&
+        <p>{this.state.currentUser.email}</p>
+        }
+        {!this.state.currentUser &&
+        <p>You must log in to view the page at {from.pathname}</p>
+        } */}
 
         {!this.state.currentUser &&
           <div>
             <label>
-              <input id='login-email' type='text' onChange={(e) => this.handleEmail(e)} placeholder='email' />
-              <input id='login-username' type='text' onChange={(e) => this.handleUsername(e)} placeholder='username' />
+              <input id='login-username' type='text' onChange={(e) => this.handleUsername(e)} placeholder='username'/>
+              <input id='login-email' type='text' onChange={(e) => this.handleEmail(e)} placeholder='email'/>
               <input id='login-password' type='password' onChange={(e) => this.handlePassword(e)} placeholder='password' />
             </label>
+            <button id='signup-button' onClick={(e)=> this.handleSignup(e)}>Sign Up</button>
+            <Link to='/register' className='registerButton' ref={(ref) => { this.linkToRegister = ref }} style={{display: 'none'}} />
 
-            <button id='signup-button' onClick={(e) => this.handleSignup(e)}>Sign Up</button>
           </div>
         }
         {this.state.currentUser &&
