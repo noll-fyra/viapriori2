@@ -5,6 +5,7 @@
   "dependencies": {
     "exif-js": "^2.2.1",
     "firebase": "^4.0.0",
+    "geocoder": "^0.2.3",
     "prop-types": "^15.5.10",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",

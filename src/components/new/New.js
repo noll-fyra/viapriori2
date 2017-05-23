@@ -1,5 +1,7 @@
 import React from 'react'
 import db, {auth, storage} from '../../utils/firebase'
+import EXIF from 'exif-js'
+import geocoder from 'geocoder'
 
 class New extends React.Component {
   constructor (props) {
@@ -10,7 +12,8 @@ class New extends React.Component {
       imageName: 'Add an image',
       imageLocation: '',
       imageDate: '',
-      description: ''
+      description: '',
+      image: ''
     }
     this.addedTitle = this.addedTitle.bind(this)
     this.addedStart = this.addedStart.bind(this)
@@ -39,9 +42,36 @@ class New extends React.Component {
   }
 
   addedFile (e) {
+    let image = e.target.files[0]
+    var reader = new window.FileReader()
+    reader.addEventListener('load', () => {
+      this.setState({
+        image: reader.result
+      })
+    })
+    reader.readAsDataURL(image)
+
     this.setState({
-      imagePath: e.target.files[0],
-      imageName: e.target.files[0].name
+      imagePath: image,
+      imageName: image.name
+    })
+
+    EXIF.getData(image, () => {
+      var date = image.exifdata.DateTime
+      console.log(image.exifdata);
+      var gpsTemp = [image.exifdata.GPSLatitude, image.exifdata.GPSLongitude]
+      var gps = [gpsTemp[0][0].numerator, gpsTemp[0][1].numerator, gpsTemp[0][2].numerator, gpsTemp[1][0].numerator, gpsTemp[1][1].numerator, gpsTemp[1][2].numerator]
+      var combined = [gps[0], gps[1]/60, gps[2] / 360000, gps[3], gps[4]/60, gps[5] / 360000]
+      this.setState({
+        imageDate: date,
+        imageLocation: {lat: combined[0] + combined[1] + combined[2], lng: combined[3] + combined[4] + combined[5]}
+      })
+      console.log(this.state.imageLocation);
+      geocoder.reverseGeocode(this.state.imageLocation.lat, this.state.imageLocation.lng, (err, data) => {
+
+        if (err) { console.log(err) }
+        console.log(data.results[0])
+      })
     })
   }
 
@@ -68,19 +98,30 @@ class New extends React.Component {
     return (
       <div>
         <div className='backdrop' onClick={this.props.onClose} />
+
+        {this.state.imagePath === '' &&
         <div className='modal'>
           <label>
             <span>{this.state.imageName}</span>
             <input className='fileInput' type='file' onChange={(e) => this.addedFile(e)} />
           </label>
         </div>
+        }
+
         {this.state.imagePath !== '' &&
-        <div className='modal modal2'>
-          <p><input type='text' onChange={(e) => this.addedTitle(e)} placeholder='Title' /></p>
-          <p><input type='date' onChange={(e) => this.addedStart(e)} /></p>
-          <p><input type='date' onChange={(e) => this.addedEnd(e)} /></p>
-          <p><textarea onChange={(e) => this.addedDescription(e)} /></p>
-          <button onClick={this.addActivity}>Post</button>
+        <div>
+
+          <div className='modal' style={{backgroundImage: `url(${this.state.image})`, backgroundSize: 'cover'}}>
+            {/* <img src={this.state.image} alt='' /> */}
+
+          </div>
+          <div className='modal modal2'>
+            <p><input type='text' onChange={(e) => this.addedTitle(e)} placeholder='Title' /></p>
+            <p><input type='date' onChange={(e) => this.addedStart(e)} /></p>
+            <p><input type='date' onChange={(e) => this.addedEnd(e)} /></p>
+            <p><textarea onChange={(e) => this.addedDescription(e)} /></p>
+            <button onClick={this.addActivity}>Post</button>
+          </div>
         </div>
         }
       </div>
