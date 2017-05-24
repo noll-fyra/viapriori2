@@ -7,6 +7,7 @@ import Home from '../home/Home'
 import SearchResults from '../search/SearchResults'
 import New from '../new/New'
 import Trips from '../trip/Trips'
+import MyActs from '../trip/MyActs'
 import TestTrip from '../trip/TestTrip'
 import Profile from '../user/Profile'
 import Planned from '../planned/Planned'
@@ -53,6 +54,7 @@ class App extends Component {
           <Route path='/new' component={() => <New tripid='1' />} />
           <Route path='/planned' component={Planned} />
           <Route path='/saved' component={Saved} />
+          <Route path='/activities' component={MyActs} />
           <PrivateRoute exact path='/trips' component={Trips} />
           <PrivateRoute path='/trips/:id' component={TestTrip} />
           <PrivateRoute path='/profile' component={Profile} />

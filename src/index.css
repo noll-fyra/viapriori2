@@ -43,6 +43,7 @@ body {
   justify-content: center;
   align-items: center;
 }
+
 .profileDiv {
   width: 50%;
   height: 50%;
@@ -52,19 +53,19 @@ body {
   z-index: 9999;
 }
 
-.editImage{
-  color:black;
-  width:60%;
-  height:15%;
+.editImage {
+  color: black;
+  width: 60%;
+  height: 15%;
   text-align: center;
-  display:none;
-  position:relative;
+  display: none;
+  position: relative;
   background-color: rgba(255, 255, 255, 0.7);
-  top:30%;
+  top: 30%;
 }
 
-.profile:hover .editImage{
-  display:inline;
+.profile:hover .editImage {
+  display: inline;
 }
 
 label:focus {
@@ -103,7 +104,6 @@ label:focus {
 }
 
 .modal2 {
-  height: 20%;
   top: 41%;
 }
 

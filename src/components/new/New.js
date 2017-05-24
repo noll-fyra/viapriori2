@@ -2,7 +2,7 @@ import React from 'react'
 import db, {auth, storage} from '../../utils/firebase'
 import EXIF from 'exif-js'
 import geocoder from 'geocoder'
-import latLng, {location} from '../../utils/geocoding'
+import latLng, {getLocation} from '../../utils/geocoding'
 import formatDate from '../../utils/format'
 import Rating from '../rating/Rating'
 
@@ -17,7 +17,8 @@ class New extends React.Component {
       date: '',
       description: '',
       image: '',
-      location: '',
+      locality: '',
+      country: '',
       rating: 0
     }
     this.addedTitle = this.addedTitle.bind(this)
@@ -49,18 +50,25 @@ class New extends React.Component {
     })
 
     EXIF.getData(image, () => {
+      // var x = new Date(image.exifdata.DateTime)
+      console.log(image.exifdata.DateTime)
+      console.log(formatDate(image.exifdata.DateTime))
+      let parsedDate = Date.parse(formatDate(image.exifdata.DateTime))
+      let offset = (new Date().getTimezoneOffset()) * 60 * 1000
+      console.log(parsedDate)
+      console.log(parsedDate + offset)
       this.setState({
-        date: formatDate(image.exifdata.DateTime),
+        date: parsedDate + offset,
         imageLatLng: {lat: latLng(image).lat, lng: latLng(image).lng}
       })
-      // console.log(image.exifdata)
+      console.log(image.exifdata)
       if (this.state.imageLatLng.lat && this.state.imageLatLng.lng) {
         geocoder.reverseGeocode(this.state.imageLatLng.lat, this.state.imageLatLng.lng, (err, data) => {
           if (err) { console.log(err) }
           if (data.results[0]) {
-            let loc = location(data.results[0])[0] + ', ' + location(data.results[0])[1]
             this.setState({
-              location: loc
+              locality: getLocation(data.results[0])[0],
+              country: getLocation(data.results[0])[1]
             })
           }
         })
@@ -83,13 +91,15 @@ class New extends React.Component {
   addActivity () {
     console.log(this.state.imagePath)
     storage.ref(auth.currentUser.uid + '/' + this.props.tripid + '/images/' + this.state.imageName).put(this.state.imagePath).then((snap) => {
+      // console.log(snap.val());
       db.ref('activities/').push({
         trip: this.props.tripid,
         section: 5,
         user: auth.currentUser.uid,
         title: this.state.title,
         date: this.state.date,
-        location: this.state.location,
+        locality: this.state.locality,
+        country: this.state.country,
         imageLatLng: this.state.imageLatLng,
         image: auth.currentUser.uid + '/' + this.props.tripid + '/images/' + this.state.imageName,
         description: this.state.description,
@@ -120,12 +130,11 @@ class New extends React.Component {
               <span>Post a photo</span>
               <input className='fileInput' type='file' onChange={(e) => this.addedFile(e)} />
             </label>
-
           </div>
           <div className='modal modal2'>
             <p>Activity: <input type='text' onChange={(e) => this.addedTitle(e)} placeholder='' /></p>
-            <p>Date: <b>{this.state.date}</b></p>
-            <p>Location: <b>{this.state.location}</b></p>
+            <p>Date: <b>{new Date(this.state.date).toString()}</b></p>
+            <p>Location: <b>{this.state.locality + ', ' + this.state.country}</b></p>
             <p>Caption: <textarea onChange={(e) => this.addedDescription(e)} /></p>
             <Rating stars={this.state.rating} starClick={this.starClick} />
             <button onClick={this.addActivity}>Share</button>
