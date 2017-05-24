@@ -1,9 +1,6 @@
 import React from 'react'
-import db, {auth} from '../../utils/firebase'
-// import search from '../../utils/search'
-// import SearchForm from '../search/SearchForm'
-// import TripOverview from '../trip/TripOverview'
-// import ProfileDetails from './ProfileDetails'
+import db, {auth, storage} from '../../utils/firebase'
+
 
 class Profile extends React.Component {
   constructor (props) {
@@ -12,22 +9,41 @@ class Profile extends React.Component {
       user: '',
       searchQuery: '',
       imagePath: '',
-      imageName: 'Add Profile Picture',
+      // imageName: 'Add Profile Picture',
       image: ''
     }
+    this.addProfilePic = this.addProfilePic.bind(this)
+
   }
   componentDidMount () {
     db.ref('users/' + auth.currentUser.uid).on('value', (snapshot) => {
+
       this.setState({
-        username: snapshot.val().details.username,
-        email: snapshot.val().details.email,
+        imageName: snapshot.val().details.imageName,
+        imagePath: snapshot.val().details.imagePath,
+          username: snapshot.val().details.username,
+            email: snapshot.val().details.email,
+
       })
+      this.displayProfile()
     })
+  }
+      displayProfile(){
+        var storageRef = storage.ref();
+        storageRef.child(this.state.imagePath).getDownloadURL().then((url) => {
+          console.log(url)
+          this.setState({
+            image:url
+          })
+        })
+
+
+
+
   }
   addProfilePic(e) {
 
     let image = e.target.files[0]
-    console.log(image)
     var reader = new window.FileReader()
     reader.addEventListener('load', () => {
       this.setState({
@@ -41,10 +57,16 @@ class Profile extends React.Component {
       imageName: image.name
     })
 
-    // db.ref('users/' + auth.currentUser.uid+ '/details').update({
-      // profileURL: image
-    // })
+    storage.ref(auth.currentUser.uid + '/profile/images/' + image.name).put(image).then((snap) => {
+      // console.log(url)
+      db.ref('users/' + auth.currentUser.uid +'/details').update({
+        imageName: image.name,
+        imagePath: auth.currentUser.uid + '/profile/images/' + image.name
+      })
+    })
+
   }
+
   render () {
 
     return (
