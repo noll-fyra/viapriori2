@@ -10,52 +10,55 @@ class Profile extends React.Component {
       searchQuery: '',
       imagePath: '',
       // imageName: 'Add Profile Picture',
-      image: ''
+      // image: 'a'
     }
     this.addProfilePic = this.addProfilePic.bind(this)
 
   }
-  componentDidMount () {
+  componentWillMount () {
     db.ref('users/' + auth.currentUser.uid).on('value', (snapshot) => {
 
       this.setState({
         imageName: snapshot.val().details.imageName,
         imagePath: snapshot.val().details.imagePath,
-          username: snapshot.val().details.username,
-            email: snapshot.val().details.email,
+        username: snapshot.val().details.username,
+        email: snapshot.val().details.email,
+        image: snapshot.val().details.image
 
       })
-      this.displayProfile()
     })
   }
-      displayProfile(){
-        var storageRef = storage.ref();
-        storageRef.child(this.state.imagePath).getDownloadURL().then((url) => {
-          console.log(url)
-          this.setState({
-            image:url
-          })
-        })
+//   componentDidUpdate(){
+//   // only update chart if the data has changed
+//     storage.refFromURL('gs://via-priori.appspot.com/'+this.state.imagePath).getDownloadURL().then((url) => {
+//       console.log(this.state.image,'this state image')
+//       console.log(this.state.username, 'username')
+//       console.log(url, 'url')
+//       if (this.state.image !== url) {
+//       this.setState({
+//         image: url
+//       })
+//       console.log('done')
+//     }
+//     })
+// }
 
 
-
-
-  }
   addProfilePic(e) {
 
     let image = e.target.files[0]
-    var reader = new window.FileReader()
-    reader.addEventListener('load', () => {
-      this.setState({
-        image: reader.result
-      })
-    })
-    reader.readAsDataURL(image)
-
-    this.setState({
-      imagePath: image,
-      imageName: image.name
-    })
+    // var reader = new window.FileReader()
+    // reader.addEventListener('load', () => {
+    //   this.setState({
+    //     image: reader.result
+    //   })
+    // })
+    // reader.readAsDataURL(image)
+    //
+    // this.setState({
+    //   imagePath: image,
+    //   imageName: image.name
+    // })
 
     storage.ref(auth.currentUser.uid + '/profile/images/' + image.name).put(image).then((snap) => {
       // console.log(url)
@@ -63,12 +66,25 @@ class Profile extends React.Component {
         imageName: image.name,
         imagePath: auth.currentUser.uid + '/profile/images/' + image.name
       })
+      this.displayProfile()
     })
+  }
 
+  displayProfile(){
+    console.log('start')
+    storage.refFromURL('gs://via-priori.appspot.com/'+this.state.imagePath).getDownloadURL().then((url) => {
+      // console.log(this.state.image,'this state image')
+      console.log(this.state.username, 'username')
+      console.log(url, 'url')
+      db.ref('users/' + auth.currentUser.uid +'/details').update({
+        image: url
+      })
+    })
   }
 
   render () {
-
+// console.log(this.state.image)
+// console.log(this.state.username)
     return (
       <div>
         <h1> User Profile</h1>
@@ -94,7 +110,7 @@ class Profile extends React.Component {
 
 
 <h4> Name: {this.state.username}</h4>
-<h4> email: {auth.currentUser.email}</h4>
+<h4> Email: {auth.currentUser.email}</h4>
       </div>
        //
       //
