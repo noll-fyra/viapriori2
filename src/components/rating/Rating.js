@@ -19,11 +19,11 @@ class Rating extends React.Component {
   render () {
     return (
       <div>
-        <span className={'star ' + (this.state.stars >= 1 ? 'bright' : 'dull')} onClick={() => this.starClick(1)}>Star</span>
-        <span className={'star ' + (this.state.stars >= 2 ? 'bright' : 'dull')} onClick={() => this.starClick(2)}>Star</span>
-        <span className={'star ' + (this.state.stars >= 3 ? 'bright' : 'dull')} onClick={() => this.starClick(3)}>Star</span>
-        <span className={'star ' + (this.state.stars >= 4 ? 'bright' : 'dull')} onClick={() => this.starClick(4)}>Star</span>
-        <span className={'star ' + (this.state.stars >= 5 ? 'bright' : 'dull')} onClick={() => this.starClick(5)}>Star</span>
+        <span className={'star ' + (this.state.stars >= 1 ? 'bright' : 'dull')} onClick={() => this.starClick(1)}>Star</span>{' '}
+        <span className={'star ' + (this.state.stars >= 2 ? 'bright' : 'dull')} onClick={() => this.starClick(2)}>Star</span>{' '}
+        <span className={'star ' + (this.state.stars >= 3 ? 'bright' : 'dull')} onClick={() => this.starClick(3)}>Star</span>{' '}
+        <span className={'star ' + (this.state.stars >= 4 ? 'bright' : 'dull')} onClick={() => this.starClick(4)}>Star</span>{' '}
+        <span className={'star ' + (this.state.stars >= 5 ? 'bright' : 'dull')} onClick={() => this.starClick(5)}>Star</span>{' '}
       </div>
     )
   }

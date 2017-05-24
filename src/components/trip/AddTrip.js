@@ -60,7 +60,7 @@ class AddTrip extends React.Component {
       newObj[key] = true
       db.ref('users/' + auth.currentUser.uid + '/trips').set(newObj)
     })
-    window.location = '/trips/' + key
+    // window.location = '/trips/' + key
   }
 
   render () {

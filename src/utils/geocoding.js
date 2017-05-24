@@ -24,7 +24,7 @@ function latLng (image) {
   return {lat: null, lng: null}
 }
 
-function location (data) {
+function getLocation (data) {
   let locality = null
   let country = null
   data.address_components.forEach((address) => {
@@ -39,4 +39,4 @@ function location (data) {
 }
 
 export default latLng
-export {location}
+export {getLocation}
