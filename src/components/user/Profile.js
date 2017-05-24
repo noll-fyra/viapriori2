@@ -1,9 +1,6 @@
 import React from 'react'
 import db, {auth, storage} from '../../utils/firebase'
-// import search from '../../utils/search'
-// import SearchForm from '../search/SearchForm'
-// import TripOverview from '../trip/TripOverview'
-// import ProfileDetails from './ProfileDetails'
+
 
 class Profile extends React.Component {
   constructor (props) {
@@ -12,7 +9,7 @@ class Profile extends React.Component {
       user: '',
       searchQuery: '',
       imagePath: '',
-      imageName: 'Add Profile Picture',
+      // imageName: 'Add Profile Picture',
       image: ''
     }
     this.addProfilePic = this.addProfilePic.bind(this)
@@ -20,12 +17,28 @@ class Profile extends React.Component {
   }
   componentDidMount () {
     db.ref('users/' + auth.currentUser.uid).on('value', (snapshot) => {
+
       this.setState({
-        username: snapshot.val().details.username,
-        email: snapshot.val().details.email,
-        image: snapshot.val().details.image
+        imageName: snapshot.val().details.imageName,
+        imagePath: snapshot.val().details.imagePath,
+          username: snapshot.val().details.username,
+            email: snapshot.val().details.email,
+
       })
+      this.displayProfile()
     })
+  }
+      displayProfile(){
+        var storageRef = storage.ref();
+        storageRef.child(this.state.imagePath).getDownloadURL().then((url) => {
+          console.log(url)
+          this.setState({
+            image:url
+          })
+        })
+
+
+
 
   }
   addProfilePic(e) {
@@ -44,18 +57,18 @@ class Profile extends React.Component {
       imageName: image.name
     })
 
-      storage.ref(auth.currentUser.uid + '/profile/images/' + this.state.imageName).put(this.state.imagePath).then((snap) => {
-        db.ref('users/' + auth.currentUser.uid +'/details').push({
-          image: auth.currentUser.uid + '/profile/images/' + this.state.imageName,
-        })
+    storage.ref(auth.currentUser.uid + '/profile/images/' + image.name).put(image).then((snap) => {
+      // console.log(url)
+      db.ref('users/' + auth.currentUser.uid +'/details').update({
+        imageName: image.name,
+        imagePath: auth.currentUser.uid + '/profile/images/' + image.name
       })
-
+    })
 
   }
+
   render () {
-    console.log(this.state.imagePath)
-    console.log(this.state.imageName)
-    // console.log(this.state.image)
+
     return (
       <div>
         <h1> User Profile</h1>
