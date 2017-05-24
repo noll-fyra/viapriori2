@@ -50,7 +50,7 @@ class App extends Component {
           <Nav onChange={this.search} onKeyUp={(e) => this.handleSearch(e)} linkToSearch={(ref) => { this.linkToSearch = ref }} />
           <Route exact path='/' component={Home} />
           <Route path='/search' component={() => <SearchResults searchQuery={this.state.searchQuery} />} />
-          <Route path='/new' component={New} />
+          <Route path='/new' component={() => <New tripid='1' />} />
           <Route path='/planned' component={Planned} />
           <Route path='/saved' component={Saved} />
           <PrivateRoute exact path='/trips' component={Trips} />

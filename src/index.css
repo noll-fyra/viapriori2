@@ -13,16 +13,22 @@ body {
   z-index: -1;
 }
 
-label {
+.imageLabel, .imageLabelActive {
   font-size: 1.25em;
   font-weight: 700;
   width: 100%;
   height: 100%;
-  color: white;
-  background-color: black;
+  /*border: 1px solid rgba(50, 50, 50, 0.25);*/
+  color: rgba(50, 50, 50, 0.75);
   display: flex;
   justify-content: center;
   align-items: center;
+  /*border-radius: 8px;*/
+}
+
+.imageLabelActive {
+  color: rgba(0, 0, 0, 0);
+  background-color: rgba(0, 0, 0, 0);
 }
 
 .profile {
@@ -77,20 +83,28 @@ label:focus {
 }
 
 .modal {
-  width: 50%;
-  height: 50%;
+  width: 40%;
+  height: 40%;
+  padding-top: 0%;
   position: absolute;
-  top: 50%;
-  left: 50%;
-  margin-top: -25%;
-  margin-left: -25%;
+  top: 1%;
+  left: 30%;
+  margin-top: 16px;
+  border: 1px solid rgba(50, 50, 50, 0.25);
+  border-radius: 8px;
+  /*margin-left: -25%;*/
   z-index: 9999;
-  background: yellow;
+}
+
+.modalWrapper {
+  position: relative;
+  padding-top: 75%;
+  height: 0;
 }
 
 .modal2 {
   height: 20%;
-  top: 100%;
+  top: 41%;
 }
 
 .topNav a {
@@ -103,4 +117,16 @@ label:focus {
 
 li {
   list-style: none;
+}
+
+.star {
+  color: yellow;
+}
+
+.bright {
+  background-color: red;
+}
+
+.dull {
+  background-color: black;
 }
