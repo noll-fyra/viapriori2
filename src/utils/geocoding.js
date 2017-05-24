@@ -1,4 +1,9 @@
 function latLng (image) {
+
+
+  // 1 1 1 denominator
+
+
   let data = image.exifdata || null
 
   if (data.GPSLatitude && data.GPSLongitude && data.GPSLatitudeRef && data.GPSLongitudeRef) {
@@ -23,6 +28,8 @@ function latLng (image) {
   }
   return {lat: null, lng: null}
 }
+
+
 
 function getLocation (data) {
   let locality = null

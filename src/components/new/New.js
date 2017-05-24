@@ -10,6 +10,11 @@ class New extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
+      newTrip: false,
+      newTripName: '',
+      trips: [],
+      tripIDs: [],
+      tripIndex: 0,
       title: '',
       imagePath: '',
       imageName: '',
@@ -21,14 +26,50 @@ class New extends React.Component {
       country: '',
       rating: 0
     }
-    this.addedTitle = this.addedTitle.bind(this)
+    this.chooseTrip = this.chooseTrip.bind(this)
+    this.startNewTrip = this.startNewTrip.bind(this)
+    this.addedTripTitle = this.addedTripTitle.bind(this)
+    this.addedActivityTitle = this.addedActivityTitle.bind(this)
     this.addedFile = this.addedFile.bind(this)
     this.addedDescription = this.addedDescription.bind(this)
     this.starClick = this.starClick.bind(this)
     this.addActivity = this.addActivity.bind(this)
   }
 
-  addedTitle (e) {
+  componentDidMount () {
+    db.ref('users/' + auth.currentUser.uid + '/trips').once('value', (snap) => {
+      Object.keys(snap.val()).forEach((trip) => {
+        this.setState({
+          tripIDs: this.state.tripIDs.concat(trip)
+        })
+        db.ref('trips/' + trip).once('value', (snap) => {
+          this.setState({
+            trips: this.state.trips.concat(snap.val().title)
+          })
+        })
+      })
+    })
+  }
+
+  chooseTrip (e) {
+    this.setState({
+      tripIndex: e.target.selectedIndex
+    })
+  }
+
+  startNewTrip (bool) {
+    this.setState({
+      newTrip: bool
+    })
+  }
+
+  addedTripTitle (e) {
+    this.setState({
+      newTripName: e.target.value
+    })
+  }
+
+  addedActivityTitle (e) {
     this.setState({
       title: e.target.value
     })
@@ -43,25 +84,29 @@ class New extends React.Component {
       })
     })
     reader.readAsDataURL(image)
-    console.log(image)
+    // console.log(image)
     this.setState({
       imagePath: image,
       imageName: image.name
     })
 
     EXIF.getData(image, () => {
-      // var x = new Date(image.exifdata.DateTime)
-      console.log(image.exifdata.DateTime)
-      console.log(formatDate(image.exifdata.DateTime))
+      console.log(image.exifdata);
+      let date = Date.now()
+      if (image.exifdata.DateTime) {
+      // console.log(image.exifdata.DateTime)
+      // console.log(formatDate(image.exifdata.DateTime))
       let parsedDate = Date.parse(formatDate(image.exifdata.DateTime))
       let offset = (new Date().getTimezoneOffset()) * 60 * 1000
-      console.log(parsedDate)
-      console.log(parsedDate + offset)
+      // console.log(parsedDate)
+      // console.log(parsedDate + offset)
+      date = parsedDate + offset
+      }
       this.setState({
-        date: parsedDate + offset,
+        date: date,
         imageLatLng: {lat: latLng(image).lat, lng: latLng(image).lng}
       })
-      console.log(image.exifdata)
+      // console.log(image.exifdata)
       if (this.state.imageLatLng.lat && this.state.imageLatLng.lng) {
         geocoder.reverseGeocode(this.state.imageLatLng.lat, this.state.imageLatLng.lng, (err, data) => {
           if (err) { console.log(err) }
@@ -84,16 +129,15 @@ class New extends React.Component {
 
   starClick (number) {
     this.setState({
-      stars: number
+      rating: number
     })
   }
 
   addActivity () {
-    console.log(this.state.imagePath)
+    let trip = this.state.newTrip ? this.state.newTripName : this.state.tripIDs.reverse()[this.state.tripIndex]
     storage.ref(auth.currentUser.uid + '/' + this.props.tripid + '/images/' + this.state.imageName).put(this.state.imagePath).then((snap) => {
-      // console.log(snap.val());
       db.ref('activities/').push({
-        trip: this.props.tripid,
+        trip: trip,
         section: 5,
         user: auth.currentUser.uid,
         title: this.state.title,
@@ -109,8 +153,13 @@ class New extends React.Component {
   }
 
   render () {
+    const temp = this.state.trips.slice().reverse()
+    const options = temp.map((title) => {
+      return <option>{title}</option>
+    })
     return (
       <div className='modalWrapper'>
+
         <div className='backdrop' onClick={this.props.onClose} />
 
         {this.state.imagePath === '' &&
@@ -132,9 +181,26 @@ class New extends React.Component {
             </label>
           </div>
           <div className='modal modal2'>
-            <p>Activity: <input type='text' onChange={(e) => this.addedTitle(e)} placeholder='' /></p>
+            {!this.state.newTrip &&
+            <p>Add to:
+              <select onChange={this.chooseTrip}>
+                {options}
+              </select> or <button onClick={() => this.startNewTrip(true)}>Start a new trip</button></p>
+            }
+            {this.state.newTrip &&
+              <p><input type='text' onChange={this.addedTripTitle} placeholder='Add new trip' />
+            or <button onClick={() => this.startNewTrip(false)}>add to existing trip</button></p>
+            }
+            rating: {this.state.rating}
+
+            <p>Activity: <input type='text' onChange={(e) => this.addedActivityTitle(e)} placeholder='' /></p>
             <p>Date: <b>{new Date(this.state.date).toString()}</b></p>
+            {this.state.locality && this.state.country &&
             <p>Location: <b>{this.state.locality + ', ' + this.state.country}</b></p>
+            }
+            {!this.state.locality && !this.state.country &&
+            <p>Location: <input type='text' placeholder='no loc data' /></p>
+            }
             <p>Caption: <textarea onChange={(e) => this.addedDescription(e)} /></p>
             <Rating stars={this.state.rating} starClick={this.starClick} />
             <button onClick={this.addActivity}>Share</button>

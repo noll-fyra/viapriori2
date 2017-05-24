@@ -51,7 +51,7 @@ class MyActs extends React.Component {
 
   render () {
     const x = this.state.images.map((url) => {
-      return <li><img style={{width: '20%', height: '20%', imageOrientation: 'flip'}} src={url} alt='' /></li>
+      return <li><img style={{width: '20%', height: '20%', imageOrientation: 'from-image'}} src={url} alt='' /></li>
     })
     return (
       <div>
