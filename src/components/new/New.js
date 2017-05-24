@@ -91,16 +91,16 @@ class New extends React.Component {
     })
 
     EXIF.getData(image, () => {
-      console.log(image.exifdata);
+      console.log(image.exifdata)
       let date = Date.now()
       if (image.exifdata.DateTime) {
       // console.log(image.exifdata.DateTime)
       // console.log(formatDate(image.exifdata.DateTime))
-      let parsedDate = Date.parse(formatDate(image.exifdata.DateTime))
-      let offset = (new Date().getTimezoneOffset()) * 60 * 1000
+        let parsedDate = Date.parse(formatDate(image.exifdata.DateTime))
+        let offset = (new Date().getTimezoneOffset()) * 60 * 1000
       // console.log(parsedDate)
       // console.log(parsedDate + offset)
-      date = parsedDate + offset
+        date = parsedDate + offset
       }
       this.setState({
         date: date,
@@ -134,11 +134,29 @@ class New extends React.Component {
   }
 
   addActivity () {
-    let trip = this.state.newTrip ? this.state.newTripName : this.state.tripIDs.reverse()[this.state.tripIndex]
+    let newTripID = ''
+// create new trip if newTrip is true
+    if (this.state.newTrip) {
+      let trips = db.ref('trips')
+      let newRef = trips.push()
+      newRef.set({
+        user: auth.currentUser.uid,
+        title: this.state.newTripName
+      })
+      let key = newRef.key
+      newTripID = key
+      db.ref('users/' + auth.currentUser.uid + '/trips').once('value', snap => {
+        let newObj = snap.val() || {}
+        newObj[key] = true
+        db.ref('users/' + auth.currentUser.uid + '/trips').set(newObj)
+      })
+    }
+    let tripID = this.state.newTrip ? newTripID : this.state.tripIDs.reverse()[this.state.tripIndex]
+// save photo
     storage.ref(auth.currentUser.uid + '/' + this.props.tripid + '/images/' + this.state.imageName).put(this.state.imagePath).then((snap) => {
+// create activity
       db.ref('activities/').push({
-        trip: trip,
-        section: 5,
+        trip: tripID,
         user: auth.currentUser.uid,
         title: this.state.title,
         date: this.state.date,
@@ -155,7 +173,7 @@ class New extends React.Component {
   render () {
     const temp = this.state.trips.slice().reverse()
     const options = temp.map((title) => {
-      return <option>{title}</option>
+      return <option key={title}>{title}</option>
     })
     return (
       <div className='modalWrapper'>
@@ -191,7 +209,6 @@ class New extends React.Component {
               <p><input type='text' onChange={this.addedTripTitle} placeholder='Add new trip' />
             or <button onClick={() => this.startNewTrip(false)}>add to existing trip</button></p>
             }
-            rating: {this.state.rating}
 
             <p>Activity: <input type='text' onChange={(e) => this.addedActivityTitle(e)} placeholder='' /></p>
             <p>Date: <b>{new Date(this.state.date).toString()}</b></p>

@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import {BrowserRouter as Router, Route, Redirect} from 'react-router-dom'
 import Nav from '../nav/Nav'
-import Login from '../login/Login'
-import Register from '../register/Register'
+import Login from '../auth/Login'
+import Register from '../auth/Register'
 import Home from '../home/Home'
 import SearchResults from '../search/SearchResults'
 import New from '../new/New'
@@ -12,14 +12,15 @@ import TestTrip from '../trip/TestTrip'
 import Profile from '../user/Profile'
 import Planned from '../planned/Planned'
 import Saved from '../saved/Saved'
-import {auth, storageKey, isAuthenticated} from '../../utils/firebase'
+import {auth, storageKey, isAuthenticated, logOut} from '../../utils/firebase'
 import search from '../../utils/search'
 
 class App extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      searchQuery: ''
+      searchQuery: '',
+      uid: null
     }
     this.search = search.bind(this)
     this.handleSearch = this.handleSearch.bind(this)
@@ -30,10 +31,14 @@ class App extends Component {
     auth.onAuthStateChanged(user => {
       if (user) {
         window.localStorage.setItem(storageKey, user.uid)
-        // this.setState({uid: user.uid})
+        this.setState({
+          uid: user.uid
+        })
       } else {
         window.localStorage.removeItem(storageKey)
-        // this.setState({uid: null})
+        this.setState({
+          uid: null
+        })
       }
     })
   }
@@ -48,7 +53,7 @@ class App extends Component {
     return (
       <Router>
         <div>
-          <Nav onChange={this.search} onKeyUp={(e) => this.handleSearch(e)} linkToSearch={(ref) => { this.linkToSearch = ref }} />
+          <Nav isAuthenticated={isAuthenticated()} logOut={logOut} onChange={this.search} onKeyUp={(e) => this.handleSearch(e)} linkToSearch={(ref) => { this.linkToSearch = ref }} />
           <Route exact path='/' component={Home} />
           <Route path='/search' component={() => <SearchResults searchQuery={this.state.searchQuery} />} />
           <Route path='/new' component={() => <New tripid='1' />} />

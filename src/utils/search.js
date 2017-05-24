@@ -1,3 +1,4 @@
+// search/filter
 function search (e) {
   let searchQuery = e.target.value.toLowerCase()
   this.setState({

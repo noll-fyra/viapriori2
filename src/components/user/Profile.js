@@ -1,7 +1,6 @@
 import React from 'react'
 import db, {auth, storage} from '../../utils/firebase'
 
-
 class Profile extends React.Component {
   constructor (props) {
     super(props)
@@ -13,36 +12,29 @@ class Profile extends React.Component {
       image: ''
     }
     this.addProfilePic = this.addProfilePic.bind(this)
-
   }
   componentDidMount () {
     db.ref('users/' + auth.currentUser.uid).on('value', (snapshot) => {
-
       this.setState({
         imageName: snapshot.val().details.imageName,
         imagePath: snapshot.val().details.imagePath,
-          username: snapshot.val().details.username,
-            email: snapshot.val().details.email,
+        username: snapshot.val().details.username,
+        email: snapshot.val().details.email
 
       })
       this.displayProfile()
     })
   }
-      displayProfile(){
-        var storageRef = storage.ref();
-        storageRef.child(this.state.imagePath).getDownloadURL().then((url) => {
-          console.log(url)
-          this.setState({
-            image:url
-          })
-        })
-
-
-
-
+  displayProfile () {
+    var storageRef = storage.ref()
+    storageRef.child(this.state.imagePath).getDownloadURL().then((url) => {
+      console.log(url)
+      this.setState({
+        image: url
+      })
+    })
   }
-  addProfilePic(e) {
-
+  addProfilePic (e) {
     let image = e.target.files[0]
     var reader = new window.FileReader()
     reader.addEventListener('load', () => {
@@ -59,16 +51,14 @@ class Profile extends React.Component {
 
     storage.ref(auth.currentUser.uid + '/profile/images/' + image.name).put(image).then((snap) => {
       // console.log(url)
-      db.ref('users/' + auth.currentUser.uid +'/details').update({
+      db.ref('users/' + auth.currentUser.uid + '/details').update({
         imageName: image.name,
         imagePath: auth.currentUser.uid + '/profile/images/' + image.name
       })
     })
-
   }
 
   render () {
-
     return (
       <div>
         <h1> User Profile</h1>
@@ -83,7 +73,7 @@ class Profile extends React.Component {
         }
 
         {this.state.imagePath !== '' &&
-        <div className = 'profileDiv'>
+        <div className='profileDiv'>
 
           <label className='profile' style={{backgroundImage: `url(${this.state.image})`, backgroundSize: 'cover'}}>
             <span className='editImage'>Edit Image</span>
@@ -92,9 +82,8 @@ class Profile extends React.Component {
         </div>
 }
 
-
-<h4> Name: {this.state.username}</h4>
-<h4> email: {auth.currentUser.email}</h4>
+        <h4> Name: {this.state.username}</h4>
+        <h4> email: {auth.currentUser.email}</h4>
       </div>
        //
       //

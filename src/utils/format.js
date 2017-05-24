@@ -1,3 +1,4 @@
+// turn an EXIF DateTime string into a UTC string
 function formatDate (EXIFDate) {
   let newDate = EXIFDate.split(' ')[0].split(':')
   let modDate = newDate[0] + '-' + newDate[1] + '-' + newDate[2]
