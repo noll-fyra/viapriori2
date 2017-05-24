@@ -1,5 +1,5 @@
 import React from 'react'
-import db, {auth} from '../../utils/firebase'
+import db, {auth, storage} from '../../utils/firebase'
 // import search from '../../utils/search'
 // import SearchForm from '../search/SearchForm'
 // import TripOverview from '../trip/TripOverview'
@@ -15,19 +15,22 @@ class Profile extends React.Component {
       imageName: 'Add Profile Picture',
       image: ''
     }
+    this.addProfilePic = this.addProfilePic.bind(this)
+
   }
   componentDidMount () {
     db.ref('users/' + auth.currentUser.uid).on('value', (snapshot) => {
       this.setState({
         username: snapshot.val().details.username,
         email: snapshot.val().details.email,
+        image: snapshot.val().details.image
       })
     })
+
   }
   addProfilePic(e) {
 
     let image = e.target.files[0]
-    console.log(image)
     var reader = new window.FileReader()
     reader.addEventListener('load', () => {
       this.setState({
@@ -41,12 +44,18 @@ class Profile extends React.Component {
       imageName: image.name
     })
 
-    // db.ref('users/' + auth.currentUser.uid+ '/details').update({
-      // profileURL: image
-    // })
+      storage.ref(auth.currentUser.uid + '/profile/images/' + this.state.imageName).put(this.state.imagePath).then((snap) => {
+        db.ref('users/' + auth.currentUser.uid +'/details').push({
+          image: auth.currentUser.uid + '/profile/images/' + this.state.imageName,
+        })
+      })
+
+
   }
   render () {
-
+    console.log(this.state.imagePath)
+    console.log(this.state.imageName)
+    // console.log(this.state.image)
     return (
       <div>
         <h1> User Profile</h1>
