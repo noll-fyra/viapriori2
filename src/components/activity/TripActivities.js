@@ -9,21 +9,18 @@ class TripActivities extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-        isNewTrip: false,
-        newTripName: '',
         trips: [],
         tripIDs: [],
-        tripIndex: 0,
-        title: '',
-        imagePath: '',
-        imageName: '',
-        imageLatLng: '',
-        date: '',
-        description: '',
-        image: '',
-        locality: '',
-        country: '',
-        rating: 0
+        title: [],
+        imagePath: [],
+        imageName: [],
+        imageLatLng: [],
+        date: [],
+        description: [],
+        image: [],
+        locality: [],
+        country: [],
+        rating: []
     }
 
   }
@@ -34,6 +31,7 @@ class TripActivities extends React.Component {
       // console.log(snap.val())
       // console.log(Object.keys(snap.val()))
         let activityArray = Object.keys(snap.val())
+      
 activityArray.forEach((activity)=>{
 
   db.ref('activities/'+activity).once('value').then((snapshot) => {
@@ -79,6 +77,7 @@ activityArray.forEach((activity)=>{
   }
 
   render () {
+
     return (
       <div>
         <h1>Trip Activities - To Be routed/component elsewhere</h1>
