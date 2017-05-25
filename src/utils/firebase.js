@@ -16,8 +16,7 @@ const storageKey = 'KEY_FOR_LOCAL_STORAGE'
 export default db
 export {auth, storage, storageKey}
 export const isAuthenticated = () => {
-  // return !!auth.currentUser || !!window.localStorage.getItem(storageKey)
-  return !!auth.currentUser
+  return !!auth.currentUser || !!window.localStorage.getItem(storageKey)
 }
 export const logOut = () => {
   auth.signOut()

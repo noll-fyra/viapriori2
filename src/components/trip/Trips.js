@@ -1,8 +1,6 @@
 import React from 'react'
-import AddTrip from './AddTrip'
+import NewTrip from './NewTrip'
 import MyTrips from './MyTrips'
-// import TestTrip from './TestTrip'
-// import {BrowserRouter as Router, Route} from 'react-router-dom'
 
 class Trips extends React.Component {
   constructor (props) {
@@ -44,7 +42,7 @@ class Trips extends React.Component {
     return (
       <div>
         <button onClick={this.openAddTrip}>New Trip</button>
-        <AddTrip isOpen={this.state.addTripIsOpen} onOpen={this.openAddTrip} onClose={this.closeAddTrip} />
+        <NewTrip isOpen={this.state.addTripIsOpen} onOpen={this.openAddTrip} onClose={this.closeAddTrip} />
         <MyTrips />
       </div>
     )

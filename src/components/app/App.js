@@ -8,7 +8,7 @@ import SearchResults from '../search/SearchResults'
 import NewActivity from '../activity/NewActivity'
 import Trips from '../trip/Trips'
 import MyActs from '../trip/MyActs'
-import TestTrip from '../trip/TestTrip'
+// import TestTrip from '../trip/TestTrip'
 import Profile from '../user/Profile'
 import Planned from '../planned/Planned'
 import Saved from '../saved/Saved'
@@ -19,8 +19,8 @@ class App extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      searchQuery: '',
-      uid: null
+      searchQuery: ''
+      // uid: null
     }
     this.search = search.bind(this)
     this.handleSearch = this.handleSearch.bind(this)
@@ -31,14 +31,14 @@ class App extends Component {
     auth.onAuthStateChanged(user => {
       if (user) {
         window.localStorage.setItem(storageKey, user.uid)
-        this.setState({
-          uid: user.uid
-        })
+        // this.setState({
+        //   uid: user.uid
+        // })
       } else {
         window.localStorage.removeItem(storageKey)
-        this.setState({
-          uid: null
-        })
+        // this.setState({
+        //   uid: null
+        // })
       }
     })
   }
@@ -61,7 +61,7 @@ class App extends Component {
           <Route path='/saved' component={Saved} />
           <Route path='/activities' component={MyActs} />
           <PrivateRoute exact path='/trips' component={Trips} />
-          <PrivateRoute path='/trips/:id' component={TestTrip} />
+          {/* <PrivateRoute path='/trips/:id' component={TestTrip} /> */}
           <PrivateRoute path='/profile' component={Profile} />
           <Route path='/login' component={Login} />
           <Route path='/register' component={Register} />

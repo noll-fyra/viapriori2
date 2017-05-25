@@ -10,7 +10,7 @@ class NewActivity extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      newTrip: false,
+      isNewTrip: false,
       newTripName: '',
       trips: [],
       tripIDs: [],
@@ -48,6 +48,7 @@ class NewActivity extends React.Component {
           })
         })
       })
+      
     })
   }
 
@@ -59,7 +60,7 @@ class NewActivity extends React.Component {
 
   startNewTrip (bool) {
     this.setState({
-      newTrip: bool
+      isNewTrip: bool
     })
   }
 
@@ -93,19 +94,12 @@ class NewActivity extends React.Component {
       console.log(image.exifdata)
       let date = Date.now()
       if (image.exifdata.DateTime) {
-      // console.log(image.exifdata.DateTime)
-      // console.log(formatDate(image.exifdata.DateTime))
-        let parsedDate = Date.parse(formatDate(image.exifdata.DateTime))
-        let offset = (new Date().getTimezoneOffset()) * 60 * 1000
-      // console.log(parsedDate)
-      // console.log(parsedDate + offset)
-        date = parsedDate + offset
+        date = formatDate(image.exifdata.DateTime)
       }
       this.setState({
         date: date,
         imageLatLng: {lat: latLng(image).lat, lng: latLng(image).lng}
       })
-      // console.log(image.exifdata)
       if (this.state.imageLatLng.lat && this.state.imageLatLng.lng) {
         geocoder.reverseGeocode(this.state.imageLatLng.lat, this.state.imageLatLng.lng, (err, data) => {
           if (err) { console.log(err) }
@@ -133,27 +127,27 @@ class NewActivity extends React.Component {
   }
 
   addActivity () {
+    // create new trip if isNewTrip is true
     let newTripID = ''
-// create new trip if newTrip is true
-    if (this.state.newTrip) {
+    if (this.state.isNewTrip) {
       let trips = db.ref('trips')
       let newRef = trips.push()
+      newTripID = newRef.key
       newRef.set({
         user: window.localStorage[storageKey],
-        title: this.state.newTripName
+        title: this.state.newTripName,
+        image: window.localStorage[storageKey] + '/' + newTripID + '/images/' + this.state.imageName
       })
-      let key = newRef.key
-      newTripID = key
       db.ref('users/' + window.localStorage[storageKey] + '/trips').once('value', snap => {
         let newObj = snap.val() || {}
-        newObj[key] = true
+        newObj[newTripID] = true
         db.ref('users/' + window.localStorage[storageKey] + '/trips').set(newObj)
       })
     }
-    let tripID = this.state.newTrip ? newTripID : this.state.tripIDs.reverse()[this.state.tripIndex]
-// save photo
-    storage.ref(window.localStorage[storageKey] + '/' + this.props.tripid + '/images/' + this.state.imageName).put(this.state.imagePath).then((snap) => {
-// create activity
+    let tripID = this.state.isNewTrip ? newTripID : this.state.tripIDs.reverse()[this.state.tripIndex]
+    // save photo
+    storage.ref(window.localStorage[storageKey] + '/' + tripID + '/images/' + this.state.imageName).put(this.state.imagePath).then((snap) => {
+      // create activity
       db.ref('activities/').push({
         trip: tripID,
         user: window.localStorage[storageKey],
@@ -162,7 +156,7 @@ class NewActivity extends React.Component {
         locality: this.state.locality,
         country: this.state.country,
         imageLatLng: this.state.imageLatLng,
-        image: window.localStorage[storageKey] + '/' + this.props.tripid + '/images/' + this.state.imageName,
+        image: window.localStorage[storageKey] + '/' + tripID + '/images/' + this.state.imageName,
         description: this.state.description,
         rating: this.state.rating
       })
@@ -198,13 +192,13 @@ class NewActivity extends React.Component {
             </label>
           </div>
           <div className='modal modal2'>
-            {!this.state.newTrip &&
+            {!this.state.isNewTrip &&
             <p>Add to:
               <select onChange={this.chooseTrip}>
                 {options}
               </select> or <button onClick={() => this.startNewTrip(true)}>Start a new trip</button></p>
             }
-            {this.state.newTrip &&
+            {this.state.isNewTrip &&
               <p><input type='text' onChange={this.addedTripTitle} placeholder='Add new trip' />
             or <button onClick={() => this.startNewTrip(false)}>add to existing trip</button></p>
             }
