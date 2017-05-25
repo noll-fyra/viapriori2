@@ -8,54 +8,69 @@ class Profile extends React.Component {
       user: '',
       searchQuery: '',
       imagePath: '',
-      // imageName: 'Add Profile Picture',
+      imageName: '',
+      username: '',
+      email: '',
       image: ''
     }
     this.addProfilePic = this.addProfilePic.bind(this)
   }
   componentDidMount () {
-    db.ref('users/' + auth.currentUser.uid).on('value', (snapshot) => {
+
+    db.ref('users/' + auth.currentUser.uid).once('value').then((snapshot) => {
+
       this.setState({
         imageName: snapshot.val().details.imageName,
         imagePath: snapshot.val().details.imagePath,
         username: snapshot.val().details.username,
-        email: snapshot.val().details.email
 
+        email: snapshot.val().details.email,
+        image: snapshot.val().details.image
       })
-      this.displayProfile()
     })
   }
-  displayProfile () {
-    var storageRef = storage.ref()
-    storageRef.child(this.state.imagePath).getDownloadURL().then((url) => {
-      console.log(url)
+
+
+  addProfilePic(e) {
+
+    let image = e.target.files[0]
+    // var reader = new window.FileReader()
+    // reader.addEventListener('load', () => {
+    //   this.setState({
+    //     image: reader.result
+    //   })
+    // })
+    // reader.readAsDataURL(image)
+    //
+    // this.setState({
+    //   imagePath: image,
+    //   imageName: image.name
+    // })
+
+    storage.ref(auth.currentUser.uid + '/profile/images/' + image.name).put(image).then((snap) => {
+
+      db.ref('users/' + auth.currentUser.uid +'/details').update({
+
+        imageName: image.name,
+        imagePath: auth.currentUser.uid + '/profile/images/' + image.name
+      })
+
+      this.displayProfile()
+    })
+
+  }
+
+  displayProfile(){
+    storage.refFromURL('gs://via-priori.appspot.com/'+this.state.imagePath).getDownloadURL().then((url) => {
+      db.ref('users/' + auth.currentUser.uid +'/details').update({
+        image: url
+      })
+
       this.setState({
         image: url
       })
     })
-  }
-  addProfilePic (e) {
-    let image = e.target.files[0]
-    var reader = new window.FileReader()
-    reader.addEventListener('load', () => {
-      this.setState({
-        image: reader.result
-      })
-    })
-    reader.readAsDataURL(image)
 
-    this.setState({
-      imagePath: image,
-      imageName: image.name
-    })
-
-    storage.ref(auth.currentUser.uid + '/profile/images/' + image.name).put(image).then((snap) => {
-      // console.log(url)
-      db.ref('users/' + auth.currentUser.uid + '/details').update({
-        imageName: image.name,
-        imagePath: auth.currentUser.uid + '/profile/images/' + image.name
-      })
-    })
   }
 
   render () {
@@ -82,8 +97,10 @@ class Profile extends React.Component {
         </div>
 }
 
-        <h4> Name: {this.state.username}</h4>
-        <h4> email: {auth.currentUser.email}</h4>
+
+<h4> Name: {this.state.username}</h4>
+<h4> Email: {auth.currentUser.email}</h4>
+
       </div>
        //
       //
