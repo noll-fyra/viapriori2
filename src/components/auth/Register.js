@@ -15,7 +15,7 @@ class Register extends React.Component {
     this.handleEmail = this.handleEmail.bind(this)
     this.handlePassword = this.handlePassword.bind(this)
     this.handleSignup = this.handleSignup.bind(this)
-    this.handleLogout = this.handleLogout.bind(this)
+    // this.handleLogout = this.handleLogout.bind(this)
     this.linkToRegister = null
   }
   handleUsername (e) {
