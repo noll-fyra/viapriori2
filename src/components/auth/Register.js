@@ -1,6 +1,5 @@
 import React from 'react'
 import {Link, Redirect} from 'react-router-dom'
-// import {Link} from 'react-router-dom'
 import db, {auth} from '../../utils/firebase'
 
 class Register extends React.Component {
@@ -10,7 +9,6 @@ class Register extends React.Component {
       email: '',
       password: '',
       username: '',
-      // currentUser: auth.currentUser,
       redirectToReferrer: false
     }
     this.handleUsername = this.handleUsername.bind(this)
@@ -37,38 +35,14 @@ class Register extends React.Component {
     })
   }
 
-  // handleLogin (e) {
-  //   const authPromise = auth.signInWithEmailAndPassword(this.state.email, this.state.password)
-  //   authPromise
-  //   .then((user) => {
-  //     console.log(user.email)
-  //     this.setState({
-  //       currentUser: auth.currentUser,
-  //       redirectToReferrer: true
-  //     })
-  //     console.log(auth.currentUser.uid)
-  //   })
-  //   .catch((error) => { console.log(error.message) })
-  // }
-
   handleSignup (e) {
-      // this.linkToRegister.handleClick(new window.MouseEvent('click'))
-    // }
-
-    //
     const authPromise = auth.createUserWithEmailAndPassword(this.state.email, this.state.password)
     authPromise
     .then((user) => {
-      db.ref('users/' + auth.currentUser.uid+ '/details').set({
+      db.ref('users/' + auth.currentUser.uid + '/details').set({
         email: this.state.email,
         uid: auth.currentUser.uid,
-        username: this.state.username,
-        // dob: null,
-        // tripsCompleted: [],
-        // tripsSaved: [],
-        // tripsFavourited: [],
-        // following: [],
-        // followedBy: []
+        username: this.state.username
       })
       this.setState({
         currentUser: auth.currentUser,
@@ -79,16 +53,16 @@ class Register extends React.Component {
     .catch((error) => { console.log(error.message) })
   }
 
-  handleLogout (e) {
-    const authPromise = auth.signOut()
-    authPromise
-    .then((user) => {
-      this.setState({
-        currentUser: auth.currentUser
-      })
-    })
-    .catch((error) => { console.log(error.message) })
-  }
+  // handleLogout (e) {
+  //   const authPromise = auth.signOut()
+  //   authPromise
+  //   .then((user) => {
+  //     this.setState({
+  //       currentUser: auth.currentUser
+  //     })
+  //   })
+  //   .catch((error) => { console.log(error.message) })
+  // }
 
   render () {
     const { from } = this.props.location.state || { from: { pathname: '/' } }
@@ -100,21 +74,14 @@ class Register extends React.Component {
     }
     return (
       <div>
-        {/* {this.state.currentUser &&
-        <p>{this.state.currentUser.email}</p>
-        }
-        {!this.state.currentUser &&
-        <p>You must log in to view the page at {from.pathname}</p>
-        } */}
-
         {!this.state.currentUser &&
           <div>
             <label>
-              <input id='login-username' type='text' onChange={(e) => this.handleUsername(e)} placeholder='username'/>
-              <input id='login-email' type='text' onChange={(e) => this.handleEmail(e)} placeholder='email'/>
+              <input id='login-username' type='text' onChange={(e) => this.handleUsername(e)} placeholder='username' />
+              <input id='login-email' type='text' onChange={(e) => this.handleEmail(e)} placeholder='email' />
               <input id='login-password' type='password' onChange={(e) => this.handlePassword(e)} placeholder='password' />
             </label>
-            <button id='signup-button' onClick={(e)=> this.handleSignup(e)}>Sign Up</button>
+            <button id='signup-button' onClick={(e) => this.handleSignup(e)}>Sign Up</button>
             <Link to='/register' className='registerButton' ref={(ref) => { this.linkToRegister = ref }} style={{display: 'none'}} />
 
           </div>

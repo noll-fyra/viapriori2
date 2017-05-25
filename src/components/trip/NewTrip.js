@@ -1,7 +1,7 @@
 import React from 'react'
 import db, {auth} from '../../utils/firebase'
 
-class AddTrip extends React.Component {
+class NewTrip extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -84,4 +84,4 @@ class AddTrip extends React.Component {
 
 }
 
-export default AddTrip
+export default NewTrip

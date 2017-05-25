@@ -19,3 +19,6 @@ export const isAuthenticated = () => {
   // return !!auth.currentUser || !!window.localStorage.getItem(storageKey)
   return !!auth.currentUser
 }
+export const logOut = () => {
+  auth.signOut()
+}

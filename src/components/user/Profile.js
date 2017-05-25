@@ -1,7 +1,6 @@
 import React from 'react'
 import db, {auth, storage} from '../../utils/firebase'
 
-
 class Profile extends React.Component {
   constructor (props) {
     super(props)
@@ -15,20 +14,22 @@ class Profile extends React.Component {
       image: ''
     }
     this.addProfilePic = this.addProfilePic.bind(this)
-
   }
   componentDidMount () {
+
     db.ref('users/' + auth.currentUser.uid).once('value').then((snapshot) => {
 
       this.setState({
         imageName: snapshot.val().details.imageName,
         imagePath: snapshot.val().details.imagePath,
         username: snapshot.val().details.username,
+
         email: snapshot.val().details.email,
         image: snapshot.val().details.image
       })
     })
   }
+
 
   addProfilePic(e) {
 
@@ -47,13 +48,16 @@ class Profile extends React.Component {
     // })
 
     storage.ref(auth.currentUser.uid + '/profile/images/' + image.name).put(image).then((snap) => {
+
       db.ref('users/' + auth.currentUser.uid +'/details').update({
+
         imageName: image.name,
         imagePath: auth.currentUser.uid + '/profile/images/' + image.name
       })
 
       this.displayProfile()
     })
+
   }
 
   displayProfile(){
@@ -66,6 +70,7 @@ class Profile extends React.Component {
         image: url
       })
     })
+
   }
 
   render () {
@@ -95,6 +100,7 @@ class Profile extends React.Component {
 
 <h4> Name: {this.state.username}</h4>
 <h4> Email: {auth.currentUser.email}</h4>
+
       </div>
        //
       //
