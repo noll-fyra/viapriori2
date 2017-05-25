@@ -15,54 +15,42 @@ class MyTrips extends React.Component {
   componentDidMount () {
 
     db.ref('users/' + window.localStorage[storageKey] + '/trips').once('value').then((snapshot) => {
-
+      let keys = Object.keys(snapshot.val())
       this.setState({
-        keys: Object.keys(snapshot.val())
+        keys: keys
       })
-      let temp = []
-      let images = []
+      let temp = keys.slice()
+      let images = keys.slice()
       for (var key in snapshot.val()) {
-        db.ref('trips/' + key).once('value', (snap) => {
-          // this.setState({
-          //   trips: this.state.trips.concat(snap.val())
-          // })
-          temp.push(snap.val())
+        let ind = keys.indexOf(key)
+        db.ref('trips/' + key).once('value').then((snap) => {
+          temp[ind] = snap.val()
           this.setState({
             trips: temp
           })
           if (snap.val().image) {
             storage.ref(snap.val().image).getDownloadURL().then((url) => {
-              images.push(url)
+              images[ind] = url
               this.setState({
                 images: images
               })
             })
           } else {
-            images.push('')
+            images[ind] = ''
             this.setState({
               images: images
             })
-            // this.setState({
-            //   images: this.state.images.concat('')
-            // })
           }
-          // this.setState({
-          //   trips: temp,
-          //   images: images
-          // })
         })
-        // this.setState({
-        //   trips: temp
-        // })
       }
+      this.setState({
+        trips: temp,
+        images: images
+      })
     })
   }
 
   render () {
-    // const allTrips = this.state.trips.map((trip, index) => {
-    //   return <TripOverview key={this.state.keys[index]} tripID={this.state.keys[index]} trip={trip} image={this.state.images[index]} />
-    // })
-
     return (
       <div className='trips'>
         <p>keys{JSON.stringify(this.state.keys)}</p>

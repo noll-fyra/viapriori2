@@ -1,10 +1,11 @@
 import React from 'react'
-import db, {storage, storageKey} from '../../utils/firebase'
 import EXIF from 'exif-js'
 import geocoder from 'geocoder'
+import moment from 'moment'
+import TagsInput from 'react-tagsinput'
+import db, {storage, storageKey} from '../../utils/firebase'
 import latLng, {getLocation} from '../../utils/geocoding'
 import Rating from '../rating/Rating'
-import moment from 'moment'
 
 class NewActivity extends React.Component {
   constructor (props) {
@@ -25,8 +26,10 @@ class NewActivity extends React.Component {
       locality: '',
       country: '',
       editLocation: false,
-      rating: 0
+      rating: 0,
+      tags: []
     }
+
     this.chooseTrip = this.chooseTrip.bind(this)
     this.startNewTrip = this.startNewTrip.bind(this)
     this.addedTripTitle = this.addedTripTitle.bind(this)
@@ -37,6 +40,7 @@ class NewActivity extends React.Component {
     this.changeCountry = this.changeCountry.bind(this)
     this.addedCaption = this.addedCaption.bind(this)
     this.starClick = this.starClick.bind(this)
+    this.handleTags = this.handleTags.bind(this)
     this.addActivity = this.addActivity.bind(this)
   }
 
@@ -154,6 +158,12 @@ class NewActivity extends React.Component {
     })
   }
 
+  handleTags(tags) {
+    this.setState({
+      tags
+    })
+  }
+
   addActivity () {
     // create new trip if isNewTrip is true
     let newTripID = ''
@@ -186,7 +196,8 @@ class NewActivity extends React.Component {
         imageLatLng: this.state.imageLatLng,
         image: window.localStorage[storageKey] + '/' + tripID + '/images/' + this.state.imageName,
         caption: this.state.caption,
-        rating: this.state.rating
+        rating: this.state.rating,
+        tags: this.state.tags
       })
       let newActivityID = activityRef.key
       db.ref('trips/' + tripID +'/activities').once('value', snap => {
@@ -248,6 +259,8 @@ class NewActivity extends React.Component {
             <p>Country: <input type='text' placeholder='country' onChange={this.changeCountry} value={this.state.country} /></p>
             <p>Caption: <textarea onChange={(e) => this.addedCaption(e)} /></p>
             <Rating stars={this.state.rating} starClick={this.starClick} />
+            <TagsInput value={this.state.tags} onChange={this.handleTags} />
+            {this.state.tags}
             <button onClick={this.addActivity}>Share</button>
           </div>
         </div>
