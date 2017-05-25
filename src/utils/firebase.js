@@ -22,4 +22,5 @@ export const isAuthenticated = () => {
 }
 export const logOut = () => {
   auth.signOut()
+
 }

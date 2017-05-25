@@ -49,16 +49,16 @@ class Profile extends React.Component {
     //   imagePath: image,
     //   imageName: image.name
     // })
-    storage.ref(window.localStorage[storageKey] + '/profile/images/' + image.name).put(image).then((snap) => {
+    storage.ref(window.localStorage[storageKey] + '/profile/images/').put(image).then((snap) => {
 
       db.ref('users/' + window.localStorage[storageKey] +'/details').update({
 
         imageName: image.name,
-        imagePath: window.localStorage[storageKey] + '/profile/images/' + image.name
+        imagePath: window.localStorage[storageKey] + '/profile/images/'
       })
       this.setState({
         imageName: image.name,
-        imagePath: window.localStorage[storageKey] + '/profile/images/' + image.name
+        imagePath: window.localStorage[storageKey] + '/profile/images/'
       })
       this.displayProfile()
     })
