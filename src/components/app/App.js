@@ -68,6 +68,7 @@ class App extends Component {
           {/* <PrivateRoute path='/profile' component={Profile} /> */}
           <Route path='/login' component={Login} />
           <Route path='/register' component={Register} />
+
         </div>
       </Router>
     )

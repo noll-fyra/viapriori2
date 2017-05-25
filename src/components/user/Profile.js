@@ -16,9 +16,6 @@ class Profile extends React.Component {
     this.addProfilePic = this.addProfilePic.bind(this)
   }
   componentDidMount () {
-    console.log(window.localStorage)
-    console.log(window.localStorage[storageKey])
-    console.log(window.localStorage[storageEmail])
 
     db.ref('users/' + window.localStorage[storageKey]).once('value').then((snapshot) => {
 

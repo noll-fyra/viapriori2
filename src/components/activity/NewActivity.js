@@ -37,7 +37,7 @@ class NewActivity extends React.Component {
   }
 
   componentDidMount () {
-    db.ref('users/' + window.localStorage[storageKey] + '/trips').once('value', (snap) => {
+    db.ref('users/' + window.localStorage[storageKey] + '/trips').once('value').then((snap) => {
       Object.keys(snap.val()).forEach((trip) => {
         this.setState({
           tripIDs: this.state.tripIDs.concat(trip)
@@ -48,7 +48,7 @@ class NewActivity extends React.Component {
           })
         })
       })
-      
+
     })
   }
 
@@ -161,6 +161,13 @@ class NewActivity extends React.Component {
         rating: this.state.rating
       })
     })
+//ADD Activities TO TRIPS
+// db.ref('users/' + auth.currentUser.uid + '/trips').once('value', snap => {
+//   let newObj = snap.val() || {}
+//   newObj[key] = true
+//   db.ref('users/' + auth.currentUser.uid + '/trips').set(newObj)
+// })
+
   }
 
   render () {
