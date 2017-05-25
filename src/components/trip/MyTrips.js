@@ -38,31 +38,6 @@ class MyTrips extends React.Component {
     })
   }
 
-  // displayTrip () {
-  //   const keys = []
-  //   const details = []
-  //   for (var key in this.state.database) {
-  //     if (this.state.database[key].user === window.localStorage[storageKey]) {
-  //       keys.push(key)
-  //       details.push(this.state.database[key])
-  //     }
-  //   }
-  //   return details.map((trip, index) => {
-  //     let path = '/trips/' + keys[index]
-  //     return (
-  //       <li key={keys[index]}>
-  //         <p><Link to={path}>name: {trip.title}</Link></p>
-  //         {trip.details &&
-  //         <p>details: {trip.details}</p>}
-  //         {trip.start &&
-  //         <p>start: {new Date(trip.start).toLocaleDateString()}</p>}
-  //         {trip.end &&
-  //         <p>end: {new Date(trip.end).toLocaleDateString()}</p>}
-  //       </li>
-  //     )
-  //   })
-  // }
-
   render () {
     const allTrips = this.state.trips.map((trip, index) => {
       return <TripOverview key={this.state.keys[index]} tripID={this.state.keys[index]} trip={trip} image={this.state.images[index]} />
@@ -70,6 +45,9 @@ class MyTrips extends React.Component {
 
     return (
       <div className='trips'>
+        {JSON.stringify(this.state.keys)}
+        {JSON.stringify(this.state.trips)}
+        {JSON.stringify(this.state.images)}
         {allTrips}
       </div>
     )

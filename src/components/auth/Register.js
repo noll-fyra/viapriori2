@@ -74,21 +74,16 @@ class Register extends React.Component {
     }
     return (
       <div>
-        {!this.state.currentUser &&
-          <div>
-            <label>
-              <input id='login-username' type='text' onChange={(e) => this.handleUsername(e)} placeholder='username' />
-              <input id='login-email' type='text' onChange={(e) => this.handleEmail(e)} placeholder='email' />
-              <input id='login-password' type='password' onChange={(e) => this.handlePassword(e)} placeholder='password' />
-            </label>
-            <button id='signup-button' onClick={(e) => this.handleSignup(e)}>Sign Up</button>
-            <Link to='/register' className='registerButton' ref={(ref) => { this.linkToRegister = ref }} style={{display: 'none'}} />
+        <div>
+          <label>
+            <input id='login-username' type='text' onChange={(e) => this.handleUsername(e)} placeholder='username' />
+            <input id='login-email' type='text' onChange={(e) => this.handleEmail(e)} placeholder='email' />
+            <input id='login-password' type='password' onChange={(e) => this.handlePassword(e)} placeholder='password' />
+          </label>
+          <button id='signup-button' onClick={(e) => this.handleSignup(e)}>Sign Up</button>
+          <Link to='/register' className='registerButton' ref={(ref) => { this.linkToRegister = ref }} style={{display: 'none'}} />
 
-          </div>
-        }
-        {this.state.currentUser &&
-          <button id='logout-button' onClick={(e) => this.handleLogout(e)}>Log Out</button>
-      }
+        </div>
       </div>
     )
   }
