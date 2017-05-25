@@ -8,7 +8,6 @@ import SearchResults from '../search/SearchResults'
 import NewActivity from '../activity/NewActivity'
 import Trips from '../trip/Trips'
 import MyActs from '../trip/MyActs'
-import TestTrip from '../trip/TestTrip'
 import Profile from '../user/Profile'
 import Planned from '../planned/Planned'
 import Saved from '../saved/Saved'
@@ -61,7 +60,7 @@ class App extends Component {
           <Route path='/saved' component={Saved} />
           <Route path='/activities' component={MyActs} />
           <PrivateRoute exact path='/trips' component={Trips} />
-          <PrivateRoute path='/trips/:id' component={TestTrip} />
+          {/* <PrivateRoute path='/trips/:id' component={TestTrip} /> */}
           <PrivateRoute path='/profile' component={Profile} />
           <Route path='/login' component={Login} />
           <Route path='/register' component={Register} />
