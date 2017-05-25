@@ -5,6 +5,7 @@ import moment from 'moment'
 import TagsInput from 'react-tagsinput'
 import db, {storage, storageKey} from '../../utils/firebase'
 import latLng, {getLocation} from '../../utils/geocoding'
+import arrayToObject from '../../utils/format'
 import Rating from '../rating/Rating'
 
 class NewActivity extends React.Component {
@@ -204,7 +205,7 @@ class NewActivity extends React.Component {
           image: url,
           caption: this.state.caption,
           rating: this.state.rating,
-          tags: this.state.tags
+          tags: arrayToObject(this.state.tags)
         })
         db.ref('trips/' + tripID + '/activities').once('value', snap => {
           let newObj = snap.val() || {}
@@ -256,18 +257,16 @@ class NewActivity extends React.Component {
             }
             {this.state.isNewTrip &&
               <p><input type='text' onChange={this.addedTripTitle} placeholder='Add new trip' />
-            or <button onClick={() => this.startNewTrip(false)}>add to existing trip</button></p>
+            or <button onClick={() => this.startNewTrip(false)}>Add to existing trip</button></p>
             }
 
             <p>Activity: <input type='text' onChange={(e) => this.addedActivityTitle(e)} placeholder='' /></p>
             <p>Date: <input type='date' onChange={this.changeDate} value={moment(this.state.date).format('YYYY-MM-DD')} /></p>
-            {JSON.stringify(this.state.date)}
             <p>City: <input type='text' placeholder='city' onChange={this.changeLocality} value={this.state.locality} /></p>
             <p>Country: <input type='text' placeholder='country' onChange={this.changeCountry} value={this.state.country} /></p>
             <p>Caption: <textarea onChange={(e) => this.addedCaption(e)} /></p>
             <Rating stars={this.state.rating} starClick={this.starClick} />
             <TagsInput value={this.state.tags} onChange={this.handleTags} />
-            {this.state.tags}
             <button onClick={this.addActivity}>Share</button>
           </div>
         </div>
