@@ -9,14 +9,16 @@ class Profile extends React.Component {
       user: '',
       searchQuery: '',
       imagePath: '',
-      // imageName: 'Add Profile Picture',
-      // image: 'a'
+      imageName: '',
+      username: '',
+      email: '',
+      image: ''
     }
     this.addProfilePic = this.addProfilePic.bind(this)
 
   }
-  componentWillMount () {
-    db.ref('users/' + auth.currentUser.uid).on('value', (snapshot) => {
+  componentDidMount () {
+    db.ref('users/' + auth.currentUser.uid).once('value').then((snapshot) => {
 
       this.setState({
         imageName: snapshot.val().details.imageName,
@@ -24,25 +26,9 @@ class Profile extends React.Component {
         username: snapshot.val().details.username,
         email: snapshot.val().details.email,
         image: snapshot.val().details.image
-
       })
     })
   }
-//   componentDidUpdate(){
-//   // only update chart if the data has changed
-//     storage.refFromURL('gs://via-priori.appspot.com/'+this.state.imagePath).getDownloadURL().then((url) => {
-//       console.log(this.state.image,'this state image')
-//       console.log(this.state.username, 'username')
-//       console.log(url, 'url')
-//       if (this.state.image !== url) {
-//       this.setState({
-//         image: url
-//       })
-//       console.log('done')
-//     }
-//     })
-// }
-
 
   addProfilePic(e) {
 
@@ -61,30 +47,28 @@ class Profile extends React.Component {
     // })
 
     storage.ref(auth.currentUser.uid + '/profile/images/' + image.name).put(image).then((snap) => {
-      // console.log(url)
       db.ref('users/' + auth.currentUser.uid +'/details').update({
         imageName: image.name,
         imagePath: auth.currentUser.uid + '/profile/images/' + image.name
       })
+
       this.displayProfile()
     })
   }
 
   displayProfile(){
-    console.log('start')
     storage.refFromURL('gs://via-priori.appspot.com/'+this.state.imagePath).getDownloadURL().then((url) => {
-      // console.log(this.state.image,'this state image')
-      console.log(this.state.username, 'username')
-      console.log(url, 'url')
       db.ref('users/' + auth.currentUser.uid +'/details').update({
+        image: url
+      })
+
+      this.setState({
         image: url
       })
     })
   }
 
   render () {
-// console.log(this.state.image)
-// console.log(this.state.username)
     return (
       <div>
         <h1> User Profile</h1>
@@ -99,7 +83,7 @@ class Profile extends React.Component {
         }
 
         {this.state.imagePath !== '' &&
-        <div className = 'profileDiv'>
+        <div className='profileDiv'>
 
           <label className='profile' style={{backgroundImage: `url(${this.state.image})`, backgroundSize: 'cover'}}>
             <span className='editImage'>Edit Image</span>
