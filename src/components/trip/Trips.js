@@ -1,6 +1,7 @@
 import React from 'react'
 import NewTrip from './NewTrip'
 import MyTrips from './MyTrips'
+import MyProfile from '../user/Profile'
 // import TestTrip from './TestTrip'
 // import {BrowserRouter as Router, Route} from 'react-router-dom'
 
@@ -43,6 +44,7 @@ class Trips extends React.Component {
   render () {
     return (
       <div>
+        <MyProfile />
         <button onClick={this.openAddTrip}>New Trip</button>
         <NewTrip isOpen={this.state.addTripIsOpen} onOpen={this.openAddTrip} onClose={this.closeAddTrip} />
         <MyTrips />

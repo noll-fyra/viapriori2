@@ -97,9 +97,15 @@ class Profile extends React.Component {
         </div>
 }
 
-
+<div className="profileDetails">
 <h4> Name: {this.state.username}</h4>
 <h4> Email: {auth.currentUser.email}</h4>
+</div>
+
+
+
+
+
 
       </div>
        //

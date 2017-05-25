@@ -30,6 +30,7 @@ class MyTrips extends React.Component {
     return details.map((trip, index) => {
       let path = '/trips/' + keys[index]
       return (
+        <div>
         <li key={keys[index]}>
           <p><Link to={path}>name: {trip.title}</Link></p>
           {trip.details &&
@@ -39,6 +40,7 @@ class MyTrips extends React.Component {
           {trip.end &&
           <p>end: {new Date(trip.end).toLocaleDateString()}</p>}
         </li>
+      </div>
       )
     })
   }
