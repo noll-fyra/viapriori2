@@ -5,7 +5,7 @@ const TripOverview = (props) => {
   return (
     <div>
       <Link to={'trips/' + props.tripID}>
-        <div className='tripOverview'><p>{props.trip.title}</p><img src={props.image} alt={props.trip.title} /></div>
+        <div className='tripOverview'><p>{props.trip.title || ''}</p><img src={props.image} alt={props.trip.title} /></div>
       </Link>
     </div>
   )
