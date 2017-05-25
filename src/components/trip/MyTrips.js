@@ -45,6 +45,9 @@ class MyTrips extends React.Component {
 
     return (
       <div className='trips'>
+        {JSON.stringify(this.state.keys)}
+        {JSON.stringify(this.state.trips)}
+        {JSON.stringify(this.state.images)}
         {allTrips}
       </div>
     )

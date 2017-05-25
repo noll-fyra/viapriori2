@@ -8,7 +8,6 @@ import SearchResults from '../search/SearchResults'
 import NewActivity from '../activity/NewActivity'
 import Trips from '../trip/Trips'
 import MyActs from '../trip/MyActs'
-import Profile from '../user/Profile'
 import Planned from '../planned/Planned'
 import Saved from '../saved/Saved'
 import {auth, storageKey, isAuthenticated, logOut} from '../../utils/firebase'
@@ -59,7 +58,7 @@ class App extends Component {
           <Route path='/planned' component={Planned} />
           <Route path='/saved' component={Saved} />
           <Route path='/activities' component={MyActs} />
-          <PrivateRoute exact path='/trips' component={Trips} />
+          <PrivateRoute exact path='/profile' component={Trips} />
           {/* <PrivateRoute path='/trips/:id' component={TestTrip} /> */}
           {/* <PrivateRoute path='/profile' component={Profile} /> */}
           <Route path='/login' component={Login} />
