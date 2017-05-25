@@ -1,5 +1,5 @@
 import React from 'react'
-import db, {auth, storage} from '../../utils/firebase'
+import db, {auth, storage, storageKey, storageEmail} from '../../utils/firebase'
 
 class Profile extends React.Component {
   constructor (props) {
@@ -16,8 +16,11 @@ class Profile extends React.Component {
     this.addProfilePic = this.addProfilePic.bind(this)
   }
   componentDidMount () {
+    console.log(window.localStorage)
+    console.log(window.localStorage[storageKey])
+    console.log(window.localStorage[storageEmail])
 
-    db.ref('users/' + auth.currentUser.uid).once('value').then((snapshot) => {
+    db.ref('users/' + window.localStorage[storageKey]).once('value').then((snapshot) => {
 
       this.setState({
         imageName: snapshot.val().details.imageName,
@@ -46,15 +49,17 @@ class Profile extends React.Component {
     //   imagePath: image,
     //   imageName: image.name
     // })
+    storage.ref(window.localStorage[storageKey] + '/profile/images/' + image.name).put(image).then((snap) => {
 
-    storage.ref(auth.currentUser.uid + '/profile/images/' + image.name).put(image).then((snap) => {
-
-      db.ref('users/' + auth.currentUser.uid +'/details').update({
+      db.ref('users/' + window.localStorage[storageKey] +'/details').update({
 
         imageName: image.name,
-        imagePath: auth.currentUser.uid + '/profile/images/' + image.name
+        imagePath: window.localStorage[storageKey] + '/profile/images/' + image.name
       })
-
+      this.setState({
+        imageName: image.name,
+        imagePath: window.localStorage[storageKey] + '/profile/images/' + image.name
+      })
       this.displayProfile()
     })
 
@@ -62,7 +67,7 @@ class Profile extends React.Component {
 
   displayProfile(){
     storage.refFromURL('gs://via-priori.appspot.com/'+this.state.imagePath).getDownloadURL().then((url) => {
-      db.ref('users/' + auth.currentUser.uid +'/details').update({
+      db.ref('users/' + window.localStorage[storageKey] +'/details').update({
         image: url
       })
 
@@ -70,7 +75,6 @@ class Profile extends React.Component {
         image: url
       })
     })
-
   }
 
   render () {
@@ -97,15 +101,12 @@ class Profile extends React.Component {
         </div>
 }
 
-<div className="profileDetails">
-<h4> Name: {this.state.username}</h4>
-<h4> Email: {auth.currentUser.email}</h4>
-</div>
+        <div className="profileDetails">
+        <h4> Name: {this.state.username}</h4>
+        <h4> Email: {window.localStorage[storageEmail]}</h4>
 
 
-
-
-
+        </div>
 
       </div>
        //

@@ -35,12 +35,10 @@ class Login extends React.Component {
     const authPromise = auth.signInWithEmailAndPassword(this.state.email, this.state.password)
     authPromise
     .then((user) => {
-      console.log(user.email)
       this.setState({
         currentUser: auth.currentUser,
         redirectToReferrer: true
       })
-      console.log(auth.currentUser.uid)
     })
     .catch((error) => { console.log(error.message) })
   }
