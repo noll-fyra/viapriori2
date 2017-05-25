@@ -1,5 +1,5 @@
 import React from 'react'
-import db, {auth, storage, storageKey, storageEmail} from '../../utils/firebase'
+import db, {storage, storageKey, storageEmail} from '../../utils/firebase'
 
 class Profile extends React.Component {
   constructor (props) {
@@ -21,7 +21,6 @@ class Profile extends React.Component {
     console.log(window.localStorage[storageEmail])
 
     db.ref('users/' + window.localStorage[storageKey]).once('value').then((snapshot) => {
-
       this.setState({
         imageName: snapshot.val().details.imageName,
         imagePath: snapshot.val().details.imagePath,
@@ -33,9 +32,7 @@ class Profile extends React.Component {
     })
   }
 
-
-  addProfilePic(e) {
-
+  addProfilePic (e) {
     let image = e.target.files[0]
     // var reader = new window.FileReader()
     // reader.addEventListener('load', () => {
@@ -50,8 +47,7 @@ class Profile extends React.Component {
     //   imageName: image.name
     // })
     storage.ref(window.localStorage[storageKey] + '/profile/images/' + image.name).put(image).then((snap) => {
-
-      db.ref('users/' + window.localStorage[storageKey] +'/details').update({
+      db.ref('users/' + window.localStorage[storageKey] + '/details').update({
 
         imageName: image.name,
         imagePath: window.localStorage[storageKey] + '/profile/images/' + image.name
@@ -62,12 +58,11 @@ class Profile extends React.Component {
       })
       this.displayProfile()
     })
-
   }
 
-  displayProfile(){
-    storage.refFromURL('gs://via-priori.appspot.com/'+this.state.imagePath).getDownloadURL().then((url) => {
-      db.ref('users/' + window.localStorage[storageKey] +'/details').update({
+  displayProfile () {
+    storage.refFromURL('gs://via-priori.appspot.com/' + this.state.imagePath).getDownloadURL().then((url) => {
+      db.ref('users/' + window.localStorage[storageKey] + '/details').update({
         image: url
       })
 
@@ -93,7 +88,6 @@ class Profile extends React.Component {
 
         {this.state.imagePath !== '' &&
         <div className='profileDiv'>
-
           <label className='profile' style={{backgroundImage: `url(${this.state.image})`, backgroundSize: 'cover'}}>
             <span className='editImage'>Edit Image</span>
             <input className='fileInput' type='file' onChange={(e) => this.addProfilePic(e)} />
@@ -101,18 +95,12 @@ class Profile extends React.Component {
         </div>
 }
 
-        <div className="profileDetails">
-        <h4> Name: {this.state.username}</h4>
-        <h4> Email: {window.localStorage[storageEmail]}</h4>
-
-
+        <div className='profileDetails'>
+          <h4> Name: {this.state.username}</h4>
+          <h4> Email: {window.localStorage[storageEmail]}</h4>
         </div>
-
       </div>
-       //
-      //
-      //   <ProfileDetails profileDetails={profile} />
-      //  <TripOverview tripItems={trips} />
+
     )
   }
 }

@@ -43,8 +43,9 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-
 }
+
+
 /*.profileDiv .profile {
    display: block;
    border-radius: 2px 2px 0 0;
@@ -112,9 +113,10 @@ label:focus {
   left: 10%;
   margin-top: 16px;
   border: 1px solid rgba(50, 50, 50, 0.25);
-  border-radius: 8px;
+  /*border-radius: 8px;*/
   /*margin-left: -25%;*/
   z-index: 9999;
+  background-color: white;
 }
 
 .modal2 {

@@ -18,7 +18,6 @@ class App extends Component {
     super(props)
     this.state = {
       searchQuery: ''
-      // uid: null
     }
     this.search = search.bind(this)
     this.handleSearch = this.handleSearch.bind(this)
@@ -30,17 +29,9 @@ class App extends Component {
       if (user) {
         window.localStorage.setItem(storageKey, user.uid)
         window.localStorage.setItem(storageEmail, user.email)
-
-        // this.setState({
-        //   uid: user.uid
-        // })
       } else {
         window.localStorage.removeItem(storageKey)
         window.localStorage.removeItem(storageEmail)
-
-        // this.setState({
-        //   uid: null
-        // })
       }
     })
   }
@@ -67,6 +58,7 @@ class App extends Component {
           {/* <PrivateRoute path='/profile' component={Profile} /> */}
           <Route path='/login' component={Login} />
           <Route path='/register' component={Register} />
+          {/* <Route path='/logout' component={Logout} /> */}
         </div>
       </Router>
     )
