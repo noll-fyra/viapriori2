@@ -5,6 +5,7 @@ import MyProfile from '../user/Profile'
 // import TestTrip from './TestTrip'
 // import {BrowserRouter as Router, Route} from 'react-router-dom'
 
+
 class Trips extends React.Component {
   constructor (props) {
     super(props)

@@ -36,9 +36,6 @@ class MyActs extends React.Component {
       details: details
     })
     details.forEach((trip, index) => {
-      // let path = '/trips/' + keys[index]
-
-      // let x = 'not url'
       storage.ref(trip.image).getDownloadURL().then((url) => {
         console.log(url)
         this.setState({
