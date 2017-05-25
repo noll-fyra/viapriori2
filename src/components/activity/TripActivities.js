@@ -25,14 +25,34 @@ class TripActivities extends React.Component {
         country: '',
         rating: 0
     }
-    this.openAddTrip = this.openAddTrip.bind(this)
-    this.closeAddTrip = this.closeAddTrip.bind(this)
+
   }
 
   componentDidMount () {
-    db.ref('activities/').once('value').then((snap) => {
-      console.log(Object.keys(snap.val()))
-    //
+    // console.log(this.props.match.params.id)
+    db.ref('trips/'+this.props.match.params.id+'/activities').once('value').then((snap) => {
+      // console.log(snap.val())
+      // console.log(Object.keys(snap.val()))
+        let activityArray = Object.keys(snap.val())
+activityArray.forEach((activity)=>{
+
+  db.ref('activities/'+activity).once('value').then((snapshot) => {
+    console.log(snapshot.val())
+    this.setState({
+        //  activityIDs: this.state.tripIDs.concat(trip)
+       })
+  })
+
+})
+        //   activityArray.forEach
+        //  Object.keys(snap.val()).forEach((trip) => {
+        //     this.setState({
+        //       tripIDs: this.state.tripIDs.concat(trip)
+        //     })
+        //     db.ref('trips/' + trip).once('value', (snap) => {
+        //       this.setState({
+        //         trips: this.state.trips.concat(snap.val().title)
+        //       })
     //   Object.keys(snap.val()).forEach((trip) => {
     //     this.setState({
     //       tripIDs: this.state.tripIDs.concat(trip)

@@ -3,8 +3,8 @@ import db, {storage, storageKey} from '../../utils/firebase'
 import EXIF from 'exif-js'
 import geocoder from 'geocoder'
 import latLng, {getLocation} from '../../utils/geocoding'
-import formatDate from '../../utils/format'
 import Rating from '../rating/Rating'
+import moment from 'moment'
 
 class NewActivity extends React.Component {
   constructor (props) {
@@ -19,11 +19,12 @@ class NewActivity extends React.Component {
       imagePath: '',
       imageName: '',
       imageLatLng: '',
-      date: '',
-      description: '',
+      date: Date.now(),
+      caption: '',
       image: '',
       locality: '',
       country: '',
+      editLocation: false,
       rating: 0
     }
     this.chooseTrip = this.chooseTrip.bind(this)
@@ -31,7 +32,10 @@ class NewActivity extends React.Component {
     this.addedTripTitle = this.addedTripTitle.bind(this)
     this.addedActivityTitle = this.addedActivityTitle.bind(this)
     this.addedFile = this.addedFile.bind(this)
-    this.addedDescription = this.addedDescription.bind(this)
+    this.changeDate = this.changeDate.bind(this)
+    this.changeLocality = this.changeLocality.bind(this)
+    this.changeCountry = this.changeCountry.bind(this)
+    this.addedCaption = this.addedCaption.bind(this)
     this.starClick = this.starClick.bind(this)
     this.addActivity = this.addActivity.bind(this)
   }
@@ -91,10 +95,10 @@ class NewActivity extends React.Component {
     })
 
     EXIF.getData(image, () => {
-      console.log(image.exifdata)
+      console.log('exifdata:', image.exifdata)
       let date = Date.now()
       if (image.exifdata.DateTime) {
-        date = formatDate(image.exifdata.DateTime)
+        date = moment(image.exifdata.DateTime, 'YYYY:MM:DD HH:mm:ss')
       }
       this.setState({
         date: date,
@@ -104,19 +108,43 @@ class NewActivity extends React.Component {
         geocoder.reverseGeocode(this.state.imageLatLng.lat, this.state.imageLatLng.lng, (err, data) => {
           if (err) { console.log(err) }
           if (data.results[0]) {
+            console.log('reverse geocoded address:', data.results[0])
             this.setState({
               locality: getLocation(data.results[0])[0],
               country: getLocation(data.results[0])[1]
             })
           }
         })
+      } else {
+        this.setState({
+          locality: '',
+          country: ''
+        })
       }
     })
   }
 
-  addedDescription (e) {
+  changeDate (e) {
     this.setState({
-      description: e.target.value
+      date: moment(e.target.value).valueOf()
+    })
+  }
+
+  changeLocality (e) {
+    this.setState({
+      locality: e.target.value
+    })
+  }
+
+  changeCountry (e) {
+    this.setState({
+      country: e.target.value
+    })
+  }
+
+  addedCaption (e) {
+    this.setState({
+      caption: e.target.value
     })
   }
 
@@ -148,7 +176,7 @@ class NewActivity extends React.Component {
     // save photo
     storage.ref(window.localStorage[storageKey] + '/' + tripID + '/images/' + this.state.imageName).put(this.state.imagePath).then((snap) => {
       // create activity
-      db.ref('activities/').push({
+      let activityRef = db.ref('activities/').push({
         trip: tripID,
         user: window.localStorage[storageKey],
         title: this.state.title,
@@ -157,16 +185,16 @@ class NewActivity extends React.Component {
         country: this.state.country,
         imageLatLng: this.state.imageLatLng,
         image: window.localStorage[storageKey] + '/' + tripID + '/images/' + this.state.imageName,
-        description: this.state.description,
+        caption: this.state.caption,
         rating: this.state.rating
       })
+      let newActivityID = activityRef.key
+      db.ref('trips/' + tripID +'/activities').once('value', snap => {
+        let newTripObj = snap.val() || {}
+        newTripObj[newActivityID] = true
+        db.ref('trips/' + tripID+'/activities').set(newTripObj)
+      })
     })
-//ADD Activities TO TRIPS
-// db.ref('users/' + auth.currentUser.uid + '/trips').once('value', snap => {
-//   let newObj = snap.val() || {}
-//   newObj[key] = true
-//   db.ref('users/' + auth.currentUser.uid + '/trips').set(newObj)
-// })
 
   }
 
@@ -191,7 +219,6 @@ class NewActivity extends React.Component {
 
         {this.state.imagePath !== '' &&
         <div >
-
           <div className='modal'>
             <label className='imageLabelActive' style={{backgroundImage: `url(${this.state.image})`, backgroundSize: 'cover'}}>
               <span>Post a photo</span>
@@ -200,10 +227,15 @@ class NewActivity extends React.Component {
           </div>
           <div className='modal modal2'>
             {!this.state.isNewTrip &&
-            <p>Add to:
-              <select onChange={this.chooseTrip}>
-                {options}
-              </select> or <button onClick={() => this.startNewTrip(true)}>Start a new trip</button></p>
+            <p>
+              <label>
+                Add to:
+                <select onChange={this.chooseTrip}>
+                  {options}
+                </select>
+              </label>
+               or <button onClick={() => this.startNewTrip(true)}>Start a new trip</button>
+            </p>
             }
             {this.state.isNewTrip &&
               <p><input type='text' onChange={this.addedTripTitle} placeholder='Add new trip' />
@@ -211,14 +243,10 @@ class NewActivity extends React.Component {
             }
 
             <p>Activity: <input type='text' onChange={(e) => this.addedActivityTitle(e)} placeholder='' /></p>
-            <p>Date: <b>{new Date(this.state.date).toString()}</b></p>
-            {this.state.locality && this.state.country &&
-            <p>Location: <b>{this.state.locality + ', ' + this.state.country}</b></p>
-            }
-            {!this.state.locality && !this.state.country &&
-            <p>Location: <input type='text' placeholder='no loc data' /></p>
-            }
-            <p>Caption: <textarea onChange={(e) => this.addedDescription(e)} /></p>
+            <p>Date: <input type='date' onChange={this.changeDate} value={moment(this.state.date).format('YYYY-MM-DD')} /></p>
+            <p>City: <input type='text' placeholder='city' onChange={this.changeLocality} value={this.state.locality} /></p>
+            <p>Country: <input type='text' placeholder='country' onChange={this.changeCountry} value={this.state.country} /></p>
+            <p>Caption: <textarea onChange={(e) => this.addedCaption(e)} /></p>
             <Rating stars={this.state.rating} starClick={this.starClick} />
             <button onClick={this.addActivity}>Share</button>
           </div>

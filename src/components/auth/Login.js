@@ -15,7 +15,7 @@ class Login extends React.Component {
     this.handlePassword = this.handlePassword.bind(this)
     this.handleLogin = this.handleLogin.bind(this)
     this.handleSignup = this.handleSignup.bind(this)
-    // this.handleLogout = this.handleLogout.bind(this)
+
     this.linkToRegister = null
   }
 
@@ -46,18 +46,6 @@ class Login extends React.Component {
   handleSignup (e) {
     this.linkToRegister.handleClick(new window.MouseEvent('click'))
   }
-
-  // handleLogout (e) {
-  //   console.log('clicked')
-  //   const authPromise = auth.signOut()
-  //   authPromise
-  //   .then((user) => {
-  //     this.setState({
-  //       currentUser: auth.currentUser
-  //     })
-  //   })
-  //   .catch((error) => { console.log(error.message) })
-  // }
 
   render () {
     const { from } = this.props.location.state || { from: { pathname: '/' } }
