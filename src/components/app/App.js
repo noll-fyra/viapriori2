@@ -5,7 +5,7 @@ import Login from '../auth/Login'
 import Register from '../auth/Register'
 import Home from '../home/Home'
 import SearchResults from '../search/SearchResults'
-import New from '../new/New'
+import NewActivity from '../activity/NewActivity'
 import Trips from '../trip/Trips'
 import MyActs from '../trip/MyActs'
 import TestTrip from '../trip/TestTrip'
@@ -56,7 +56,7 @@ class App extends Component {
           <Nav isAuthenticated={isAuthenticated()} logOut={logOut} onChange={this.search} onKeyUp={(e) => this.handleSearch(e)} linkToSearch={(ref) => { this.linkToSearch = ref }} />
           <Route exact path='/' component={Home} />
           <Route path='/search' component={() => <SearchResults searchQuery={this.state.searchQuery} />} />
-          <Route path='/new' component={() => <New tripid='1' />} />
+          <Route path='/new' component={() => <NewActivity />} />
           <Route path='/planned' component={Planned} />
           <Route path='/saved' component={Saved} />
           <Route path='/activities' component={MyActs} />

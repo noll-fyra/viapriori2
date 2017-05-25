@@ -1,12 +1,12 @@
 import React from 'react'
-import db, {auth, storage} from '../../utils/firebase'
+import db, {storage, storageKey} from '../../utils/firebase'
 import EXIF from 'exif-js'
 import geocoder from 'geocoder'
 import latLng, {getLocation} from '../../utils/geocoding'
 import formatDate from '../../utils/format'
 import Rating from '../rating/Rating'
 
-class New extends React.Component {
+class NewActivity extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -37,7 +37,7 @@ class New extends React.Component {
   }
 
   componentDidMount () {
-    db.ref('users/' + auth.currentUser.uid + '/trips').once('value', (snap) => {
+    db.ref('users/' + window.localStorage[storageKey] + '/trips').once('value', (snap) => {
       Object.keys(snap.val()).forEach((trip) => {
         this.setState({
           tripIDs: this.state.tripIDs.concat(trip)
@@ -84,7 +84,6 @@ class New extends React.Component {
       })
     })
     reader.readAsDataURL(image)
-    // console.log(image)
     this.setState({
       imagePath: image,
       imageName: image.name
@@ -140,30 +139,30 @@ class New extends React.Component {
       let trips = db.ref('trips')
       let newRef = trips.push()
       newRef.set({
-        user: auth.currentUser.uid,
+        user: window.localStorage[storageKey],
         title: this.state.newTripName
       })
       let key = newRef.key
       newTripID = key
-      db.ref('users/' + auth.currentUser.uid + '/trips').once('value', snap => {
+      db.ref('users/' + window.localStorage[storageKey] + '/trips').once('value', snap => {
         let newObj = snap.val() || {}
         newObj[key] = true
-        db.ref('users/' + auth.currentUser.uid + '/trips').set(newObj)
+        db.ref('users/' + window.localStorage[storageKey] + '/trips').set(newObj)
       })
     }
     let tripID = this.state.newTrip ? newTripID : this.state.tripIDs.reverse()[this.state.tripIndex]
 // save photo
-    storage.ref(auth.currentUser.uid + '/' + this.props.tripid + '/images/' + this.state.imageName).put(this.state.imagePath).then((snap) => {
+    storage.ref(window.localStorage[storageKey] + '/' + this.props.tripid + '/images/' + this.state.imageName).put(this.state.imagePath).then((snap) => {
 // create activity
       db.ref('activities/').push({
         trip: tripID,
-        user: auth.currentUser.uid,
+        user: window.localStorage[storageKey],
         title: this.state.title,
         date: this.state.date,
         locality: this.state.locality,
         country: this.state.country,
         imageLatLng: this.state.imageLatLng,
-        image: auth.currentUser.uid + '/' + this.props.tripid + '/images/' + this.state.imageName,
+        image: window.localStorage[storageKey] + '/' + this.props.tripid + '/images/' + this.state.imageName,
         description: this.state.description,
         rating: this.state.rating
       })
@@ -229,4 +228,4 @@ class New extends React.Component {
   }
 }
 
-export default New
+export default NewActivity
