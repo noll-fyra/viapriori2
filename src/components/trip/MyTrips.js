@@ -7,8 +7,7 @@ class MyTrips extends React.Component {
     super(props)
     this.state = {
       keys: [],
-      trips: [],
-      images: []
+      trips: []
     }
   }
 
@@ -19,7 +18,7 @@ class MyTrips extends React.Component {
         keys: keys
       })
       let temp = keys.slice()
-      let images = keys.slice()
+      // let images = keys.slice()
       for (var key in snapshot.val()) {
         let ind = keys.indexOf(key)
         db.ref('trips/' + key).once('value').then((snap) => {
@@ -27,36 +26,38 @@ class MyTrips extends React.Component {
           this.setState({
             trips: temp
           })
-          if (snap.val().image) {
-            storage.ref(snap.val().image).getDownloadURL().then((url) => {
-              images[ind] = url
-              this.setState({
-                images: images
-              })
-            })
-          } else {
-            images[ind] = ''
-            this.setState({
-              images: images
-            })
-          }
+          // if (snap.val().image) {
+          //   storage.ref(snap.val().image).getDownloadURL().then((url) => {
+          //     images[ind] = url
+          //     this.setState({
+          //       images: images
+          //     })
+          //   })
+          // } else {
+          //   images[ind] = ''
+          //   this.setState({
+          //     images: images
+          //   })
+          // }
         })
       }
-      this.setState({
-        trips: temp,
-        images: images
-      })
+      // this.setState({
+      //   trips: temp,
+      //   images: images
+      // })
     })
   }
 
   render () {
+    let reverse = this.state.trips.reverse()
     return (
       <div className='trips'>
         <p>keys{JSON.stringify(this.state.keys)}</p>
+        <p>keys{this.state.keys.length}</p>
         <p>trips{JSON.stringify(this.state.trips)}</p>
-        <p>images{JSON.stringify(this.state.images)}</p>
-        {this.state.trips.map((trip, index) => {
-          return <TripOverview key={this.state.keys[index]} tripID={this.state.keys[index]} trip={trip} image={this.state.images[index]} />
+        <p>trips{this.state.trips.length}</p>
+        {reverse.map((trip, index) => {
+          return <TripOverview key={this.state.keys[index]} tripID={this.state.keys[index]} trip={trip} />
         })}
       </div>
     )

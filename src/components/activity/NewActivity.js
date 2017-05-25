@@ -101,7 +101,7 @@ class NewActivity extends React.Component {
       console.log('exifdata:', image.exifdata)
       let date = Date.now()
       if (image.exifdata.DateTime) {
-        date = moment(image.exifdata.DateTime, 'YYYY:MM:DD HH:mm:ss')
+        date = moment(image.exifdata.DateTime, 'YYYY:MM:DD HH:mm:ss').valueOf()
       }
       this.setState({
         date: date,
@@ -157,7 +157,7 @@ class NewActivity extends React.Component {
     })
   }
 
-  handleTags(tags) {
+  handleTags (tags) {
     this.setState({
       tags
     })
@@ -183,20 +183,27 @@ class NewActivity extends React.Component {
     }
     let tripID = this.state.isNewTrip ? newTripID : this.state.tripIDs.reverse()[this.state.tripIndex]
     // save photo
-    storage.ref(window.localStorage[storageKey] + '/' + tripID + '/images/' + this.state.imageName).put(this.state.imagePath).then((snap) => {
-      // create activity
-      db.ref('activities/').push({
-        trip: tripID,
-        user: window.localStorage[storageKey],
-        title: this.state.title,
-        date: this.state.date,
-        locality: this.state.locality,
-        country: this.state.country,
-        imageLatLng: this.state.imageLatLng,
-        image: window.localStorage[storageKey] + '/' + tripID + '/images/' + this.state.imageName,
-        caption: this.state.caption,
-        rating: this.state.rating,
-        tags: this.state.tags
+    storage.ref(window.localStorage[storageKey] + '/' + tripID + '/images/' + this.state.imageName).put(this.state.imagePath).then(() => {
+      // get image url
+      storage.ref(window.localStorage[storageKey] + '/' + tripID + '/images/' + this.state.imageName).getDownloadURL().then((url) => {
+        // update new trip image url
+        if (this.state.isNewTrip) {
+          db.ref('trips/' + newTripID).update({image: url})
+        }
+        // create activity
+        db.ref('activities/').push({
+          trip: tripID,
+          user: window.localStorage[storageKey],
+          title: this.state.title,
+          date: this.state.date,
+          locality: this.state.locality,
+          country: this.state.country,
+          imageLatLng: this.state.imageLatLng,
+          image: url,
+          caption: this.state.caption,
+          rating: this.state.rating,
+          tags: this.state.tags
+        })
       })
     })
   }
@@ -247,6 +254,7 @@ class NewActivity extends React.Component {
 
             <p>Activity: <input type='text' onChange={(e) => this.addedActivityTitle(e)} placeholder='' /></p>
             <p>Date: <input type='date' onChange={this.changeDate} value={moment(this.state.date).format('YYYY-MM-DD')} /></p>
+            {JSON.stringify(this.state.date)}
             <p>City: <input type='text' placeholder='city' onChange={this.changeLocality} value={this.state.locality} /></p>
             <p>Country: <input type='text' placeholder='country' onChange={this.changeCountry} value={this.state.country} /></p>
             <p>Caption: <textarea onChange={(e) => this.addedCaption(e)} /></p>
