@@ -15,7 +15,7 @@ class Register extends React.Component {
     this.handleEmail = this.handleEmail.bind(this)
     this.handlePassword = this.handlePassword.bind(this)
     this.handleSignup = this.handleSignup.bind(this)
-    this.handleLogout = this.handleLogout.bind(this)
+    // this.handleLogout = this.handleLogout.bind(this)
     this.linkToRegister = null
   }
   handleUsername (e) {
@@ -74,7 +74,6 @@ class Register extends React.Component {
     }
     return (
       <div>
-        {!this.state.currentUser &&
           <div>
             <label>
               <input id='login-username' type='text' onChange={(e) => this.handleUsername(e)} placeholder='username' />
@@ -85,10 +84,6 @@ class Register extends React.Component {
             <Link to='/register' className='registerButton' ref={(ref) => { this.linkToRegister = ref }} style={{display: 'none'}} />
 
           </div>
-        }
-        {this.state.currentUser &&
-          <button id='logout-button' onClick={(e) => this.handleLogout(e)}>Log Out</button>
-      }
       </div>
     )
   }

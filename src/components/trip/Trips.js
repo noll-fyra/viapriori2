@@ -46,8 +46,8 @@ class Trips extends React.Component {
     return (
       <div>
         <MyProfile />
-        <button onClick={this.openAddTrip}>New Trip</button>
-        <NewTrip isOpen={this.state.addTripIsOpen} onOpen={this.openAddTrip} onClose={this.closeAddTrip} />
+        {/* <button onClick={this.openAddTrip}>New Trip</button> */}
+        {/* <NewTrip isOpen={this.state.addTripIsOpen} onOpen={this.openAddTrip} onClose={this.closeAddTrip} /> */}
         <MyTrips />
       </div>
     )
