@@ -20,6 +20,7 @@ export const isAuthenticated = () => {
   return !!auth.currentUser || !!window.localStorage.getItem(storageKey)
 }
 export const logOut = () => {
+
   const authPromise = auth.signOut()
   authPromise.then(()=>{
     console.log('hello');

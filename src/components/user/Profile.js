@@ -16,9 +16,6 @@ class Profile extends React.Component {
     this.addProfilePic = this.addProfilePic.bind(this)
   }
   componentDidMount () {
-    console.log(window.localStorage)
-    console.log(window.localStorage[storageKey])
-    console.log(window.localStorage[storageEmail])
 
     db.ref('users/' + window.localStorage[storageKey]).once('value').then((snapshot) => {
       this.setState({
@@ -46,15 +43,18 @@ class Profile extends React.Component {
     //   imagePath: image,
     //   imageName: image.name
     // })
-    storage.ref(window.localStorage[storageKey] + '/profile/images/' + image.name).put(image).then((snap) => {
-      db.ref('users/' + window.localStorage[storageKey] + '/details').update({
+
+    storage.ref(window.localStorage[storageKey] + '/profile/images/').put(image).then((snap) => {
+
+      db.ref('users/' + window.localStorage[storageKey] +'/details').update({
+
 
         imageName: image.name,
-        imagePath: window.localStorage[storageKey] + '/profile/images/' + image.name
+        imagePath: window.localStorage[storageKey] + '/profile/images/'
       })
       this.setState({
         imageName: image.name,
-        imagePath: window.localStorage[storageKey] + '/profile/images/' + image.name
+        imagePath: window.localStorage[storageKey] + '/profile/images/'
       })
       this.displayProfile()
     })

@@ -1,6 +1,7 @@
 import React from 'react'
 // import TripItem from '../tripitem/TripItem'
 import db from '../../utils/firebase'
+import TripActivities from '../activity/TripActivities'
 
 class Home extends React.Component {
   constructor (props) {
@@ -12,7 +13,7 @@ class Home extends React.Component {
   }
 
   componentDidMount () {
-    db.ref('trips').on('value', (snapshot) => {
+    db.ref('trips').once('value').then((snapshot) => {
       const keys = []
       const allTrips = []
       for (var key in snapshot.val()) {
@@ -95,6 +96,7 @@ class Home extends React.Component {
         })
           } /> */}
           Featured
+            <TripActivities />
       </div>
     )
   }

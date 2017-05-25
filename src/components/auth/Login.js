@@ -15,6 +15,7 @@ class Login extends React.Component {
     this.handlePassword = this.handlePassword.bind(this)
     this.handleLogin = this.handleLogin.bind(this)
     this.handleSignup = this.handleSignup.bind(this)
+
     this.linkToRegister = null
   }
 
@@ -77,9 +78,9 @@ class Login extends React.Component {
 
           </div>
         }
-        {this.state.currentUser &&
+        {/* {this.state.currentUser &&
           <button id='logout-button' onClick={(e) => this.handleLogout(e)}>Log Out</button>
-      }
+      } */}
       </div>
     )
   }

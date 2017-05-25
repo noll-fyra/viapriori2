@@ -12,6 +12,7 @@ class MyTrips extends React.Component {
   }
 
   componentDidMount () {
+
     db.ref('users/' + window.localStorage[storageKey] + '/trips').once('value').then((snapshot) => {
       let keys = Object.keys(snapshot.val())
       this.setState({

@@ -45,7 +45,7 @@ class NewActivity extends React.Component {
   }
 
   componentDidMount () {
-    db.ref('users/' + window.localStorage[storageKey] + '/trips').once('value', (snap) => {
+    db.ref('users/' + window.localStorage[storageKey] + '/trips').once('value').then((snap) => {
       Object.keys(snap.val()).forEach((trip) => {
         this.setState({
           tripIDs: this.state.tripIDs.concat(trip)
@@ -191,7 +191,9 @@ class NewActivity extends React.Component {
           db.ref('trips/' + newTripID).update({image: url})
         }
         // create activity
-        db.ref('activities/').push({
+        let activityRef = db.ref('activities/').push()
+        let newActivityID = activityRef.key
+        activityRef.set({
           trip: tripID,
           user: window.localStorage[storageKey],
           title: this.state.title,
@@ -203,6 +205,11 @@ class NewActivity extends React.Component {
           caption: this.state.caption,
           rating: this.state.rating,
           tags: this.state.tags
+        })
+        db.ref('trips/' + tripID + '/activities').once('value', snap => {
+          let newObj = snap.val() || {}
+          newObj[newActivityID] = true
+          db.ref('trips/' + tripID + '/activities').set(newObj)
         })
       })
     })
