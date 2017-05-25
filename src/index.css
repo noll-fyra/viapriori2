@@ -35,7 +35,7 @@ body {
 .profile {
   font-size: 1.25em;
   font-weight: 700;
-  border-radius: 85%;
+  border-radius: 150px;
   width: 40%;
   height: 40%;
   color: white;
@@ -43,7 +43,18 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+
 }
+/*.profileDiv .profile {
+   display: block;
+   border-radius: 2px 2px 0 0;
+   position: relative;
+   left: 0;
+   right: 0;
+   top: 0;
+   bottom: 0;
+   width: 100%;
+}*/
 
 .profileDiv {
   width: 30%;

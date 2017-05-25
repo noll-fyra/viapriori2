@@ -11,32 +11,32 @@ class MyTrips extends React.Component {
       images: []
     }
   }
-
-  componentDidMount () {
-    db.ref('users/' + window.localStorage[storageKey] + '/trips').on('value', (snapshot) => {
-      this.setState({
-        keys: Object.keys(snapshot.val())
-      })
-      for (var key in snapshot.val()) {
-        db.ref('trips/' + key).once('value', (snapshot) => {
-          this.setState({
-            trips: this.state.trips.concat(snapshot.val())
-          })
-          if (snapshot.val().image) {
-            storage.ref(snapshot.val().image).getDownloadURL().then((url) => {
-              this.setState({
-                images: this.state.images.concat(url)
-              })
-            })
-          } else {
-            this.setState({
-              images: this.state.images.concat('')
-            })
-          }
-        })
-      }
-    })
-  }
+  //
+  // componentDidMount () {
+  //   db.ref('users/' + window.localStorage[storageKey] + '/trips').on('value', (snapshot) => {
+  //     this.setState({
+  //       keys: Object.keys(snapshot.val())
+  //     })
+  //     for (var key in snapshot.val()) {
+  //       db.ref('trips/' + key).once('value', (snapshot) => {
+  //         this.setState({
+  //           trips: this.state.trips.concat(snapshot.val())
+  //         })
+  //         if (snapshot.val().image) {
+  //           storage.ref(snapshot.val().image).getDownloadURL().then((url) => {
+  //             this.setState({
+  //               images: this.state.images.concat(url)
+  //             })
+  //           })
+  //         } else {
+  //           this.setState({
+  //             images: this.state.images.concat('')
+  //           })
+  //         }
+  //       })
+  //     }
+  //   })
+  // }
 
   render () {
     const allTrips = this.state.trips.map((trip, index) => {

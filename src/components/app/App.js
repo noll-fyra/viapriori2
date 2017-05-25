@@ -10,7 +10,7 @@ import Trips from '../trip/Trips'
 import MyActs from '../trip/MyActs'
 import Planned from '../planned/Planned'
 import Saved from '../saved/Saved'
-import {auth, storageKey, isAuthenticated, logOut} from '../../utils/firebase'
+import {auth, storageKey, storageEmail, isAuthenticated, logOut} from '../../utils/firebase'
 import search from '../../utils/search'
 
 class App extends Component {
@@ -29,11 +29,15 @@ class App extends Component {
     auth.onAuthStateChanged(user => {
       if (user) {
         window.localStorage.setItem(storageKey, user.uid)
+        window.localStorage.setItem(storageEmail, user.email)
+
         // this.setState({
         //   uid: user.uid
         // })
       } else {
         window.localStorage.removeItem(storageKey)
+        window.localStorage.removeItem(storageEmail)
+
         // this.setState({
         //   uid: null
         // })
