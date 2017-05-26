@@ -5,12 +5,14 @@
   "dependencies": {
     "exif-js": "^2.2.1",
     "firebase": "^4.0.0",
+    "fix-orientation": "0.0.2",
     "geocoder": "^0.2.3",
     "moment": "^2.18.1",
     "prop-types": "^15.5.10",
     "react": "^15.5.4",
     "react-autosuggest": "^9.0.1",
     "react-dom": "^15.5.4",
+    "react-load-script": "0.0.3",
     "react-router": "^4.1.1",
     "react-router-dom": "^4.1.1",
     "react-tagsinput": "^3.16.1"
