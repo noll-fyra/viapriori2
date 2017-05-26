@@ -141,7 +141,7 @@ li {
   color: yellow;
 }
 
-.star:hover {
+.starenabled:hover {
   cursor: pointer;
 }
 

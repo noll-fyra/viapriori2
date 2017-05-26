@@ -96,7 +96,6 @@ class Home extends React.Component {
         })
           } /> */}
           Featured
-            <TripActivities />
       </div>
     )
   }

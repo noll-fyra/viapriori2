@@ -40,7 +40,7 @@ class SearchResults extends React.Component {
     return (
       <div>
         <h1>Search Results</h1>
-        <TripOverview tripId={this.state.tripId} tripItems={trips} />
+        <TripOverview tripId={this.state.tripId} trip={trips} />
       </div>
     )
   }
