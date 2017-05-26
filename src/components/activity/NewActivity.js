@@ -8,7 +8,7 @@ import db, {storage, storageKey} from '../../utils/firebase'
 import latLng, {getLocation} from '../../utils/geocoding'
 import arrayToObject from '../../utils/format'
 import Rating from '../rating/Rating'
-
+var fixOrientation = require('fix-orientation')
 class NewActivity extends React.Component {
   constructor (props) {
     super(props)
@@ -21,6 +21,7 @@ class NewActivity extends React.Component {
       title: '',
       imagePath: '',
       imageName: '',
+      imageOrientation: 1,
       imageLatLng: '',
       date: Date.now(),
       caption: '',
@@ -95,8 +96,23 @@ class NewActivity extends React.Component {
     let image = e.target.files[0]
     var reader = new window.FileReader()
     reader.addEventListener('load', () => {
-      this.setState({
-        image: reader.result
+      // this.setState({
+      //   image: reader.result
+      // })
+      // let x = null
+      let self = this
+      fixOrientation(reader.result, { image: true }, function (fixed, image) {
+        self.setState({
+          image: fixed
+        })
+
+        // console.log('fixed', fixed)
+        // console.log('image', image);;
+
+    // var img = new Image();
+    // img.src = fixed;
+    // document.body.appendChild(img);
+    // document.body.appendChild(image);
       })
     })
     reader.readAsDataURL(image)
@@ -107,13 +123,12 @@ class NewActivity extends React.Component {
 
     EXIF.getData(image, () => {
       console.log('exifdata:', image.exifdata)
-      let date = Date.now()
-      if (image.exifdata.DateTime) {
-        date = moment(image.exifdata.DateTime, 'YYYY:MM:DD HH:mm:ss').valueOf()
-      }
+      let date = image.exifdata.DateTime ? moment(image.exifdata.DateTime, 'YYYY:MM:DD HH:mm:ss').valueOf() : Date.now()
+      let orientation = image.exifdata.Orientation || 1
       this.setState({
         date: date,
-        imageLatLng: {lat: latLng(image).lat, lng: latLng(image).lng}
+        imageLatLng: {lat: latLng(image).lat, lng: latLng(image).lng},
+        imageOrientation: orientation
       })
       if (this.state.imageLatLng.lat && this.state.imageLatLng.lng) {
         geocoder.reverseGeocode(this.state.imageLatLng.lat, this.state.imageLatLng.lng, (err, data) => {
@@ -181,7 +196,9 @@ class NewActivity extends React.Component {
       newRef.set({
         user: window.localStorage[storageKey],
         title: this.state.newTripName,
-        image: window.localStorage[storageKey] + '/' + newTripID + '/images/' + this.state.imageName
+        image: window.localStorage[storageKey] + '/' + newTripID + '/images/' + this.state.imageName,
+        imageOrientation: this.state.imageOrientation,
+        totalRating: this.state.rating
       })
       // add new trip to the user's trips
       db.ref('users/' + window.localStorage[storageKey] + '/trips').once('value', snap => {
@@ -211,6 +228,7 @@ class NewActivity extends React.Component {
           country: this.state.country,
           imageLatLng: this.state.imageLatLng,
           image: url,
+          imageOrientation: this.state.imageOrientation,
           caption: this.state.caption,
           rating: this.state.rating,
           tags: arrayToObject(this.state.tags)
@@ -220,6 +238,21 @@ class NewActivity extends React.Component {
           let newObj = snap.val() || {}
           newObj[newActivityID] = true
           db.ref('trips/' + tripID + '/activities').set(newObj)
+        })
+        // update the trip's rating
+        db.ref('trips/' + tripID).once('value').then((snap) => {
+          let newObj = snap.val() || {}
+          let currentRating = snap.val().totalRating || 0
+          newObj['totalRating'] = currentRating + this.state.rating
+          db.ref('trips/' + tripID).set(newObj)
+        })
+        // add tags to all tags
+        db.ref('tags').once('value').then((snap) => {
+          let newObj = snap.val() || {}
+          for (var tag in arrayToObject(this.state.tags)) {
+            newObj[tag] = newObj[tag] ? newObj[tag] + 1 : 1
+          }
+          db.ref('tags').set(newObj)
           this.linkToProfile.handleClick(new window.MouseEvent('click'))
         })
       })
@@ -232,8 +265,8 @@ class NewActivity extends React.Component {
       return <option key={index}>{title}</option>
     })
     return (
-      <div className='modalWrapper'>
 
+      <div className='modalWrapper'>
         <div className='backdrop' onClick={this.props.onClose} />
 
         {this.state.imagePath === '' &&
@@ -250,6 +283,7 @@ class NewActivity extends React.Component {
           <div className='modal'>
             <label className='imageLabelActive' style={{backgroundImage: `url(${this.state.image})`, backgroundSize: 'cover'}}>
               <span>Post a photo</span>
+              {/* <img src={this.state.image}/> */}
               <input className='fileInput' type='file' onChange={(e) => this.addFile(e)} />
             </label>
           </div>
