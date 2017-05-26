@@ -18,14 +18,16 @@ class Profile extends React.Component {
   componentDidMount () {
 
     db.ref('users/' + window.localStorage[storageKey]).once('value').then((snapshot) => {
+      if (snapshot.val()){
       this.setState({
-        imageName: snapshot.val().details.imageName,
-        imagePath: snapshot.val().details.imagePath,
+        imageName: snapshot.val().details.imageName||null,
+        imagePath: snapshot.val().details.imagePath||null,
         username: snapshot.val().details.username,
 
         email: snapshot.val().details.email,
         image: snapshot.val().details.image
       })
+    }
     })
   }
 

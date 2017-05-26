@@ -235,7 +235,6 @@ class NewActivity extends React.Component {
         })
         // add activity to the trip's activities
         db.ref('trips/' + tripID + '/activities').once('value').then((snap) => {
-          console.log(snap.val())
           let newObj = snap.val() || {}
           newObj[newActivityID] = true
           db.ref('trips/' + tripID + '/activities').set(newObj)
