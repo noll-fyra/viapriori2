@@ -51,11 +51,11 @@ class App extends Component {
           <Route exact path='/' component={Home} />
           <Route path='/search' component={() => <SearchResults searchQuery={this.state.searchQuery} />} />
           <Route path='/new' component={() => <NewActivity />} />
-          <Route path='/planned' component={Planned} />
-          <Route path='/saved' component={Saved} />
+          <PrivateRoute path='/planned' component={Planned} />
+          <PrivateRoute path='/saved' component={Saved} />
           <Route path='/activities' component={MyActs} />
           <PrivateRoute exact path='/profile' component={Trips} />
-          <PrivateRoute path='/trips/:id' component={TripActivities} />
+          <PrivateRoute path='/trips/:title/:id' component={TripActivities} />
           {/* <PrivateRoute path='/profile' component={Profile} /> */}
           <Route path='/login' component={Login} />
           <Route path='/register' component={Register} />

@@ -3,100 +3,40 @@ import React from 'react'
 // import MyTrips from './MyTrips'
 // import MyProfile from '../user/Profile'
 import db, {storage, storageKey} from '../../utils/firebase'
+import ActivityOverview from './ActivityOverview'
 
 
 class TripActivities extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-        trips: [],
-        tripIDs: [],
-        title: [],
-        imagePath: [],
-        imageName: [],
-        imageLatLng: [],
-        date: [],
-        description: [],
-        image: [],
-        locality: [],
-        country: [],
-        rating: []
+    activities:[],
+    activityArray:[],
     }
-
   }
 
   componentDidMount () {
-    // console.log(this.props.match.params.id)
-    db.ref('trips/'+this.props.match.params.id+'/activities').once('value').then((snap) => {
-      // console.log(snap.val())
-      // console.log(Object.keys(snap.val()))
-        let activityArray = Object.keys(snap.val())
-
-activityArray.forEach((activity)=>{
-
-  db.ref('activities/'+activity).once('value').then((snapshot) => {
-    console.log(snapshot.val())
-    // this.setState({
-        //  activityIDs: this.state.tripIDs.concat(trip)
-      //  })
-
-
-      let keys = Object.keys(snapshot.val())
-      this.setState({
-        keys: keys
-      })
-      let temp = keys.slice()
-      let images = keys.slice()
-      for (var key in snapshot.val()) {
-        let ind = keys.indexOf(key)
-        db.ref('trips/' + key).once('value').then((snap) => {
-          temp[ind] = snap.val()
-          this.setState({
-            trips: temp
-          })
-          if (snap.val().image) {
-            storage.ref(snap.val().image).getDownloadURL().then((url) => {
-              images[ind] = url
-              this.setState({
-                images: images
-              })
-            })
-          } else {
-            images[ind] = ''
-            this.setState({
-              images: images
-            })
-          }
+    db.ref('trips/'+this.props.match.params.id+'/activities').once('value').then((snapshot) => {
+      // console.log(snapshot.val())
+      // console.log(Object.keys(snapshot.val()))
+        let activityArray = Object.keys(snapshot.val())
+        this.setState({
+          activityArray: activityArray
         })
-      }
-      this.setState({
-        trips: temp,
-        images: images
-      })
 
-  })
+            let temp = activityArray.slice()
+            for (var activity in snapshot.val()) {
+              let ind = activityArray.indexOf(activity)
+              db.ref('activities/' + activity).once('value').then((snap) => {
+                temp[ind] = snap.val()
+                // console.log(temp[ind], "tempind")
+                this.setState({
+                  activities: temp
+                })
+                // console.log(temp)
+              })
+            }
 
-})
-        //   activityArray.forEach
-        //  Object.keys(snap.val()).forEach((trip) => {
-        //     this.setState({
-        //       tripIDs: this.state.tripIDs.concat(trip)
-        //     })
-        //     db.ref('trips/' + trip).once('value', (snap) => {
-        //       this.setState({
-        //         trips: this.state.trips.concat(snap.val().title)
-        //       })
-    //   Object.keys(snap.val()).forEach((trip) => {
-    //     this.setState({
-    //       tripIDs: this.state.tripIDs.concat(trip)
-    //     })
-    //     db.ref('trips/' + trip).once('value', (snap) => {
-    //       this.setState({
-    //         trips: this.state.trips.concat(snap.val().title)
-    //       })
-    //     })
-    //   })
-    //
     })
   }
   openAddTrip () {
@@ -111,19 +51,24 @@ activityArray.forEach((activity)=>{
     })
   }
 
-  render () {
+  saveActivity(e){
+    let savedActivityID = e.target.name
+    db.ref('users/' + window.localStorage[storageKey] + '/saved').once('value').then((snap) => {
+      let newObj = snap.val() || {}
+      newObj[savedActivityID] = true
+      db.ref('users/' + window.localStorage[storageKey] + '/saved').set(newObj)
+    })
+  }
 
+  render () {
     return (
       <div>
-        <h1>Trip Activities - To Be routed/component elsewhere</h1>
-        {this.state.trips.map((trip, index) => {
-          return <ActivityOverview key={this.state.keys[index]} tripID={this.state.keys[index]} trip={trip} image={this.state.images[index]} />
+        <h1>Activities for {this.props.match.params.title} </h1>
+        {this.state.activities &&
+            this.state.activities.map((activity, index) => {
+          return  <ActivityOverview key={this.state.activityArray[index]} activityID={this.state.activityArray[index]} activity={activity} handleSaveActivity= {(e) => this.saveActivity(e)} />
         })}
 
-        {/* <MyProfile /> */}
-        {/* <button onClick={this.openAddTrip}>New Trip</button> */}
-        {/* <NewTrip isOpen={this.state.addTripIsOpen} onOpen={this.openAddTrip} onClose={this.closeAddTrip} /> */}
-        {/* <MyTrips /> */}
       </div>
     )
   }

@@ -275,7 +275,7 @@ class NewActivity extends React.Component {
             <p>City: <input type='text' placeholder='city' onChange={this.changeLocality} value={this.state.locality} /></p>
             <p>Country: <input type='text' placeholder='country' onChange={this.changeCountry} value={this.state.country} /></p>
             <p>Caption: <textarea onChange={(e) => this.addCaption(e)} /></p>
-            <Rating stars={this.state.rating} starClick={this.starClick} />
+            <Rating stars={this.state.rating} starClick={this.starClick} isEnabled={true}/>
             <TagsInput value={this.state.tags} onChange={this.handleTags} />
             <button onClick={this.addActivity}>Share</button>
           </div>
