@@ -12,7 +12,6 @@
     "react": "^15.5.4",
     "react-autosuggest": "^9.0.1",
     "react-dom": "^15.5.4",
-    "react-load-script": "0.0.3",
     "react-router": "^4.1.1",
     "react-router-dom": "^4.1.1",
     "react-tagsinput": "^3.16.1"

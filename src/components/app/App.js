@@ -14,6 +14,9 @@ import Saved from '../saved/Saved'
 import {auth, storageKey, storageEmail, isAuthenticated, logOut} from '../../utils/firebase'
 import search from '../../utils/search'
 
+import Autocomplete from '../autocomplete/Autocomplete'
+import AutocompleteExample2 from '../autocomplete/Autocomplete2'
+
 class App extends Component {
   constructor (props) {
     super(props)
@@ -59,6 +62,8 @@ class App extends Component {
           {/* <PrivateRoute path='/profile' component={Profile} /> */}
           <Route path='/login' component={Login} />
           <Route path='/register' component={Register} />
+          <Route path='/autocomplete' component={Autocomplete} />
+          <Route path='/autocomplete2' component={AutocompleteExample2} />
           {/* <Route path='"trips/"+{props.tripID}' component={TripActivities}/> */}
         </div>
       </Router>
