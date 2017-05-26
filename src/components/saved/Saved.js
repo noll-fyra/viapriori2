@@ -1,6 +1,8 @@
 import React from 'react'
 import db, {storage, storageKey} from '../../utils/firebase'
 import SavedOverview from './SavedOverview'
+import Planned from '../planned/Planned'
+
 
 class Saved extends React.Component {
   constructor (props) {
@@ -15,15 +17,6 @@ class Saved extends React.Component {
       this.displayActivity()
     })
   }
-      //
-      // plannedActivity(e){
-      //   let savedActivityID = e.target.name
-      //   db.ref('users/' + window.localStorage[storageKey] + '/saved').once('value').then((snap) => {
-      //     let newObj = snap.val() || {}
-      //     newObj[savedActivityID] = true
-      //     db.ref('users/' + window.localStorage[storageKey] + '/saved').set(newObj)
-      //   })
-      // }
   displayActivity () {
     db.ref('users/' + window.localStorage[storageKey] + '/saved').once('value').then((snapshot) => {
       if (snapshot.val()) {
@@ -56,17 +49,31 @@ class Saved extends React.Component {
     this.displayActivity()
   }
 
+
+  plannedActivity(e){
+    let savedActivityID = e.target.name
+    db.ref('users/' + window.localStorage[storageKey] + '/saved').once('value').then((snap) => {
+      let newObj = snap.val() || {}
+      newObj[savedActivityID] = true
+      db.ref('users/' + window.localStorage[storageKey] + '/saved').set(newObj)
+    })
+  }
+
+  startNewPlanned(boolean){
+      this.setState({
+        isNewPlanned: boolean
+      })
+  }
   render () {
       let reverseSaved = this.state.savedActivities.slice().reverse()
     return (
       <div>
+        <Planned/>
         <h1> Saved Activities</h1>
-        {!this.state.savedActivities &&
-          <p></p>}
 
         {this.state.savedActivities &&
             reverseSaved.map((activity, index) => {
-              return <SavedOverview key={index} activityID={this.state.savedArray[index]} activity={activity} handlePlannedActivity={(e) => this.plannedActivity(e)} handleRemoveSaved={(e) => this.removeActivity(e)} />
+              return <SavedOverview key={index} activityID={this.state.savedArray[index]} activity={activity} handlePlannedActivity={(e) => this.plannedActivity(e)} handleRemoveSaved={(e) => this.removeActivity(e)} isplanned={this.state.isNewPlanned}/>
             })}
       </div>
     )

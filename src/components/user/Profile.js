@@ -33,18 +33,6 @@ class Profile extends React.Component {
 
   addProfilePic (e) {
     let image = e.target.files[0]
-    // var reader = new window.FileReader()
-    // reader.addEventListener('load', () => {
-    //   this.setState({
-    //     image: reader.result
-    //   })
-    // })
-    // reader.readAsDataURL(image)
-    //
-    // this.setState({
-    //   imagePath: image,
-    //   imageName: image.name
-    // })
 
     storage.ref(window.localStorage[storageKey] + '/profile/images/').put(image).then((snap) => {
 
