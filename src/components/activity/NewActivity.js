@@ -8,7 +8,8 @@ import db, {storage, storageKey} from '../../utils/firebase'
 import latLng, {getLocation} from '../../utils/geocoding'
 import arrayToObject from '../../utils/format'
 import Rating from '../rating/Rating'
-var fixOrientation = require('fix-orientation')
+import fixOrientation from 'fix-orientation'
+
 class NewActivity extends React.Component {
   constructor (props) {
     super(props)
@@ -51,10 +52,15 @@ class NewActivity extends React.Component {
   componentDidMount () {
     // get all the user's trip IDs
     db.ref('users/' + window.localStorage[storageKey] + '/trips').once('value').then((snapshot) => {
-      let keys = Object.keys(snapshot.val())
+      let keys = snapshot.val() ? Object.keys(snapshot.val()) : []
       this.setState({
         tripIDs: keys
       })
+      if (keys.length === 0) {
+        this.setState({
+          isNewTrip: true
+        })
+      }
       // get all the trips' details
       let trips = new Array(keys.length).fill(null)
       keys.forEach((trip, index) => {
@@ -96,23 +102,11 @@ class NewActivity extends React.Component {
     let image = e.target.files[0]
     var reader = new window.FileReader()
     reader.addEventListener('load', () => {
-      // this.setState({
-      //   image: reader.result
-      // })
-      // let x = null
       let self = this
       fixOrientation(reader.result, { image: true }, function (fixed, image) {
         self.setState({
           image: fixed
         })
-
-        // console.log('fixed', fixed)
-        // console.log('image', image);;
-
-    // var img = new Image();
-    // img.src = fixed;
-    // document.body.appendChild(img);
-    // document.body.appendChild(image);
       })
     })
     reader.readAsDataURL(image)
@@ -198,7 +192,7 @@ class NewActivity extends React.Component {
         title: this.state.newTripName,
         image: window.localStorage[storageKey] + '/' + newTripID + '/images/' + this.state.imageName,
         imageOrientation: this.state.imageOrientation,
-        totalRating: this.state.rating
+        totalRating: 0
       })
       // add new trip to the user's trips
       db.ref('users/' + window.localStorage[storageKey] + '/trips').once('value', snap => {
@@ -233,24 +227,30 @@ class NewActivity extends React.Component {
           rating: this.state.rating,
           tags: arrayToObject(this.state.tags)
         })
-        // add activity to the trip's activities
-        db.ref('trips/' + tripID + '/activities').once('value').then((snap) => {
-          let newObj = snap.val() || {}
-          newObj[newActivityID] = true
-          db.ref('trips/' + tripID + '/activities').set(newObj)
-        })
-        // update the trip's rating
+
+        // update the trip's rating and activities
         db.ref('trips/' + tripID).once('value').then((snap) => {
           let newObj = snap.val() || {}
+          let currentActivities = snap.val().activities || {}
+          currentActivities[newActivityID] = true
+          newObj['activities'] = currentActivities
           let currentRating = snap.val().totalRating || 0
           newObj['totalRating'] = currentRating + this.state.rating
           db.ref('trips/' + tripID).set(newObj)
         })
+
+        // add activity to the trip's activities
+        // db.ref('trips/' + tripID + '/activities').once('value').then((snap) => {
+        //   let newObj = snap.val() || {}
+        //   newObj[newActivityID] = true
+        //   db.ref('trips/' + tripID + '/activities').set(newObj)
+        // })
+
         // add tags to all tags
         db.ref('tags').once('value').then((snap) => {
           let newObj = snap.val() || {}
           for (var tag in arrayToObject(this.state.tags)) {
-            newObj[tag] = newObj[tag] ? newObj[tag] + 1 : 1
+            newObj[tag.toLowerCase()] = newObj[tag.toLowerCase()] ? newObj[tag.toLowerCase()] + 1 : 1
           }
           db.ref('tags').set(newObj)
           this.linkToProfile.handleClick(new window.MouseEvent('click'))
@@ -288,7 +288,10 @@ class NewActivity extends React.Component {
             </label>
           </div>
           <div className='modal modal2'>
-            {!this.state.isNewTrip &&
+            {this.state.trips.length === 0 &&
+              <p><input type='text' onChange={this.addTripTitle} placeholder='Add your first trip title!' /></p>
+            }
+            {!this.state.isNewTrip && this.state.trips.length > 0 &&
             <p>
               <label>
                 Add to:
@@ -299,7 +302,7 @@ class NewActivity extends React.Component {
                or <button onClick={() => this.startNewTrip(true)}>Start a new trip</button>
             </p>
             }
-            {this.state.isNewTrip &&
+            {this.state.isNewTrip && this.state.trips.length > 0 &&
               <p><input type='text' onChange={this.addTripTitle} placeholder='Add new trip' />
             or <button onClick={() => this.startNewTrip(false)}>Add to existing trip</button></p>
             }
