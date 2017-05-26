@@ -197,7 +197,8 @@ class NewActivity extends React.Component {
         user: window.localStorage[storageKey],
         title: this.state.newTripName,
         image: window.localStorage[storageKey] + '/' + newTripID + '/images/' + this.state.imageName,
-        imageOrientation: this.state.imageOrientation
+        imageOrientation: this.state.imageOrientation,
+        totalRating: this.state.rating
       })
       // add new trip to the user's trips
       db.ref('users/' + window.localStorage[storageKey] + '/trips').once('value', snap => {
@@ -237,6 +238,21 @@ class NewActivity extends React.Component {
           let newObj = snap.val() || {}
           newObj[newActivityID] = true
           db.ref('trips/' + tripID + '/activities').set(newObj)
+        })
+        // update the trip's rating
+        db.ref('trips/' + tripID).once('value').then((snap) => {
+          let newObj = snap.val() || {}
+          let currentRating = snap.val().totalRating || 0
+          newObj['totalRating'] = currentRating + this.state.rating
+          db.ref('trips/' + tripID).set(newObj)
+        })
+        // add tags to all tags
+        db.ref('tags').once('value').then((snap) => {
+          let newObj = snap.val() || {}
+          for (var tag in arrayToObject(this.state.tags)) {
+            newObj[tag] = newObj[tag] ? newObj[tag] + 1 : 1
+          }
+          db.ref('tags').set(newObj)
           this.linkToProfile.handleClick(new window.MouseEvent('click'))
         })
       })
