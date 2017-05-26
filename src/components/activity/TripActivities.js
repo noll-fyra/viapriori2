@@ -31,14 +31,49 @@ class TripActivities extends React.Component {
       // console.log(snap.val())
       // console.log(Object.keys(snap.val()))
         let activityArray = Object.keys(snap.val())
-      
+
 activityArray.forEach((activity)=>{
 
   db.ref('activities/'+activity).once('value').then((snapshot) => {
     console.log(snapshot.val())
-    this.setState({
+    // this.setState({
         //  activityIDs: this.state.tripIDs.concat(trip)
-       })
+      //  })
+
+
+      let keys = Object.keys(snapshot.val())
+      this.setState({
+        keys: keys
+      })
+      let temp = keys.slice()
+      let images = keys.slice()
+      for (var key in snapshot.val()) {
+        let ind = keys.indexOf(key)
+        db.ref('trips/' + key).once('value').then((snap) => {
+          temp[ind] = snap.val()
+          this.setState({
+            trips: temp
+          })
+          if (snap.val().image) {
+            storage.ref(snap.val().image).getDownloadURL().then((url) => {
+              images[ind] = url
+              this.setState({
+                images: images
+              })
+            })
+          } else {
+            images[ind] = ''
+            this.setState({
+              images: images
+            })
+          }
+        })
+      }
+      this.setState({
+        trips: temp,
+        images: images
+      })
+
   })
 
 })
@@ -81,6 +116,10 @@ activityArray.forEach((activity)=>{
     return (
       <div>
         <h1>Trip Activities - To Be routed/component elsewhere</h1>
+        {this.state.trips.map((trip, index) => {
+          return <ActivityOverview key={this.state.keys[index]} tripID={this.state.keys[index]} trip={trip} image={this.state.images[index]} />
+        })}
+
         {/* <MyProfile /> */}
         {/* <button onClick={this.openAddTrip}>New Trip</button> */}
         {/* <NewTrip isOpen={this.state.addTripIsOpen} onOpen={this.openAddTrip} onClose={this.closeAddTrip} /> */}
