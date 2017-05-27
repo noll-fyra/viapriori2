@@ -145,6 +145,7 @@ class NewActivity extends React.Component {
         })
       }
     })
+    this.activityInput.focus()
   }
 
   handleDate (e) {
@@ -204,7 +205,9 @@ class NewActivity extends React.Component {
         title: this.state.newTripName,
         image: window.localStorage[storageKey] + '/' + newTripID + '/images/' + this.state.imageName,
         imageOrientation: this.state.imageOrientation,
-        totalRating: 0
+        totalRating: 0,
+        start: this.state.date,
+        end: this.state.date
       })
       // add new trip to the user's trips
       db.ref('users/' + window.localStorage[storageKey] + '/trips').once('value', snap => {
@@ -244,27 +247,50 @@ class NewActivity extends React.Component {
           tags: tagsArrayToObject(this.state.tags)
         })
 
-        // update the trip's rating and activities
+        // update the trip's activities, rating and date
         db.ref('trips/' + tripID).once('value').then((snap) => {
           let newObj = snap.val() || {}
           let currentActivities = snap.val().activities || {}
           currentActivities[newActivityID] = true
           newObj['activities'] = currentActivities
+
           let currentRating = snap.val().totalRating || 0
           newObj['totalRating'] = currentRating + this.state.rating
+
+          let currentStart = snap.val().start
+          let currentEnd = snap.val().end
+          newObj['start'] = currentStart < this.state.date ? currentStart : this.state.date
+          newObj['end'] = currentEnd > this.state.date ? currentEnd : this.state.date
+
           db.ref('trips/' + tripID).set(newObj)
         })
 
-        // add tags to all tags
-        db.ref('tags').once('value').then((snap) => {
-          let newObj = snap.val() || {}
-          for (var tag in tagsArrayToObject(this.state.tags)) {
-            newObj[tag.toLowerCase()] = newObj[tag.toLowerCase()] ? newObj[tag.toLowerCase()] + 1 : 1
-          }
-          db.ref('tags').set(newObj)
-          this.props.handleNewActivity(false)
-          this.linkToTrip.handleClick(new window.MouseEvent('click'))
+        // add tags to all and trending
+        this.state.tags.forEach((tag) => {
+          db.ref('all/tags/' + tag.text).once('value').then((snap) => {
+            db.ref('all/tags/' + tag.text).set(snap.val() + 1 || 1)
+          })
+          db.ref('trending/tags/' + moment().format('dddd') + '/' + tag.text).once('value').then((snap) => {
+            db.ref('trending/tags/' + moment().format('dddd') + '/' + tag.text).set(snap.val() + 1 || 1)
+          })
         })
+
+        // add locality and country to all and trending
+        db.ref('all/localities/' + this.state.locality).once('value').then((snap) => {
+          db.ref('all/localities/' + this.state.locality).set(snap.val() + 1 || 1)
+        })
+        db.ref('trending/localities/' + moment().format('dddd') + '/' + this.state.locality).once('value').then((snap) => {
+          db.ref('trending/localities/' + moment().format('dddd') + '/' + this.state.locality).set(snap.val() + 1 || 1)
+        })
+        db.ref('all/countries/' + this.state.country).once('value').then((snap) => {
+          db.ref('all/countries/' + this.state.country).set(snap.val() + 1 || 1)
+        })
+        db.ref('trending/countries/' + moment().format('dddd') + '/' + this.state.country).once('value').then((snap) => {
+          db.ref('trending/countries/' + moment().format('dddd') + '/' + this.state.country).set(snap.val() + 1 || 1)
+        })
+
+        this.props.addNewActivity(false)
+        this.linkToTrip.handleClick(new window.MouseEvent('click'))
       })
     })
   }
@@ -277,7 +303,7 @@ class NewActivity extends React.Component {
     return (
 
       <div className='modalWrapper' style={this.props.isEnabled ? {display: 'block'} : {display: 'none'}}>
-        <div className='backdrop' onClick={() => this.props.handleNewActivity(false)} />
+        <div className='backdrop' onClick={() => this.props.addNewActivity(false)} />
 
         {this.state.imagePath === '' &&
         <div className='modal'>
@@ -293,7 +319,6 @@ class NewActivity extends React.Component {
           <div className='modal'>
             <label className='imageLabelActive' style={{backgroundImage: `url(${this.state.image})`, backgroundSize: 'cover'}}>
               <span>Post a photo</span>
-              {/* <img src={this.state.image}/> */}
               <input className='fileInput' type='file' onChange={(e) => this.handleFile(e)} />
             </label>
           </div>
@@ -317,7 +342,7 @@ class NewActivity extends React.Component {
             or <button onClick={() => this.startNewTrip(false)}>Add to existing trip</button></p>
             }
 
-            <p>Activity: <input type='text' onChange={(e) => this.handleActivityTitle(e)} /></p>
+            <p>Activity: <input type='text' onChange={(e) => this.handleActivityTitle(e)} ref={(input) => { this.activityInput = input }} /></p>
             <p>Date: <input type='date' onChange={this.handleDate} value={moment(this.state.date).format('YYYY-MM-DD')} /></p>
             <p>City: <input type='text' onChange={this.handleLocality} value={this.state.locality} /></p>
             <p>Country: <input type='text' onChange={this.handleCountry} value={this.state.country} /></p>
@@ -327,6 +352,7 @@ class NewActivity extends React.Component {
               suggestions={this.state.suggestions}
               handleDelete={this.handleDelete}
               handleAddition={this.handleAddition}
+              autofocus={false}
               // minQueryLength={1}
              />
             <button onClick={this.handleActivity}>Share</button>

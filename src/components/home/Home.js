@@ -1,101 +1,57 @@
 import React from 'react'
-// import TripItem from '../tripitem/TripItem'
+import TripOverview from '../trip/TripOverview'
 import db from '../../utils/firebase'
-import TripActivities from '../activity/TripActivities'
+import {tagsObjectToArray} from '../../utils/format'
 
 class Home extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      database: {},
-      tripDisplayed: []
+      keys: [],
+      trips: [],
+      tags: []
     }
   }
 
   componentDidMount () {
-    db.ref('trips').once('value').then((snapshot) => {
+    // fetch all trips
+    db.ref('trips').on('value', snapshot => {
       const keys = []
-      const allTrips = []
+      const trips = []
       for (var key in snapshot.val()) {
         keys.push(key)
-        let tripEnd = new Date(snapshot.val()[key].end)
-        let tripStart = new Date(snapshot.val()[key].start)
-        let tripDuration = (tripEnd - tripStart) / 86400000
-        let text = tripDuration + ' days: ' + snapshot.val()[key].title
-        allTrips.push(text.toString())
+        trips.push(snapshot.val()[key])
+        this.setState({
+          keys: keys,
+          trips: trips
+        })
       }
+    })
+
+    // fetch all tags
+    db.ref('tags').on('value', snapshot => {
       this.setState({
-        database: snapshot.val(),
-        tripDisplayed: allTrips
+        tags: tagsObjectToArray(snapshot.val())
       })
-      // console.log(this.state.database)
-      // console.log(this.state.tripDisplayed)
     })
   }
 
-  displayAllTrips () {
-  // const keys = []
-  // const details = []
-  // for (var key in this.state.database) {
-  //   keys.push(key)
-  //   details.push(this.state.database[key])
-  // }
-  // console.log(details, 'hi')
-  }
-
-  // tripSearch (e) {
-  //   let searchQuery = e.target.value.toLowerCase()
-    // }
-
-    // this.setState((prevState, props) => {
-    // to edit details.tripName to field in the database
-      // let searchedTrips = details.tripName.filter((trip) => {
-      //   let lowercaseTrip = trip.toLowerCase()
-      //   return lowercaseTrip.includes(searchQuery)
-
-    // to add in the filters for the other properties of trips(activities name/User name, when database tables are up)
-      // })
-      // return {
-      //   allTrips: details,
-      //   tripDisplayed: searchedTrips
-      // }
-  // console.log(this.state.tripSearch)
-    // })
-  // }
-
-//   tripDetails (e) {
-//   // console.log(key)
-//     let tripDisplayed = this.state.tripSearch
-//     let index = e.target.getAttribute('name')
-//     let selectedTrip = tripDisplayed[index]
-//   // let searchQuery = e.target.value.toLowerCase()
-//     this.setState((prevState, props) => {
-//       let selectedTrips = this.state.tripSearch.filter((trip) => {
-//         let lowercaseTrip = trip.toLowerCase()
-//         return lowercaseTrip.includes(selectedTrip)
-//       })
-//       return {
-//         tripSearch: selectedTrip
-//       }
-//     })
-//   }
-// //
-
   render () {
+    const reverseTrips = this.state.trips.slice().reverse().map((trip, index) => {
+      return <TripOverview key={this.state.keys[index]} tripID={this.state.keys[index]} trip={trip} />
+    })
+    const tagList = this.state.tags.slice(0, 10).map((tag) => {
+      return <li key={tag}>{tag}</li>
+    })
     return (
       <div>
-        {/* <SearchForm onChange={(e) => this.search(e)} />
-        <h1>Featured</h1>
-        <TripItem tripItems={this.state.tripDisplayed.filter((trip) => {
-            // {console.log(this.state.searchQuery)}
-          if (this.state.searchQuery) {
-            return trip.toLowerCase().includes(this.state.searchQuery.toLowerCase())
-          } else {
-            return null
-          }
-        })
-          } /> */}
-          Featured
+        <b>Trending</b>
+        <ul>
+          {tagList}
+        </ul>
+        <div className='trips'>
+          {reverseTrips}
+        </div>
       </div>
     )
   }
