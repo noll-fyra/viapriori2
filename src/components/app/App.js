@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import {BrowserRouter as Router, Route, Redirect} from 'react-router-dom'
 import Nav from '../nav/Nav'
+import Auth from '../auth/Auth'
 import Login from '../auth/Login'
 import Register from '../auth/Register'
 import Home from '../home/Home'
@@ -18,10 +19,14 @@ class App extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      searchQuery: ''
+      searchQuery: '',
+      addNewActivity: false,
+      isLogin: true
     }
     this.search = search.bind(this)
+    this.addNewActivity = this.addNewActivity.bind(this)
     this.handleSearch = this.handleSearch.bind(this)
+    this.intentionToLogin = this.intentionToLogin.bind(this)
     this.linkToSearch = null
   }
 
@@ -37,29 +42,49 @@ class App extends Component {
     })
   }
 
+  addNewActivity (bool) {
+    this.setState({
+      addNewActivity: bool
+    })
+  }
+
   handleSearch (e) {
     if (e.key === 'Enter') {
       this.linkToSearch.handleClick(new window.MouseEvent('click'))
     }
   }
 
+  intentionToLogin (bool) {
+    this.setState({
+      isLogin: bool
+    })
+  }
+
   render () {
     return (
       <Router>
         <div>
-          <Nav isAuthenticated={isAuthenticated()} logOut={logOut} onChange={this.search} onKeyUp={(e) => this.handleSearch(e)} linkToSearch={(ref) => { this.linkToSearch = ref }} />
+          {JSON.stringify(this.state.isLogin)}
+          <Nav
+            addNewActivity={this.addNewActivity}
+            isAuthenticated={isAuthenticated()}
+            intentionToLogin={this.intentionToLogin}
+            logOut={logOut}
+            onChange={this.search}
+            onKeyUp={(e) => this.handleSearch(e)}
+            linkToSearch={(ref) => { this.linkToSearch = ref }}
+          />
           <Route exact path='/' component={Home} />
           <Route path='/search' component={() => <SearchResults searchQuery={this.state.searchQuery} />} />
-          <Route path='/new' component={() => <NewActivity />} />
           <PrivateRoute path='/planned' component={Planned} />
           <PrivateRoute path='/saved' component={Saved} />
           <Route path='/activities' component={MyActs} />
           <PrivateRoute exact path='/profile' component={Trips} />
           <PrivateRoute path='/trips/:title/:id' component={TripActivities} />
-          {/* <PrivateRoute path='/profile' component={Profile} /> */}
+          <Route path='/auth' component={() => <Auth isLogin={this.state.isLogin} />} />
           <Route path='/login' component={Login} />
           <Route path='/register' component={Register} />
-          {/* <Route path='"trips/"+{props.tripID}' component={TripActivities}/> */}
+          <NewActivity isEnabled={this.state.addNewActivity} addNewActivity={this.addNewActivity} suggestions={suggestions} />
         </div>
       </Router>
     )
@@ -78,5 +103,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
     )
   )} />
 )
+
+const suggestions = ['mango', 'pineapple', 'orange', 'pear', 'persimmon', 'apple']
 
 export default App

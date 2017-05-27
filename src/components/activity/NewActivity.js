@@ -17,6 +17,7 @@ class NewActivity extends React.Component {
       isNewTrip: false,
       newTripName: '',
       trips: [],
+      tripID: '',
       tripIDs: [],
       tripIndex: 0,
       title: '',
@@ -32,7 +33,7 @@ class NewActivity extends React.Component {
       editLocation: false,
       rating: 0,
       tags: [],
-      suggestions: ['mango', 'pineapple', 'orange', 'pear', 'persimmon', 'apple']
+      suggestions: props.suggestions
     }
 
     this.chooseTrip = this.chooseTrip.bind(this)
@@ -48,7 +49,7 @@ class NewActivity extends React.Component {
     this.handleDelete = this.handleDelete.bind(this)
     this.handleAddition = this.handleAddition.bind(this)
     this.addActivity = this.addActivity.bind(this)
-    this.linkToProfile = null
+    this.linkToTrip = null
   }
 
   componentDidMount () {
@@ -212,7 +213,11 @@ class NewActivity extends React.Component {
         db.ref('users/' + window.localStorage[storageKey] + '/trips').set(newObj)
       })
     }
+    // update the tripID
     let tripID = this.state.isNewTrip ? newTripID : this.state.tripIDs.reverse()[this.state.tripIndex]
+    this.setState({
+      tripID: tripID
+    })
     // save photo
     storage.ref(window.localStorage[storageKey] + '/' + tripID + '/images/' + this.state.imageName).put(this.state.imagePath).then(() => {
       // get image url
@@ -225,7 +230,7 @@ class NewActivity extends React.Component {
         let activityRef = db.ref('activities/').push()
         let newActivityID = activityRef.key
         activityRef.set({
-          trip: tripID,
+          trip: this.state.tripID,
           user: window.localStorage[storageKey],
           title: this.state.title,
           date: this.state.date,
@@ -257,7 +262,8 @@ class NewActivity extends React.Component {
             newObj[tag.toLowerCase()] = newObj[tag.toLowerCase()] ? newObj[tag.toLowerCase()] + 1 : 1
           }
           db.ref('tags').set(newObj)
-          this.linkToProfile.handleClick(new window.MouseEvent('click'))
+          this.props.addNewActivity(false)
+          this.linkToTrip.handleClick(new window.MouseEvent('click'))
         })
       })
     })
@@ -270,8 +276,8 @@ class NewActivity extends React.Component {
     })
     return (
 
-      <div className='modalWrapper'>
-        <div className='backdrop' onClick={this.props.onClose} />
+      <div className='modalWrapper' style={this.props.isEnabled ? {display: 'block'} : {display: 'none'}}>
+        <div className='backdrop' onClick={() => this.props.addNewActivity(false)} />
 
         {this.state.imagePath === '' &&
         <div className='modal'>
@@ -327,7 +333,7 @@ class NewActivity extends React.Component {
           </div>
         </div>
         }
-        <Link to='/profile' style={{display: 'none'}} ref={(link) => { this.linkToProfile = link }} />
+        <Link to={'/trips/' + this.state.trips.slice().reverse()[this.state.tripIndex] + '/' + this.state.tripID} style={{display: 'none'}} ref={(link) => { this.linkToTrip = link }} />
       </div>
     )
   }

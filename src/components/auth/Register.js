@@ -18,11 +18,13 @@ class Register extends React.Component {
     // this.handleLogout = this.handleLogout.bind(this)
     this.linkToRegister = null
   }
+
   handleUsername (e) {
     this.setState({
       username: e.target.value
     })
   }
+
   handleEmail (e) {
     this.setState({
       email: e.target.value
@@ -52,17 +54,6 @@ class Register extends React.Component {
     })
     .catch((error) => { console.log(error.message) })
   }
-
-  // handleLogout (e) {
-  //   const authPromise = auth.signOut()
-  //   authPromise
-  //   .then((user) => {
-  //     this.setState({
-  //       currentUser: auth.currentUser
-  //     })
-  //   })
-  //   .catch((error) => { console.log(error.message) })
-  // }
 
   render () {
     const { from } = this.props.location.state || { from: { pathname: '/' } }
