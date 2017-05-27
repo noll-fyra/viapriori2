@@ -6,7 +6,7 @@ const TripOverview = (props) => {
     if (!props.trip.activities) {
       return 10
     }
-    return props.trip.totalRating / Object.keys(props.trip.activities).length
+    return parseFloat(props.trip.totalRating / Object.keys(props.trip.activities).length).toFixed( 1 )
   }
   return (
     <div>
