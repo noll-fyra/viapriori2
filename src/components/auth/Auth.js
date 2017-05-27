@@ -6,7 +6,7 @@ class Auth extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      isLogin: true,
+      isLogin: props.isLogin,
       email: '',
       password: '',
       username: '',
@@ -85,7 +85,7 @@ class Auth extends React.Component {
     }
     return (
       <div>
-
+        {JSON.stringify(this.props)}
         {this.state.currentUser &&
         <p>Signed in as: {this.state.currentUser.email}</p>
         }

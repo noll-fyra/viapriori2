@@ -45,7 +45,8 @@ class Nav extends React.Component {
         <Link to='/search' className='searchButton' ref={this.props.linkToSearch} style={{display: 'none'}} />
         {!this.state.isAuthenticated &&
           <span>
-            <Link to='/auth'>Login/Register</Link>
+            <Link to='/auth' onClick={() => this.props.isLogin(true)}>Login</Link>
+            <Link to='/auth' onClick={() => this.props.isLogin(false)}>Register</Link>
           </span>
         }
         {this.state.isAuthenticated &&

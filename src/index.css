@@ -1,3 +1,7 @@
+* {
+  font-family: 'Raleway', sans-serif;
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -32,17 +36,42 @@ body {
   background-color: rgba(0, 0, 0, 0);
 }
 
-.profile {
+.profileContainer {
+  display: flex;
+  flex-flow: row;
+  /*background-color: blue;*/
+  height: 100%;
+  margin: 0 auto;
+  justify-content: center;
+}
+
+.profileImageDiv {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 12px;
+}
+
+.profileDetails {
+  padding: 0 12px;
+}
+
+.profileImage {
+  width: 160px;
+  height: 160px;
+  border: 1px solid rgba(50, 50, 50, 0.25);
+  border-radius: 80px;
   font-size: 1.25em;
   font-weight: 700;
-  border-radius: 150px;
-  width: 40%;
-  height: 40%;
   color: white;
-  background-color: black;
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
+}
+
+.profileUsername {
+  font-size: 36px;
+  font-weight: 700;
 }
 
 
@@ -57,16 +86,17 @@ body {
    width: 100%;
 }*/
 
-.profileDiv {
+
+/*.profileDiv {
   width: 30%;
   height: 50%;
   position: absolute;
   top: 10%;
   left: 40%;
   z-index: 9999;
-}
+}*/
 
-.editImage {
+.changeAvatar {
   color: black;
   width: 60%;
   height: 15%;

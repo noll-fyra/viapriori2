@@ -6,11 +6,10 @@ import Home from '../home/Home'
 import SearchResults from '../search/SearchResults'
 import NewActivity from '../activity/NewActivity'
 import TripActivities from '../activity/TripActivities'
-import Trips from '../trip/Trips'
-import MyActs from '../trip/MyActs'
+import Profile from '../profile/Profile'
 import Planned from '../planned/Planned'
 import Saved from '../saved/Saved'
-import {auth, storageKey, storageEmail, isAuthenticated, logOut} from '../../utils/firebase'
+import {auth, storageKey, isAuthenticated, logOut} from '../../utils/firebase'
 import search from '../../utils/search'
 import suggestions from '../../utils/suggestions'
 
@@ -19,13 +18,12 @@ class App extends Component {
     super(props)
     this.state = {
       searchQuery: '',
-      addNewActivity: false,
-      isLogin: true
+      addNewActivity: false
     }
     this.search = search.bind(this)
     this.addNewActivity = this.addNewActivity.bind(this)
     this.handleSearch = this.handleSearch.bind(this)
-    this.intentionToLogin = this.intentionToLogin.bind(this)
+    this.handleLogin = this.handleLogin.bind(this)
     this.linkToSearch = null
   }
 
@@ -33,10 +31,8 @@ class App extends Component {
     auth.onAuthStateChanged(user => {
       if (user) {
         window.localStorage.setItem(storageKey, user.uid)
-        window.localStorage.setItem(storageEmail, user.email)
       } else {
         window.localStorage.removeItem(storageKey)
-        window.localStorage.removeItem(storageEmail)
       }
     })
   }
@@ -53,7 +49,7 @@ class App extends Component {
     }
   }
 
-  intentionToLogin (bool) {
+  handleLogin (bool) {
     this.setState({
       isLogin: bool
     })
@@ -66,6 +62,7 @@ class App extends Component {
           <Nav
             addNewActivity={this.addNewActivity}
             isAuthenticated={isAuthenticated()}
+            isLogin={this.handleLogin}
             logOut={logOut}
             onChange={this.search}
             onKeyUp={(e) => this.handleSearch(e)}
@@ -75,10 +72,9 @@ class App extends Component {
           <Route path='/search' component={() => <SearchResults searchQuery={this.state.searchQuery} />} />
           <PrivateRoute path='/planned' component={Planned} />
           <PrivateRoute path='/saved' component={Saved} />
-          <Route path='/activities' component={MyActs} />
-          <PrivateRoute exact path='/profile' component={Trips} />
+          <PrivateRoute exact path='/profile' component={Profile} />
           <PrivateRoute path='/trips/:title/:id' component={TripActivities} />
-          <Route path='/auth' component={Auth} />
+          <Route path='/auth' component={(props) => <Auth isLogin={this.state.isLogin} {...props} />} />
           <NewActivity isEnabled={this.state.addNewActivity} addNewActivity={this.addNewActivity} suggestions={suggestions} />
         </div>
       </Router>
