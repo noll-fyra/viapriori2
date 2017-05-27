@@ -1,57 +1,116 @@
 import React from 'react'
-import {Link} from 'react-router-dom'
 import moment from 'moment'
 import Rating from '../rating/Rating'
+import db, {storageKey} from '../../utils/firebase'
 
-const SavedOverview = (props) => {
-// console.log(props.trips , 'props.trips')
-// console.log(props.isPlanned, "props.isPlanned")
-  return (
-    <div>
-      <div className='activityOverview'><p>Activity: {props.activity.title||''}</p><img src={props.activity.image} alt={props.activity.title}/>
-        <p>Date: {moment(props.activity.date).format('YYYY-MM-DD')|| ''}</p><p>City:{props.activity.city||''}</p><p>Country: {props.activity.country||''}</p><p>Caption:{props.activity.caption||''}</p><Rating stars={props.activity.rating} isEnabled={false}/>
+class SavedOverview extends React.Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      newPlannedTitle: '',
+      isNewPlanned: false,
+      plannedIndex: 0
+    }
+    this.switchNewPlanned = this.switchNewPlanned.bind(this)
+    this.handlePlannedTitle = this.handlePlannedTitle.bind(this)
+    this.addActivityToNewPlanned = this.addActivityToNewPlanned.bind(this)
+    this.addActivityToExisting = this.addActivityToExisting.bind(this)
+    this.removeActivity = this.removeActivity.bind(this)
+    this.chooseTrip = this.chooseTrip.bind(this)
+  }
 
-        {props.trips.length === 0 &&
-            <form onSubmit={props.createNewPlanned} name={props.activityID}>
+  switchNewPlanned () {
+    this.setState({
+      isNewPlanned: !this.state.isNewPlanned
+    })
+  }
+
+  handlePlannedTitle (e) {
+    this.setState({
+      newPlannedTitle: e.target.value
+    })
+  }
+
+  addActivityToNewPlanned () {
+    let newPlannedID = this.props.createNewPlanned(this.state.newPlannedTitle)
+    this.setState({
+      newPlannedTitle: ''
+    })
+    db.ref('planned/' + newPlannedID + '/activities').once('value').then((snap) => {
+      let newObj = snap.val() || {}
+      newObj[this.props.activityID] = true
+      db.ref('planned/' + newPlannedID + '/activities').set(newObj)
+    })
+  }
+
+  addActivityToExisting () {
+    this.setState({
+      newPlannedTitle: ''
+    })
+    db.ref('planned/' + this.props.plannedKeys[this.state.plannedIndex] + '/activities').once('value').then((snap) => {
+      let newObj = snap.val() || {}
+      newObj[this.props.activityID] = true
+      db.ref('planned/' + this.props.plannedKeys[this.state.plannedIndex] + '/activities').set(newObj)
+    })
+  }
+
+  removeActivity (e) {
+    db.ref('users/' + window.localStorage[storageKey] + '/saved/' + e.target.name).remove()
+  }
+
+  chooseTrip (e) {
+    this.setState({
+      plannedIndex: e.target.selectedIndex
+    })
+  }
+
+  render () {
+    return (
+      <div>
+        <div className='activityOverview'>
+          <p>Activity: {this.props.activity.title || ''}</p>
+          <img src={this.props.activity.image} alt={this.props.activity.title} />
+          <p>Date: {moment(this.props.activity.date).format('YYYY-MM-DD') || ''}</p>
+          <p>City: {this.props.activity.locality || ''}</p>
+          <p>Country: {this.props.activity.country || ''}</p>
+          <p>Caption: {this.props.activity.caption || ''}</p>
+          <Rating stars={this.props.activity.rating} isEnabled={false} />
+
+          {this.props.plannedKeys.length === 0 &&
+            <label>
+              <input value={this.state.newPlannedTitle} type='text' placeholder='New trip title' onChange={this.handlePlannedTitle} />
+              <button onClick={() => this.addActivityToNewPlanned()}>Add activity</button>
+            </label>
+          }
+
+          {!this.state.isNewPlanned && this.props.plannedKeys.length > 0 &&
+            <div>
               <label>
-                Add to new plans:
-              </label><input id='newPlanned' type='text' placeholder='Title for your first planned trip!'/>
-              <input type='submit' value="Create Trip" />
-            </form>
-        }
+                Add to plan:
+                <select onChange={(e) => this.chooseTrip(e)}>
+                  {this.props.options}
+                </select>
+                <button onClick={() => this.addActivityToExisting()}>Add activity</button>
+                <p>or <button onClick={() => this.switchNewPlanned()}>Plan a brand new trip</button></p>
+              </label>
+            </div>
+          }
 
-        {!props.isPlanned && props.trips.length > 0 &&
-        <div>
-          <form onSubmit={props.createNewPlanned} name={props.activityID}>
-          <label>
-            Add to plan:
-            <select onChange={props.chooseTrip}>
-              {props.options}
-            </select>
-          </label>
-            <input type='submit' value="Add activity" />
-          </form>
-           or <button onClick={props.startNewPlanned}>Plan a new trip</button>
+          {this.state.isNewPlanned && this.props.plannedKeys.length > 0 &&
+            <div>
+              <label>
+                <input value={this.state.newPlannedTitle} type='text' placeholder='New trip title' onChange={this.handlePlannedTitle} />
+                <button onClick={() => this.addActivityToNewPlanned()}>Add to new plan</button>
+              </label>
+              <p>or <button onClick={() => this.switchNewPlanned()}>Add to an existing plan</button></p>
+            </div>
+          }
+
+          <button onClick={(e) => this.props.handleRemoveSaved(e)}>Unsave</button>
         </div>
-        }
-
-        {props.isPlanned && props.trips.length > 0 &&
-          <div>
-        <form onSubmit={props.createNewPlanned} name={props.activityID}>
-          <input id='newPlanned' type='text' placeholder='Add title for your first planned trip!'/>
-          <input type='submit' value="Create Planned Trip" />
-        </form>
-                or
-          <button name={props.activityID} onClick={props.switchNewPlanned}>Add to existing plans</button>
-          </div>
-        }
-
-        <button name={props.activityID} onClick={props.handleRemoveSaved}>Remove</button>
-
       </div>
-
-    </div>
-  )
+    )
+  }
 }
 
 export default SavedOverview

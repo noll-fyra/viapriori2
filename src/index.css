@@ -8,6 +8,11 @@ body {
   font-family: sans-serif;
 }
 
+img {
+  width: 100px;
+  height: 75px;
+}
+
 .fileInput {
   width: 0.1px;
   height: 0.1px;

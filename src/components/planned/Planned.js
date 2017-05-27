@@ -1,14 +1,14 @@
 import React from 'react'
-import db, {storage, storageKey} from '../../utils/firebase'
-import PlannedOverview from './PlannedOverview'
+import db, {storageKey} from '../../utils/firebase'
+// import PlannedOverview from './PlannedOverview'
 
 class Planned extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      plannedArray:[],
-      plannedActivities:[],
-      plannedTrips:[]
+      plannedArray: [],
+      plannedActivities: [],
+      plannedTrips: []
     }
   }
   componentDidMount () {
@@ -52,18 +52,17 @@ class Planned extends React.Component {
   }
 
   displayActivities () {
-
-        let arrTrips = this.state.plannedTrips.slice()
-        console.log(arrTrips)
-        arrTrips.forEach((activity) =>{
-          let index = arrTrips.indexOf(activity)
-          db.ref('activities/' + activity).once('value').then((snap) => {
-            this.state.plannedTrips[index] = snap.val()
+    let arrTrips = this.state.plannedTrips.slice()
+    console.log(arrTrips)
+    arrTrips.forEach((activity) => {
+      let index = arrTrips.indexOf(activity)
+      db.ref('activities/' + activity).once('value').then((snap) => {
+        this.state.plannedTrips[index] = snap.val()
             // this.setState({
             //   savedActivities: temp
             // })
-          })
-        })
+      })
+    })
 
     //   } else {
     //     this.setState({
@@ -72,10 +71,6 @@ class Planned extends React.Component {
     //   }
     // })
   }
-
-
-
-
 
   removeActivity (e) {
     let removeActivityID = e.target.name
@@ -89,7 +84,7 @@ class Planned extends React.Component {
     return (
       <div>
         <h1> Saved Activities</h1>
-{/*
+        {/*
         {this.state.savedActivities &&
             reverseSaved.map((activity, index) => {
               return <PlannedOverview key={index} activityID={this.state.savedArray[index]} activity={activity} handlePlannedActivity={(e) => this.plannedActivity(e)} handleRemoveSaved={(e) => this.removeActivity(e)} />
