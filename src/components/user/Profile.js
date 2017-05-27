@@ -16,18 +16,17 @@ class Profile extends React.Component {
     this.addProfilePic = this.addProfilePic.bind(this)
   }
   componentDidMount () {
-
     db.ref('users/' + window.localStorage[storageKey]).once('value').then((snapshot) => {
-      if (snapshot.val()){
-      this.setState({
-        imageName: snapshot.val().details.imageName||null,
-        imagePath: snapshot.val().details.imagePath||null,
-        username: snapshot.val().details.username,
+      if (snapshot.val()) {
+        this.setState({
+          imageName: snapshot.val().details.imageName || null,
+          imagePath: snapshot.val().details.imagePath || null,
+          username: snapshot.val().details.username,
 
-        email: snapshot.val().details.email,
-        image: snapshot.val().details.image
-      })
-    }
+          email: snapshot.val().details.email,
+          image: snapshot.val().details.image
+        })
+      }
     })
   }
 
@@ -43,14 +42,12 @@ class Profile extends React.Component {
     //
     // this.setState({
     //   imagePath: image,
+
     //   imageName: image.name
     // })
 
     storage.ref(window.localStorage[storageKey] + '/profile/images/').put(image).then((snap) => {
-
-      db.ref('users/' + window.localStorage[storageKey] +'/details').update({
-
-
+      db.ref('users/' + window.localStorage[storageKey] + '/details').update({
         imageName: image.name,
         imagePath: window.localStorage[storageKey] + '/profile/images/'
       })
@@ -89,20 +86,19 @@ class Profile extends React.Component {
         }
 
         {this.state.imagePath !== '' &&
-        <div className='profileDiv'>
-          <label className='profile' style={{backgroundImage: `url(${this.state.image})`, backgroundSize: 'cover'}}>
-            <span className='editImage'>Edit Image</span>
-            <input className='fileInput' type='file' onChange={(e) => this.addProfilePic(e)} />
-          </label>
-        </div>
-}
+          <div className='profileDiv'>
+            <label className='profile' style={{backgroundImage: `url(${this.state.image})`, backgroundSize: 'cover'}}>
+              <span className='editImage'>Edit Image</span>
+              <input className='fileInput' type='file' onChange={(e) => this.addProfilePic(e)} />
+            </label>
+          </div>
+        }
 
         <div className='profileDetails'>
           <h4> Name: {this.state.username}</h4>
           <h4> Email: {window.localStorage[storageEmail]}</h4>
         </div>
       </div>
-
     )
   }
 }

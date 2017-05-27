@@ -6,7 +6,7 @@ class Auth extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      isLogin: props.isLogin,
+      isLogin: true,
       email: '',
       password: '',
       username: '',
@@ -85,10 +85,12 @@ class Auth extends React.Component {
     }
     return (
       <div>
+
         {this.state.currentUser &&
-        <p>{this.state.currentUser.email}</p>
+        <p>Signed in as: {this.state.currentUser.email}</p>
         }
-        {!this.state.currentUser &&
+
+        {!this.state.currentUser && from.pathname !== '/' &&
         <p>You must log in to view the page at {from.pathname}</p>
         }
 

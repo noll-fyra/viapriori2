@@ -2,8 +2,6 @@ import React, { Component } from 'react'
 import {BrowserRouter as Router, Route, Redirect} from 'react-router-dom'
 import Nav from '../nav/Nav'
 import Auth from '../auth/Auth'
-import Login from '../auth/Login'
-import Register from '../auth/Register'
 import Home from '../home/Home'
 import SearchResults from '../search/SearchResults'
 import NewActivity from '../activity/NewActivity'
@@ -14,6 +12,7 @@ import Planned from '../planned/Planned'
 import Saved from '../saved/Saved'
 import {auth, storageKey, storageEmail, isAuthenticated, logOut} from '../../utils/firebase'
 import search from '../../utils/search'
+import suggestions from '../../utils/suggestions'
 
 class App extends Component {
   constructor (props) {
@@ -64,11 +63,9 @@ class App extends Component {
     return (
       <Router>
         <div>
-          {JSON.stringify(this.state.isLogin)}
           <Nav
             addNewActivity={this.addNewActivity}
             isAuthenticated={isAuthenticated()}
-            intentionToLogin={this.intentionToLogin}
             logOut={logOut}
             onChange={this.search}
             onKeyUp={(e) => this.handleSearch(e)}
@@ -81,9 +78,7 @@ class App extends Component {
           <Route path='/activities' component={MyActs} />
           <PrivateRoute exact path='/profile' component={Trips} />
           <PrivateRoute path='/trips/:title/:id' component={TripActivities} />
-          <Route path='/auth' component={() => <Auth isLogin={this.state.isLogin} />} />
-          <Route path='/login' component={Login} />
-          <Route path='/register' component={Register} />
+          <Route path='/auth' component={Auth} />
           <NewActivity isEnabled={this.state.addNewActivity} addNewActivity={this.addNewActivity} suggestions={suggestions} />
         </div>
       </Router>
@@ -97,13 +92,14 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
       <Component {...props} />
     ) : (
       <Redirect to={{
-        pathname: '/login',
-        state: { from: props.location }
+        pathname: '/auth',
+        state: {
+          from: props.location,
+          isLogin: this.state.isLogin
+        }
       }} />
     )
   )} />
 )
-
-const suggestions = ['mango', 'pineapple', 'orange', 'pear', 'persimmon', 'apple']
 
 export default App
