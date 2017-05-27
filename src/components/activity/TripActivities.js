@@ -15,13 +15,12 @@ class TripActivities extends React.Component {
   }
 
   componentDidMount () {
-    db.ref('trips/' + this.props.match.params.id + '/activities').once('value').then((snapshot) => {
-      // console.log(Object.keys(snapshot.val()))
-      let activityArray = Object.keys(snapshot.val())
-      console.log(activityArray)
-      this.setState({
-        activityArray: activityArray
-      })
+    db.ref('trips/'+this.props.match.params.id+'/activities').once('value').then((snapshot) => {
+        let activityArray = Object.keys(snapshot.val())
+        this.setState({
+          activityArray: activityArray
+        })
+
 
       let temp = activityArray.slice()
       for (var activity in snapshot.val()) {
