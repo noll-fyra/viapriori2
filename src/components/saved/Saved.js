@@ -16,6 +16,10 @@ class Saved extends React.Component {
     }
     this.addSavedActivityToPlanned = this.addSavedActivityToPlanned.bind(this)
     this.createNewPlanned = this.createNewPlanned.bind(this)
+    this.displayActivity = this.displayActivity.bind(this)
+    this.removeActivity = this.removeActivity.bind(this)
+    this.startNewPlanned = this.startNewPlanned.bind(this)
+    this.currentPlannedTrips = this.currentPlannedTrips.bind(this)
   }
   componentDidMount () {
     db.ref('users/' + window.localStorage[storageKey] + '/saved').once('value').then((snapshot) => {
@@ -77,6 +81,7 @@ class Saved extends React.Component {
     db.ref('users/' + window.localStorage[storageKey] + '/planned').once('value').then((snapshot) => {
       if (snapshot.val()) {
         let plannedArray = Object.keys(snapshot.val())
+        console.log(plannedArray, 'planned array')
         this.setState({
           plannedArray: plannedArray
         })
@@ -88,7 +93,7 @@ class Saved extends React.Component {
         let tempPlanned = plannedArray.slice()
         for (var trip in snapshot.val()) {
           let index = plannedArray.indexOf(trip)
-          db.ref('plannedtrips/' + trip).once('value').then((snap) => {
+          db.ref('planned/' + trip).once('value').then((snap) => {
             tempPlanned[index] = snap.val()
             this.setState({
               plannedTrips: tempPlanned
@@ -96,6 +101,7 @@ class Saved extends React.Component {
           })
         }
       } else {
+        console.log("else statement")
         this.setState({
           plannedTrips: [],
           plannedArray: [],
@@ -123,7 +129,7 @@ class Saved extends React.Component {
       this.setState({
         newPlannedTripName: input.value
       })
-      let plannedtrips = db.ref('plannedtrips')
+      let plannedtrips = db.ref('planned')
       let newRef = plannedtrips.push()
       let newPlannedTripID = newRef.key
       newRef.set({
@@ -136,10 +142,12 @@ class Saved extends React.Component {
         db.ref('users/' + window.localStorage[storageKey] + '/planned').set(newObj)
       })
     }
-    // console.log(this.state.isNewPlanned)
+    console.log(this.state.isNewPlanned)
     // console.log(e.target.name)
-    // console.log(this.state.plannedArray)
+    console.log(newPlannedTripID)
+    console.log(this.state.plannedArray)
   let plannedTripID = this.state.isNewPlanned ? newPlannedTripID : this.state.plannedArray.reverse()[this.state.tripIndex]
+  console.log(plannedTripID)
     this.setState({
       plannedTripID: plannedTripID,
       plannedActivityID: e.target.name
@@ -149,14 +157,20 @@ class Saved extends React.Component {
 
   addSavedActivityToPlanned(){
     // console.log('save activity')
-    // console.log(this.state.plannedTripID)
+    console.log(this.state.plannedTripID)
     // console.log(this.state.plannedActivityID)
-    db.ref('plannedtrips/' + this.state.plannedTripID).once('value').then((snap) => {
-      let newObject = snap.val() || {}
-      let currentActivities = snap.val().activities || {}
-      console.log(currentActivities)
-      currentActivities[this.state.plannedActivityID] = true
-      newObject['activities'] = currentActivities
+    db.ref('planned/' + this.state.plannedTripID ).once('value').then((snap) => {
+      console.log(snap.val())
+      // let newObject = snap.val() || {}
+      // let currentActivities = snap.val().activities || {}
+      // currentActivities[this.state.plannedActivityID] = true
+      // newObject['activities'] = currentActivities
+      // db.ref('planned/'+ this.state.plannedTripID + "/activities").set(newObject)
+
+      // let newObj = snap.val() || {}
+      // let currentActivities = snap.val().activities || {}
+      // currentActivities[newActivityID] = true
+      // newObj['activities'] = currentActivities
       // let currentRating = snap.val().totalRating || 0
       // newObj['totalRating'] = currentRating + this.state.rating
       // db.ref('trips/' + tripID).set(newObj)
