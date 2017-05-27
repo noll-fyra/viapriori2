@@ -3,12 +3,12 @@ import {Link} from 'react-router-dom'
 import EXIF from 'exif-js'
 import geocoder from 'geocoder'
 import moment from 'moment'
-import TagsInput from 'react-tagsinput'
 import db, {storage, storageKey} from '../../utils/firebase'
 import latLng, {getLocation} from '../../utils/geocoding'
-import arrayToObject from '../../utils/format'
+import tagsArrayToObject from '../../utils/format'
 import Rating from '../rating/Rating'
 import fixOrientation from 'fix-orientation'
+import { WithContext as ReactTags } from 'react-tag-input'
 
 class NewActivity extends React.Component {
   constructor (props) {
@@ -17,6 +17,7 @@ class NewActivity extends React.Component {
       isNewTrip: false,
       newTripName: '',
       trips: [],
+      tripID: '',
       tripIDs: [],
       tripIndex: 0,
       title: '',
@@ -31,22 +32,24 @@ class NewActivity extends React.Component {
       country: '',
       editLocation: false,
       rating: 0,
-      tags: []
+      tags: [],
+      suggestions: props.suggestions
     }
 
     this.chooseTrip = this.chooseTrip.bind(this)
     this.startNewTrip = this.startNewTrip.bind(this)
-    this.addTripTitle = this.addTripTitle.bind(this)
-    this.addActivityTitle = this.addActivityTitle.bind(this)
-    this.addFile = this.addFile.bind(this)
-    this.changeDate = this.changeDate.bind(this)
-    this.changeLocality = this.changeLocality.bind(this)
-    this.changeCountry = this.changeCountry.bind(this)
-    this.addCaption = this.addCaption.bind(this)
+    this.handleTripTitle = this.handleTripTitle.bind(this)
+    this.handleActivityTitle = this.handleActivityTitle.bind(this)
+    this.handleFile = this.handleFile.bind(this)
+    this.handleDate = this.handleDate.bind(this)
+    this.handleLocality = this.handleLocality.bind(this)
+    this.handleCountry = this.handleCountry.bind(this)
+    this.handleCaption = this.handleCaption.bind(this)
     this.starClick = this.starClick.bind(this)
-    this.handleTags = this.handleTags.bind(this)
-    this.addActivity = this.addActivity.bind(this)
-    this.linkToProfile = null
+    this.handleDelete = this.handleDelete.bind(this)
+    this.handleAddition = this.handleAddition.bind(this)
+    this.handleActivity = this.handleActivity.bind(this)
+    this.linkToTrip = null
   }
 
   componentDidMount () {
@@ -86,19 +89,19 @@ class NewActivity extends React.Component {
     })
   }
 
-  addTripTitle (e) {
+  handleTripTitle (e) {
     this.setState({
       newTripName: e.target.value
     })
   }
 
-  addActivityTitle (e) {
+  handleActivityTitle (e) {
     this.setState({
       title: e.target.value
     })
   }
 
-  addFile (e) {
+  handleFile (e) {
     let image = e.target.files[0]
     var reader = new window.FileReader()
     reader.addEventListener('load', () => {
@@ -144,25 +147,25 @@ class NewActivity extends React.Component {
     })
   }
 
-  changeDate (e) {
+  handleDate (e) {
     this.setState({
       date: moment(e.target.value).valueOf()
     })
   }
 
-  changeLocality (e) {
+  handleLocality (e) {
     this.setState({
       locality: e.target.value
     })
   }
 
-  changeCountry (e) {
+  handleCountry (e) {
     this.setState({
       country: e.target.value
     })
   }
 
-  addCaption (e) {
+  handleCaption (e) {
     this.setState({
       caption: e.target.value
     })
@@ -174,13 +177,22 @@ class NewActivity extends React.Component {
     })
   }
 
-  handleTags (tags) {
-    this.setState({
-      tags
-    })
+  handleDelete (i) {
+    let tags = this.state.tags
+    tags.splice(i, 1)
+    this.setState({tags: tags})
   }
 
-  addActivity () {
+  handleAddition (tag) {
+    let tags = this.state.tags
+    tags.push({
+      id: tags.length + 1,
+      text: tag
+    })
+    this.setState({tags: tags})
+  }
+
+  handleActivity () {
     // create new trip if isNewTrip is true
     let newTripID = ''
     if (this.state.isNewTrip) {
@@ -201,7 +213,11 @@ class NewActivity extends React.Component {
         db.ref('users/' + window.localStorage[storageKey] + '/trips').set(newObj)
       })
     }
+    // update the tripID
     let tripID = this.state.isNewTrip ? newTripID : this.state.tripIDs.reverse()[this.state.tripIndex]
+    this.setState({
+      tripID: tripID
+    })
     // save photo
     storage.ref(window.localStorage[storageKey] + '/' + tripID + '/images/' + this.state.imageName).put(this.state.imagePath).then(() => {
       // get image url
@@ -214,7 +230,7 @@ class NewActivity extends React.Component {
         let activityRef = db.ref('activities/').push()
         let newActivityID = activityRef.key
         activityRef.set({
-          trip: tripID,
+          trip: this.state.tripID,
           user: window.localStorage[storageKey],
           title: this.state.title,
           date: this.state.date,
@@ -225,7 +241,7 @@ class NewActivity extends React.Component {
           imageOrientation: this.state.imageOrientation,
           caption: this.state.caption,
           rating: this.state.rating,
-          tags: arrayToObject(this.state.tags)
+          tags: tagsArrayToObject(this.state.tags)
         })
 
         // update the trip's rating and activities
@@ -239,21 +255,15 @@ class NewActivity extends React.Component {
           db.ref('trips/' + tripID).set(newObj)
         })
 
-        // add activity to the trip's activities
-        // db.ref('trips/' + tripID + '/activities').once('value').then((snap) => {
-        //   let newObj = snap.val() || {}
-        //   newObj[newActivityID] = true
-        //   db.ref('trips/' + tripID + '/activities').set(newObj)
-        // })
-
         // add tags to all tags
         db.ref('tags').once('value').then((snap) => {
           let newObj = snap.val() || {}
-          for (var tag in arrayToObject(this.state.tags)) {
+          for (var tag in tagsArrayToObject(this.state.tags)) {
             newObj[tag.toLowerCase()] = newObj[tag.toLowerCase()] ? newObj[tag.toLowerCase()] + 1 : 1
           }
           db.ref('tags').set(newObj)
-          this.linkToProfile.handleClick(new window.MouseEvent('click'))
+          this.props.handleNewActivity(false)
+          this.linkToTrip.handleClick(new window.MouseEvent('click'))
         })
       })
     })
@@ -266,14 +276,14 @@ class NewActivity extends React.Component {
     })
     return (
 
-      <div className='modalWrapper'>
-        <div className='backdrop' onClick={this.props.onClose} />
+      <div className='modalWrapper' style={this.props.isEnabled ? {display: 'block'} : {display: 'none'}}>
+        <div className='backdrop' onClick={() => this.props.handleNewActivity(false)} />
 
         {this.state.imagePath === '' &&
         <div className='modal'>
           <label className='imageLabel'>
             <span>Post a photo</span>
-            <input className='fileInput' type='file' onChange={(e) => this.addFile(e)} />
+            <input className='fileInput' type='file' onChange={(e) => this.handleFile(e)} />
           </label>
         </div>
         }
@@ -284,12 +294,12 @@ class NewActivity extends React.Component {
             <label className='imageLabelActive' style={{backgroundImage: `url(${this.state.image})`, backgroundSize: 'cover'}}>
               <span>Post a photo</span>
               {/* <img src={this.state.image}/> */}
-              <input className='fileInput' type='file' onChange={(e) => this.addFile(e)} />
+              <input className='fileInput' type='file' onChange={(e) => this.handleFile(e)} />
             </label>
           </div>
           <div className='modal modal2'>
             {this.state.trips.length === 0 &&
-              <p><input type='text' onChange={this.addTripTitle} placeholder='Add your first trip title!' /></p>
+              <p><input type='text' onChange={this.handleTripTitle} placeholder='Add your first trip' /></p>
             }
             {!this.state.isNewTrip && this.state.trips.length > 0 &&
             <p>
@@ -303,22 +313,27 @@ class NewActivity extends React.Component {
             </p>
             }
             {this.state.isNewTrip && this.state.trips.length > 0 &&
-              <p><input type='text' onChange={this.addTripTitle} placeholder='Add new trip' />
+              <p><input type='text' onChange={this.handleTripTitle} placeholder='Add new trip' />
             or <button onClick={() => this.startNewTrip(false)}>Add to existing trip</button></p>
             }
 
-            <p>Activity: <input type='text' onChange={(e) => this.addActivityTitle(e)} placeholder='' /></p>
-            <p>Date: <input type='date' onChange={this.changeDate} value={moment(this.state.date).format('YYYY-MM-DD')} /></p>
-            <p>City: <input type='text' placeholder='city' onChange={this.changeLocality} value={this.state.locality} /></p>
-            <p>Country: <input type='text' placeholder='country' onChange={this.changeCountry} value={this.state.country} /></p>
-            <p>Caption: <textarea onChange={(e) => this.addCaption(e)} /></p>
-            <Rating stars={this.state.rating} starClick={this.starClick} isEnabled={true}/>
-            <TagsInput value={this.state.tags} onChange={this.handleTags} />
-            <button onClick={this.addActivity}>Share</button>
+            <p>Activity: <input type='text' onChange={(e) => this.handleActivityTitle(e)} /></p>
+            <p>Date: <input type='date' onChange={this.handleDate} value={moment(this.state.date).format('YYYY-MM-DD')} /></p>
+            <p>City: <input type='text' onChange={this.handleLocality} value={this.state.locality} /></p>
+            <p>Country: <input type='text' onChange={this.handleCountry} value={this.state.country} /></p>
+            <p>Caption: <textarea onChange={(e) => this.handleCaption(e)} /></p>
+            <Rating stars={this.state.rating} starClick={this.starClick} isEnabled />
+            <ReactTags tags={this.state.tags}
+              suggestions={this.state.suggestions}
+              handleDelete={this.handleDelete}
+              handleAddition={this.handleAddition}
+              // minQueryLength={1}
+             />
+            <button onClick={this.handleActivity}>Share</button>
           </div>
         </div>
         }
-        <Link to='/profile' style={{display: 'none'}} ref={(link) => { this.linkToProfile = link }} />
+        <Link to={'/trips/' + this.state.trips.slice().reverse()[this.state.tripIndex] + '/' + this.state.tripID} style={{display: 'none'}} ref={(link) => { this.linkToTrip = link }} />
       </div>
     )
   }

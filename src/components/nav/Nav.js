@@ -40,21 +40,22 @@ class Nav extends React.Component {
   render () {
     return (
       <nav className='topNav'>
-        <Link to='/'>VIA PRIORI</Link>
+        <Link to='/'>Via Postale</Link>
         <SearchForm placeholder='Search' onChange={this.props.onChange} onKeyUp={this.props.onKeyUp} />
         <Link to='/search' className='searchButton' ref={this.props.linkToSearch} style={{display: 'none'}} />
-        <Link to='/new'>+NEW</Link>
-        <Link to='/planned'>Planned</Link>
-        <Link to='/saved'>Saved</Link>
-        <Link to='/profile'>Profile</Link>
         {!this.state.isAuthenticated &&
-        <span>
-          <Link to='/login'>Login</Link>
-          <Link to='/register'>Register</Link>
-        </span>
+          <span>
+            <Link to='/auth' onClick={() => this.props.isLogin(true)}>Login</Link>
+            <Link to='/auth' onClick={() => this.props.isLogin(false)}>Register</Link>
+          </span>
         }
         {this.state.isAuthenticated &&
-        <Link to='/' onClick={this.logOut}>Logout</Link>
+          <span>
+            <button onClick={() => this.props.addNewActivity(true)}>+NEW</button>
+            <Link to='/saved'>Saved</Link>
+            <Link to='/profile'>Profile</Link>
+            <Link to='/' onClick={this.logOut}>Logout</Link>
+          </span>
         }
       </nav>
     )

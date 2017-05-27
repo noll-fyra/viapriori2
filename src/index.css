@@ -1,3 +1,7 @@
+* {
+  font-family: 'Raleway', sans-serif;
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -32,17 +36,42 @@ body {
   background-color: rgba(0, 0, 0, 0);
 }
 
-.profile {
+.profileContainer {
+  display: flex;
+  flex-flow: row;
+  /*background-color: blue;*/
+  height: 100%;
+  margin: 0 auto;
+  justify-content: center;
+}
+
+.profileImageDiv {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 12px;
+}
+
+.profileDetails {
+  padding: 0 12px;
+}
+
+.profileImage {
+  width: 160px;
+  height: 160px;
+  border: 1px solid rgba(50, 50, 50, 0.25);
+  border-radius: 80px;
   font-size: 1.25em;
   font-weight: 700;
-  border-radius: 150px;
-  width: 40%;
-  height: 40%;
   color: white;
-  background-color: black;
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
+}
+
+.profileUsername {
+  font-size: 36px;
+  font-weight: 700;
 }
 
 
@@ -57,16 +86,17 @@ body {
    width: 100%;
 }*/
 
-.profileDiv {
+
+/*.profileDiv {
   width: 30%;
   height: 50%;
   position: absolute;
   top: 10%;
   left: 40%;
   z-index: 9999;
-}
+}*/
 
-.editImage {
+.changeAvatar {
   color: black;
   width: 60%;
   height: 15%;
@@ -97,9 +127,12 @@ label:focus {
 }
 
 .modalWrapper {
-  position: relative;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  position: absolute;
   padding-top: 75%;
-  height: 0;
 }
 
 .modal {
@@ -225,4 +258,77 @@ li {
 
 img {
   image-orientation: from-image;
+}
+
+div.ReactTags__tags {
+  position: relative;
+}
+
+
+/* Styles for the input */
+
+div.ReactTags__tagInput {
+  width: 200px;
+  border-radius: 2px;
+  display: inline-block;
+}
+
+div.ReactTags__tagInput input.ReactTags__tagInputField, div.ReactTags__tagInput input.ReactTags__tagInputField:focus {
+  height: 31px;
+  margin: 0;
+  font-size: 12px;
+  width: 100%;
+  border: 1px solid #eee;
+}
+
+
+/* Styles for selected tags */
+
+div.ReactTags__selected span.ReactTags__tag {
+  border: 1px solid #ddd;
+  background: #eee;
+  font-size: 12px;
+  display: inline-block;
+  padding: 5px;
+  margin: 0 5px;
+  /*cursor: move;*/
+  border-radius: 2px;
+}
+
+div.ReactTags__selected a.ReactTags__remove {
+  font-size: 16px;
+  color: red;
+  margin-left: 5px;
+  cursor: pointer;
+}
+
+
+/* Styles for suggestions */
+
+div.ReactTags__suggestions {
+  position: absolute;
+}
+
+div.ReactTags__suggestions ul {
+  list-style-type: none;
+  box-shadow: .05em .01em .5em rgba(0, 0, 0, .2);
+  background: white;
+  width: 200px;
+}
+
+div.ReactTags__suggestions li {
+  border-bottom: 1px solid #ddd;
+  padding: 5px 10px;
+  margin: 0;
+}
+
+div.ReactTags__suggestions li mark {
+  text-decoration: underline;
+  background: none;
+  font-weight: 600;
+}
+
+div.ReactTags__suggestions ul li.ReactTags__activeSuggestion {
+  background: #b7cfe0;
+  cursor: pointer;
 }

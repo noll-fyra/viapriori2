@@ -1,9 +1,9 @@
-function arrayToObject (array) {
+function tagsArrayToObject (array) {
   let obj = {}
   array.forEach((item) => {
-    obj[item] = true
+    obj[item.text] = true
   })
   return obj
 }
 
-export default arrayToObject
+export default tagsArrayToObject
