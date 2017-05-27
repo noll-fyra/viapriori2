@@ -10,14 +10,19 @@ class Saved extends React.Component {
       savedArray: [],
       savedActivities: [],
       plannedTrips: [],
-      isNewPlanned: false
+      plannedArray:[],
+      isNewPlanned: false,
+      plannedTripID: '',
     }
-    // this.addTripTitle = this.addTripTitle.bind(this)
+    this.addSavedActivityToPlanned = this.addSavedActivityToPlanned.bind(this)
+    this.createNewPlanned = this.createNewPlanned.bind(this)
   }
   componentDidMount () {
     db.ref('users/' + window.localStorage[storageKey] + '/saved').once('value').then((snapshot) => {
       this.displayActivity()
       this.currentPlannedTrips()
+      console.log(this.state.isNewPlanned)
+
     })
   }
   displayActivity () {
@@ -48,7 +53,6 @@ class Saved extends React.Component {
     let removeActivityID = e.target.name
     db.ref('users/' + window.localStorage[storageKey] + '/saved/' + e.target.name).remove()
         //
-    console.log('users/' + window.localStorage[storageKey] + '/saved/' + e.target.name)
     this.displayActivity()
   }
 
@@ -84,7 +88,7 @@ class Saved extends React.Component {
         let tempPlanned = plannedArray.slice()
         for (var trip in snapshot.val()) {
           let index = plannedArray.indexOf(trip)
-          db.ref('trips/' + trip).once('value').then((snap) => {
+          db.ref('plannedtrips/' + trip).once('value').then((snap) => {
             tempPlanned[index] = snap.val()
             this.setState({
               plannedTrips: tempPlanned
@@ -93,18 +97,22 @@ class Saved extends React.Component {
         }
       } else {
         this.setState({
-          plannedTrips: []
+          plannedTrips: [],
+          plannedArray: [],
+          isNewPlanned: true
         })
       }
     })
+    // console.log(this.state)
+
   }
-  //
-  // addPlannedTripTitle (e) {
-  //
-  //   this.setState({
-  //     newPlannedTripName: e.target.value
-  //   })
-  // }
+
+  chooseTrip (e) {
+    this.setState({
+      tripIndex: e.target.selectedIndex
+    })
+  }
+
   createNewPlanned (e) {
     e.preventDefault()
     let newPlannedTripID = ''
@@ -120,7 +128,7 @@ class Saved extends React.Component {
       let newPlannedTripID = newRef.key
       newRef.set({
         user: window.localStorage[storageKey],
-        title: this.state.newPlannedTripName
+        title: input.value
       })
       db.ref('users/' + window.localStorage[storageKey] + '/planned').once('value', snap => {
         let newObj = snap.val() || {}
@@ -128,21 +136,44 @@ class Saved extends React.Component {
         db.ref('users/' + window.localStorage[storageKey] + '/planned').set(newObj)
       })
     }
-      let plannedTripID = this.state.isNewPlanned ? newPlannedTripID : this.state.plannedArray.reverse()[this.state.tripIndex]
-  }
-  chooseTrip (e) {
+    // console.log(this.state.isNewPlanned)
+    // console.log(e.target.name)
+    // console.log(this.state.plannedArray)
+  let plannedTripID = this.state.isNewPlanned ? newPlannedTripID : this.state.plannedArray.reverse()[this.state.tripIndex]
     this.setState({
-      tripIndex: e.target.selectedIndex
+      plannedTripID: plannedTripID,
+      plannedActivityID: e.target.name
     })
+    this.addSavedActivityToPlanned()
+  }
+
+  addSavedActivityToPlanned(){
+    // console.log('save activity')
+    // console.log(this.state.plannedTripID)
+    // console.log(this.state.plannedActivityID)
+    db.ref('plannedtrips/' + this.state.plannedTripID).once('value').then((snap) => {
+      let newObject = snap.val() || {}
+      let currentActivities = snap.val().activities || {}
+      console.log(currentActivities)
+      currentActivities[this.state.plannedActivityID] = true
+      newObject['activities'] = currentActivities
+      // let currentRating = snap.val().totalRating || 0
+      // newObj['totalRating'] = currentRating + this.state.rating
+      // db.ref('trips/' + tripID).set(newObj)
+    })
+
+
   }
 
   render () {
     let reverseSaved = this.state.savedActivities.slice().reverse()
-    let plannedArray = this.state.plannedTrips.slice().reverse()
+    let plannedArray = this.state.plannedArray.slice().reverse()
     let options = plannedArray.map((title, index) => {
       return <option key={index}>{title}</option>
     })
-    console.log(this.state.isNewPlanned)
+    // console.log(this.state.plannedArray, 'plannedarray for user')
+    //
+    // console.log(this.state.plannedTrips, 'plannedtrips for user')
     return (
       <div>
         {/* <Planned/> */}
