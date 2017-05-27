@@ -3,12 +3,12 @@ import {Link} from 'react-router-dom'
 import EXIF from 'exif-js'
 import geocoder from 'geocoder'
 import moment from 'moment'
-import TagsInput from 'react-tagsinput'
 import db, {storage, storageKey} from '../../utils/firebase'
 import latLng, {getLocation} from '../../utils/geocoding'
-import arrayToObject from '../../utils/format'
+import tagsArrayToObject from '../../utils/format'
 import Rating from '../rating/Rating'
 import fixOrientation from 'fix-orientation'
+import { WithContext as ReactTags } from 'react-tag-input'
 
 class NewActivity extends React.Component {
   constructor (props) {
@@ -31,7 +31,8 @@ class NewActivity extends React.Component {
       country: '',
       editLocation: false,
       rating: 0,
-      tags: []
+      tags: [],
+      suggestions: ['mango', 'pineapple', 'orange', 'pear', 'persimmon', 'apple']
     }
 
     this.chooseTrip = this.chooseTrip.bind(this)
@@ -44,7 +45,8 @@ class NewActivity extends React.Component {
     this.changeCountry = this.changeCountry.bind(this)
     this.addCaption = this.addCaption.bind(this)
     this.starClick = this.starClick.bind(this)
-    this.handleTags = this.handleTags.bind(this)
+    this.handleDelete = this.handleDelete.bind(this)
+    this.handleAddition = this.handleAddition.bind(this)
     this.addActivity = this.addActivity.bind(this)
     this.linkToProfile = null
   }
@@ -174,10 +176,19 @@ class NewActivity extends React.Component {
     })
   }
 
-  handleTags (tags) {
-    this.setState({
-      tags
+  handleDelete (i) {
+    let tags = this.state.tags
+    tags.splice(i, 1)
+    this.setState({tags: tags})
+  }
+
+  handleAddition (tag) {
+    let tags = this.state.tags
+    tags.push({
+      id: tags.length + 1,
+      text: tag
     })
+    this.setState({tags: tags})
   }
 
   addActivity () {
@@ -225,7 +236,7 @@ class NewActivity extends React.Component {
           imageOrientation: this.state.imageOrientation,
           caption: this.state.caption,
           rating: this.state.rating,
-          tags: arrayToObject(this.state.tags)
+          tags: tagsArrayToObject(this.state.tags)
         })
 
         // update the trip's rating and activities
@@ -242,7 +253,7 @@ class NewActivity extends React.Component {
         // add tags to all tags
         db.ref('tags').once('value').then((snap) => {
           let newObj = snap.val() || {}
-          for (var tag in arrayToObject(this.state.tags)) {
+          for (var tag in tagsArrayToObject(this.state.tags)) {
             newObj[tag.toLowerCase()] = newObj[tag.toLowerCase()] ? newObj[tag.toLowerCase()] + 1 : 1
           }
           db.ref('tags').set(newObj)
@@ -282,7 +293,7 @@ class NewActivity extends React.Component {
           </div>
           <div className='modal modal2'>
             {this.state.trips.length === 0 &&
-              <p><input type='text' onChange={this.addTripTitle} placeholder='Add your first trip title!' /></p>
+              <p><input type='text' onChange={this.addTripTitle} placeholder='Add your first trip' /></p>
             }
             {!this.state.isNewTrip && this.state.trips.length > 0 &&
             <p>
@@ -305,8 +316,13 @@ class NewActivity extends React.Component {
             <p>City: <input type='text' placeholder='city' onChange={this.changeLocality} value={this.state.locality} /></p>
             <p>Country: <input type='text' placeholder='country' onChange={this.changeCountry} value={this.state.country} /></p>
             <p>Caption: <textarea onChange={(e) => this.addCaption(e)} /></p>
-            <Rating stars={this.state.rating} starClick={this.starClick} isEnabled={true}/>
-            <TagsInput value={this.state.tags} onChange={this.handleTags} />
+            <Rating stars={this.state.rating} starClick={this.starClick} isEnabled />
+            <ReactTags tags={this.state.tags}
+              suggestions={this.state.suggestions}
+              handleDelete={this.handleDelete}
+              handleAddition={this.handleAddition}
+              // minQueryLength={1}
+             />
             <button onClick={this.addActivity}>Share</button>
           </div>
         </div>

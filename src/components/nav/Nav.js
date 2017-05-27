@@ -40,7 +40,7 @@ class Nav extends React.Component {
   render () {
     return (
       <nav className='topNav'>
-        <Link to='/'>VIA PRIORI</Link>
+        <Link to='/'>Via Postale</Link>
         <SearchForm placeholder='Search' onChange={this.props.onChange} onKeyUp={this.props.onKeyUp} />
         <Link to='/search' className='searchButton' ref={this.props.linkToSearch} style={{display: 'none'}} />
         <Link to='/new'>+NEW</Link>
