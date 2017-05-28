@@ -8,9 +8,11 @@
     "fix-orientation": "0.0.2",
     "geocoder": "^0.2.3",
     "moment": "^2.18.1",
+    "node-schedule": "^1.2.3",
     "prop-types": "^15.5.10",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
+    "react-infinite-scroll-component": "^2.3.0",
     "react-router": "^4.1.1",
     "react-router-dom": "^4.1.1",
     "react-tag-input": "^4.7.2"

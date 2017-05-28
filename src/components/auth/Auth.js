@@ -85,7 +85,6 @@ class Auth extends React.Component {
     }
     return (
       <div>
-        {JSON.stringify(this.props)}
         {this.state.currentUser &&
         <p>Signed in as: {this.state.currentUser.email}</p>
         }

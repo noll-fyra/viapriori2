@@ -13,6 +13,20 @@ img {
   height: 75px;
 }
 
+.fixed {
+  font-weight: 900;
+  position: fixed;
+  top: 50%;
+  right: 50%;
+}
+
+.fixedMore {
+  font-weight: 900;
+  position: fixed;
+  top: 70%;
+  right: 50%;
+}
+
 .fileInput {
   width: 0.1px;
   height: 0.1px;

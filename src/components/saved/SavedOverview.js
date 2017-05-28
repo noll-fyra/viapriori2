@@ -54,8 +54,8 @@ class SavedOverview extends React.Component {
     })
   }
 
-  removeActivity (e) {
-    db.ref('users/' + window.localStorage[storageKey] + '/saved/' + e.target.name).remove()
+  removeActivity () {
+    db.ref('users/' + window.localStorage[storageKey] + '/saved/' + this.props.activityID).remove()
   }
 
   chooseTrip (e) {
@@ -106,7 +106,7 @@ class SavedOverview extends React.Component {
             </div>
           }
 
-          <button onClick={(e) => this.props.handleRemoveSaved(e)}>Unsave</button>
+          <button onClick={() => this.removeActivity()}>Unsave</button>
         </div>
       </div>
     )
