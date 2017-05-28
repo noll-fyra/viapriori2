@@ -18,6 +18,7 @@ class Profile extends React.Component {
   componentDidMount () {
     db.ref('users/' + window.localStorage[storageKey]).on('value', snapshot => {
       // fetch user profile
+      
       if (snapshot.val() && snapshot.val().profile) {
         this.setState({
           username: snapshot.val().profile.username || this.state.username,

@@ -55,7 +55,7 @@ class Auth extends React.Component {
     const authPromise = auth.createUserWithEmailAndPassword(this.state.email, this.state.password)
     authPromise
     .then((user) => {
-      db.ref('users/' + auth.currentUser.uid + '/details').set({
+      db.ref('users/' + auth.currentUser.uid + '/profile').set({
         email: this.state.email,
         uid: auth.currentUser.uid,
         username: this.state.username
