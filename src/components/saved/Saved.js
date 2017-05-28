@@ -16,7 +16,10 @@ class Saved extends React.Component {
   }
 
   componentDidMount () {
+    console.log('mounttttttttttttttttttttttttttttttttttttt')
     db.ref('users/' + window.localStorage[storageKey]).on('value', snapshot => {
+      console.log('mounttttaaaaaaaaaaaaaaaaaaaaaaaaaattttttttttttttttttt')
+
       if (snapshot.val() && snapshot.val().saved) {
         // saved activity keys
         let savedKeys = Object.keys(snapshot.val().saved)
@@ -42,15 +45,10 @@ class Saved extends React.Component {
       }
 
       // check if there are any planned trips
-      if (snapshot.val() && !snapshot.val().planned) {
-        this.setState({
-          plannedTrips: [],
-          plannedKeys: []
-        })
-      }
 
       if (snapshot.val() && snapshot.val().planned) {
         // planned trip keys
+        console.log('11111111111111111111111111111111111111111111111111111111111111111')
         let plannedKeys = Object.keys(snapshot.val().planned)
         this.setState({
           plannedKeys: plannedKeys
@@ -66,6 +64,14 @@ class Saved extends React.Component {
             })
           })
         }
+        console.log(this.state.plannedTrips)
+        console.log(this.state.plannedKeys)
+      }
+      else {
+        this.setState({
+          plannedTrips: [],
+          plannedKeys: []
+        })
       }
     })
   }
@@ -92,11 +98,10 @@ class Saved extends React.Component {
       return <option key={this.state.plannedKeys[index]}>{trip.title}</option>
     })
     console.log(this.state.plannedTrips)
-    // console.log(this.state.plannedKeys)
+    console.log(this.state.plannedKeys)
     return (
       <div>
-        <Planned plannedKeys = {this.state.plannedKeys}
-        plannedTrips = {this.state.plannedTrips}/>
+        <Planned plannedKeys = {this.state.plannedKeys} plannedTrips = {this.state.plannedTrips}/>
 
         <p>{JSON.stringify(this.state.savedKeys)}</p>
         <p>{JSON.stringify(this.state.savedActivities)}</p>
