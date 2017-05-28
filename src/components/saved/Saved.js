@@ -1,7 +1,7 @@
 import React from 'react'
 import db, {storageKey} from '../../utils/firebase'
 import SavedOverview from './SavedOverview'
-// import Planned from '../planned/Planned'
+import Planned from '../planned/Planned'
 
 class Saved extends React.Component {
   constructor (props) {
@@ -87,12 +87,17 @@ class Saved extends React.Component {
 
   render () {
     let reverseSaved = this.state.savedActivities.slice().reverse()
+    let reverseKeys = this.state.savedKeys.slice().reverse()
     let options = this.state.plannedTrips.map((trip, index) => {
       return <option key={this.state.plannedKeys[index]}>{trip.title}</option>
     })
+    console.log(this.state.plannedTrips)
+    // console.log(this.state.plannedKeys)
     return (
       <div>
-        {/* <Planned/> */}
+        <Planned plannedKeys = {this.state.plannedKeys}
+        plannedTrips = {this.state.plannedTrips}/>
+
         <p>{JSON.stringify(this.state.savedKeys)}</p>
         <p>{JSON.stringify(this.state.savedActivities)}</p>
         <p>{JSON.stringify(this.state.plannedKeys)}</p>
@@ -102,8 +107,8 @@ class Saved extends React.Component {
         {this.state.savedActivities &&
           reverseSaved.map((activity, index) => {
             return <SavedOverview
-              key={this.state.savedKeys[index]}
-              activityID={this.state.savedKeys[index]}
+              key={reverseKeys[index]}
+              activityID={reverseKeys[index]}
               activity={activity}
               options={options}
               plannedKeys={this.state.plannedKeys}

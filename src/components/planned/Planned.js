@@ -1,19 +1,23 @@
 import React from 'react'
 import db, {storageKey} from '../../utils/firebase'
-// import PlannedOverview from './PlannedOverview'
+import PlannedOverview from './PlannedOverview'
 
 class Planned extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      plannedArray: [],
-      plannedActivities: [],
+      plannedKeys: [],
       plannedTrips: []
     }
   }
   componentDidMount () {
+console.log('mount')
+// this.setState({
+//   plannedKeys: this.props.plannedKeys,
+//   plannedTrips: this.props.plannedTrips
+// })
     db.ref('users/' + window.localStorage[storageKey] + '/planned').once('value').then((snapshot) => {
-      this.displayTrips()
+      // this.displayTrips()
     })
   }
       //
@@ -25,44 +29,44 @@ class Planned extends React.Component {
       //     db.ref('users/' + window.localStorage[storageKey] + '/saved').set(newObj)
       //   })
       // }
-  displayTrips () {
-    db.ref('users/' + window.localStorage[storageKey] + '/planned').once('value').then((snapshot) => {
-      if (snapshot.val()) {
-        let plannedArray = Object.keys(snapshot.val())
-        this.setState({
-          plannedArray: plannedArray
-        })
-        let temp = plannedArray.slice()
-        for (var trip in snapshot.val()) {
-          let ind = plannedArray.indexOf(trip)
-          db.ref('trips/' + trip).once('value').then((snap) => {
-            temp[ind] = snap.val()
-            this.setState({
-              plannedTrips: temp
-            })
-          })
-        }
-        this.displayActivities()
-      } else {
-        this.setState({
-          plannedTrips: []
-        })
-      }
-    })
-  }
-
-  displayActivities () {
-    let arrTrips = this.state.plannedTrips.slice()
-    console.log(arrTrips)
-    arrTrips.forEach((activity) => {
-      let index = arrTrips.indexOf(activity)
-      db.ref('activities/' + activity).once('value').then((snap) => {
-        this.state.plannedTrips[index] = snap.val()
-            // this.setState({
-            //   savedActivities: temp
-            // })
-      })
-    })
+  // displayTrips () {
+  //   db.ref('users/' + window.localStorage[storageKey] + '/planned').once('value').then((snapshot) => {
+  //     if (snapshot.val()) {
+  //       let plannedArray = Object.keys(snapshot.val())
+  //       this.setState({
+  //         plannedArray: plannedArray
+  //       })
+  //       let temp = plannedArray.slice()
+  //       for (var trip in snapshot.val()) {
+  //         let ind = plannedArray.indexOf(trip)
+  //         db.ref('trips/' + trip).once('value').then((snap) => {
+  //           temp[ind] = snap.val()
+  //           this.setState({
+  //             plannedTrips: temp
+  //           })
+  //         })
+  //       }
+  //       this.displayActivities()
+  //     } else {
+  //       this.setState({
+  //         plannedTrips: []
+  //       })
+  //     }
+  //   })
+  // }
+  //
+  // displayActivities () {
+  //   let arrTrips = this.state.plannedTrips.slice()
+  //   console.log(arrTrips)
+  //   arrTrips.forEach((activity) => {
+  //     let index = arrTrips.indexOf(activity)
+  //     db.ref('activities/' + activity).once('value').then((snap) => {
+  //       this.state.plannedTrips[index] = snap.val()
+  //           this.setState({
+  //             savedActivities: temp
+  //           })
+  //     })
+  //   })
 
     //   } else {
     //     this.setState({
@@ -70,9 +74,9 @@ class Planned extends React.Component {
     //     })
     //   }
     // })
-  }
+  // }
 
-  removeActivity (e) {
+  removePlanned (e) {
     let removeActivityID = e.target.name
     db.ref('users/' + window.localStorage[storageKey] + '/saved/' + e.target.name).remove()
         //
@@ -81,9 +85,23 @@ class Planned extends React.Component {
   }
 
   render () {
+    console.log(this.props)
+    console.log(this.props.plannedTrips)
+    console.log(this.props.plannedKeys)
+    console.log(this.state.plannedTrips)
+    console.log(this.state.plannedKeys)
     return (
       <div>
-        <h1> Saved Activities</h1>
+
+        <h1> Planned Activities</h1>
+
+
+          {this.state.plannedKeys &&
+            this.state.plannedTrips.map((trip, index) => {
+              return <PlannedOverview key={this.state.plannedKeys[index]} tripID={this.state.plannedKeys[index]} trip={trip} />
+            })
+          }
+          <h1> end of planned</h1>
         {/*
         {this.state.savedActivities &&
             reverseSaved.map((activity, index) => {
