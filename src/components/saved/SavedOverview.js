@@ -15,6 +15,7 @@ class SavedOverview extends React.Component {
     this.handlePlannedTitle = this.handlePlannedTitle.bind(this)
     this.addActivityToNewPlanned = this.addActivityToNewPlanned.bind(this)
     this.addActivityToExisting = this.addActivityToExisting.bind(this)
+    this.addSavedToAllAndTrending = this.addSavedToAllAndTrending.bind(this)
     this.removeActivity = this.removeActivity.bind(this)
     this.chooseTrip = this.chooseTrip.bind(this)
   }
@@ -41,6 +42,7 @@ class SavedOverview extends React.Component {
       newObj[this.props.activityID] = true
       db.ref('planned/' + newPlannedID + '/activities').set(newObj)
     })
+    this.addSavedToAllAndTrending()
   }
 
   addActivityToExisting () {
@@ -51,6 +53,16 @@ class SavedOverview extends React.Component {
       let newObj = snap.val() || {}
       newObj[this.props.activityID] = true
       db.ref('planned/' + this.props.plannedKeys[this.state.plannedIndex] + '/activities').set(newObj)
+    })
+    this.addSavedToAllAndTrending()
+  }
+
+  addSavedToAllAndTrending () {
+    db.ref('all/saved/' + this.props.activityID).once('value').then((snap) => {
+      db.ref('all/saved/' + this.props.activityID).set(snap.val() + 1 || 1)
+    })
+    db.ref('trending/saved/' + moment().format('dddd') + '/' + this.props.activityID).once('value').then((snap) => {
+      db.ref('trending/saved/' + moment().format('dddd') + '/' + this.props.activityID).set(snap.val() + 1 || 1)
     })
   }
 
