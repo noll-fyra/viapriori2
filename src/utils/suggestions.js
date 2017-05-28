@@ -1,3 +1,3 @@
-const suggestions = ['mango', 'persimmon', 'pineapple', 'orange', 'pear', 'apple']
+const suggestions = ['food', 'event', 'pineapple', 'orange', 'pear', 'apple']
 
 export default suggestions

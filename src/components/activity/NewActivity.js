@@ -102,6 +102,7 @@ class NewActivity extends React.Component {
   }
 
   handleFile (e) {
+    // show file preview
     let image = e.target.files[0]
     var reader = new window.FileReader()
     reader.addEventListener('load', () => {
@@ -118,6 +119,7 @@ class NewActivity extends React.Component {
       imageName: image.name
     })
 
+    // get EXIF data for orientation, date and gps
     EXIF.getData(image, () => {
       console.log('exifdata:', image.exifdata)
       let date = image.exifdata.DateTime ? moment(image.exifdata.DateTime, 'YYYY:MM:DD HH:mm:ss').valueOf() : Date.now()
@@ -127,11 +129,11 @@ class NewActivity extends React.Component {
         imageLatLng: {lat: latLng(image).lat, lng: latLng(image).lng},
         imageOrientation: orientation
       })
+      // find locality and country from gps data
       if (this.state.imageLatLng.lat && this.state.imageLatLng.lng) {
         geocoder.reverseGeocode(this.state.imageLatLng.lat, this.state.imageLatLng.lng, (err, data) => {
           if (err) { console.log(err) }
           if (data.results[0]) {
-            console.log('reverse geocoded address:', data.results[0])
             this.setState({
               locality: getLocation(data.results[0])[0],
               country: getLocation(data.results[0])[1]
@@ -353,7 +355,6 @@ class NewActivity extends React.Component {
               handleDelete={this.handleDelete}
               handleAddition={this.handleAddition}
               autofocus={false}
-              // minQueryLength={1}
              />
             <button onClick={this.handleActivity}>Share</button>
           </div>

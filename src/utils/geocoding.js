@@ -1,6 +1,5 @@
 // turn EXIF GPS arrays into a lat and lng for geocoding
 function latLng (image) {
-  // 1 1 1 denominator?
 
   let data = image.exifdata || null
 

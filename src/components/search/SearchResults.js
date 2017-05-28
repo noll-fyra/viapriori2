@@ -8,8 +8,8 @@ class SearchResults extends React.Component {
     this.state = {
       searchQuery: props.searchQuery,
       tripFiltered: [],
-      activityFiltered:[],
-      tripId:[],
+      activityFiltered: [],
+      tripId: [],
       activityId: []
     }
   }
@@ -21,52 +21,48 @@ class SearchResults extends React.Component {
     db.ref('activities').on('value', (snapshot) => {
       // console.log(snapshot.val())
       for (var activityId in snapshot.val()) {
-        if (snapshot.val()[activityId].title.toLowerCase().includes(this.state.searchQuery.toLowerCase())){
+        if (snapshot.val()[activityId].title.toLowerCase().includes(this.state.searchQuery.toLowerCase())) {
           filteredActivities.push(snapshot.val()[activityId])
           tripKeys.push(snapshot.val()[activityId].trip)
-        }
-        else if (snapshot.val()[activityId].locality.toLowerCase().includes(this.state.searchQuery.toLowerCase())){
+        } else if (snapshot.val()[activityId].locality.toLowerCase().includes(this.state.searchQuery.toLowerCase())) {
           filteredActivities.push(snapshot.val()[activityId])
           tripKeys.push(snapshot.val()[activityId].trip)
-        }
-        else if (snapshot.val()[activityId].country.toLowerCase().includes(this.state.searchQuery.toLowerCase())){
+        } else if (snapshot.val()[activityId].country.toLowerCase().includes(this.state.searchQuery.toLowerCase())) {
           filteredActivities.push(snapshot.val()[activityId])
           tripKeys.push(snapshot.val()[activityId].trip)
-        }
-        else if (snapshot.val()[activityId].tags) {
-          for (var tags in snapshot.val()[activityId].tags){
-            if (tags.toLowerCase().includes(this.state.searchQuery.toLowerCase())){
+        } else if (snapshot.val()[activityId].tags) {
+          for (var tags in snapshot.val()[activityId].tags) {
+            if (tags.toLowerCase().includes(this.state.searchQuery.toLowerCase())) {
               filteredActivities.push(snapshot.val()[activityId])
               tripKeys.push(snapshot.val()[activityId].trip)
             }
           }
         }
       }
-    db.ref('trips').on('value', (snapshot) => {
+      db.ref('trips').on('value', (snapshot) => {
       // console.log(snapshot.val())
-      tripKeys.forEach((trip)=>{
-        filteredTrips.push(snapshot.val()[trip])
-        console.log(tripKeys.length)
+        tripKeys.forEach((trip) => {
+          filteredTrips.push(snapshot.val()[trip])
+          console.log(tripKeys.length)
+        })
+        for (var key in snapshot.val()) {
+          let tripEnd = new Date(snapshot.val()[key].end)
+          let tripStart = new Date(snapshot.val()[key].start)
+          let tripDuration = (tripEnd - tripStart) / 86400000
+          if (snapshot.val()[key].title.toLowerCase().includes(this.state.searchQuery.toLowerCase())) {
+            filteredTrips.push(snapshot.val()[key])
+            tripKeys.push(key)
+            console.log(tripKeys.length)
+          } else if (tripDuration === parseInt(this.state.searchQuery)) {
+            filteredTrips.push(snapshot.val()[key])
+            tripKeys.push(key)
+            console.log(tripKeys.length)
+          }
+        }
       })
-      for (var key in snapshot.val()) {
-        let tripEnd = new Date(snapshot.val()[key].end)
-        let tripStart = new Date(snapshot.val()[key].start)
-        let tripDuration = (tripEnd - tripStart) / 86400000
-        if (snapshot.val()[key].title.toLowerCase().includes(this.state.searchQuery.toLowerCase())){
-          filteredTrips.push(snapshot.val()[key])
-          tripKeys.push(key)
-              console.log(tripKeys.length)
-        }
-        else if (tripDuration === parseInt(this.state.searchQuery)){
-          filteredTrips.push(snapshot.val()[key])
-          tripKeys.push(key)
-              console.log(tripKeys.length)
-        }
-      }
     })
-    })
-      console.log(filteredTrips)
-      console.log(filteredActivities)
+    console.log(filteredTrips)
+    console.log(filteredActivities)
 
     this.setState({
       tripId: tripKeys,
