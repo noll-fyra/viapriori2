@@ -1,5 +1,4 @@
 import React from 'react'
-// import InfiniteScroll from 'react-infinite-scroller'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import ActivityOverview from '../activity/ActivityOverview'
 import db from '../../utils/firebase'

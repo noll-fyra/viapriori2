@@ -5,7 +5,7 @@ import Auth from '../auth/Auth'
 import Home from '../home/Home'
 import SearchResults from '../search/SearchResults'
 import NewActivity from '../activity/NewActivity'
-import TripActivities from '../activity/TripActivities'
+import Trip from '../trip/Trip'
 import Profile from '../profile/Profile'
 import Planned from '../planned/Planned'
 import Saved from '../saved/Saved'
@@ -73,7 +73,7 @@ class App extends Component {
           <PrivateRoute path='/planned' component={Planned} />
           <PrivateRoute path='/saved' component={Saved} />
           <PrivateRoute exact path='/profile' component={Profile} />
-          <PrivateRoute path='/trips/:title/:id' component={TripActivities} />
+          <PrivateRoute path='/trips/:id' component={Trip} />
           <Route path='/auth' component={(props) => <Auth isLogin={this.state.isLogin} {...props} />} />
           <NewActivity isEnabled={this.state.addNewActivity} addNewActivity={this.addNewActivity} suggestions={suggestions} />
         </div>

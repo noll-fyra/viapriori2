@@ -25,7 +25,7 @@ const ActivityOverview = (props) => {
         <p>Tags:{props.activity.tags ? tagsObjectToArray(props.activity.tags) : ''}</p>
         <Rating stars={props.activity.rating} isEnabled={false} />
         <button name={props.activityID} onClick={saveActivity}>Save Activity</button>
-        <Link to={'/' + props.activity.trip}>View Trip</Link>
+        <Link to={'/trips/' + props.activity.trip}>View Trip</Link>
       </div>
     </div>
   )

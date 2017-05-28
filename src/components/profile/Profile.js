@@ -69,7 +69,7 @@ class Profile extends React.Component {
 
   render () {
     const reverseTrips = this.state.trips.slice().reverse().map((trip, index) => {
-      return <TripOverview key={this.state.keys[index]} tripID={this.state.keys[index]} trip={trip} />
+      return <TripOverview key={this.state.keys.slice().reverse()[index]} tripID={this.state.keys.slice().reverse()[index]} trip={trip} />
     })
     return (
       <div>
