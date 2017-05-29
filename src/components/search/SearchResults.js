@@ -9,7 +9,7 @@ class SearchResults extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      searchQuery: props.searchQuery,
+      searchQuery: props.match.params.query,
       tripFiltered: [],
       activityFiltered: [],
       tripId: [],
