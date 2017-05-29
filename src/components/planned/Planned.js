@@ -12,9 +12,9 @@ class Planned extends React.Component {
     this.removePlanned = this.removePlanned.bind(this)
   }
 
-  removePlanned () {
-    db.ref('planned/' + this.tripID).remove()
-    db.ref('users/' + window.localStorage[storageKey] + '/planned/' + this.tripID).remove()
+  removePlanned (id) {
+    db.ref('planned/' + id).remove()
+    db.ref('users/' + window.localStorage[storageKey] + '/planned/' + id).remove()
   }
 
   render () {
