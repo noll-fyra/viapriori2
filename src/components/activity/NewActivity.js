@@ -357,7 +357,7 @@ class NewActivity extends React.Component {
           </div>
         </div>
         }
-        <Link to={'/trips/' + this.state.trips.slice().reverse()[this.state.tripIndex] + '/' + this.state.tripID} style={{display: 'none'}} ref={(link) => { this.linkToTrip = link }} />
+        <Link to={'/trips/' + this.state.tripID} style={{display: 'none'}} ref={(link) => { this.linkToTrip = link }} />
       </div>
     )
   }

@@ -1,5 +1,3 @@
-import fixOrientation from 'fix-orientation'
-
 function tagsArrayToObject (array) {
   let obj = {}
   array.forEach((item) => {
@@ -57,21 +55,5 @@ function trendingObjectToArray (object) {
   return finalArray // format is alphabetical: [countries, localities, saved, tags]
 }
 
-function convertImageToDataURL (url) {
-  let final
-  var image = new Image()
-  image.src = url
-  var canvas = document.createElement('canvas')
-  canvas.width = image.width
-  canvas.height = image.height
-  canvas.getContext('2d').drawImage(image, 0, 0)
-  fixOrientation(canvas.toDataURL('image/png'), { image: true }, function (fixed, newImage) {
-    final = newImage
-  })
-  console.log(url);
-  console.log(image);
-  return image
-}
-
 export default tagsArrayToObject
-export {tagsObjectToArray, allObjectToArray, trendingObjectToArray, convertImageToDataURL}
+export {tagsObjectToArray, allObjectToArray, trendingObjectToArray}

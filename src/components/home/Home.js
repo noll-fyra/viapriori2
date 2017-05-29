@@ -1,8 +1,8 @@
 import React from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import ActivityOverview from '../activity/ActivityOverview'
-import db from '../../utils/firebase'
-import {allObjectToArray, trendingObjectToArray} from '../../utils/format'
+import db, {storageKey} from '../../utils/firebase'
+import {trendingObjectToArray} from '../../utils/format'
 
 class Home extends React.Component {
   constructor (props) {
@@ -10,42 +10,55 @@ class Home extends React.Component {
     this.state = {
       keys: [],
       activities: [],
-      all: [[], [], [], []],
       trending: [[], [], [], []],
       showing: [],
       numberToShow: 5,
-      total: 0,
-      hasMore: true
+      total: 100,
+      hasMore: true,
+      filter: '',
+      filteredKeys: [],
+      filteredActivities: []
     }
     this.loadMore = this.loadMore.bind(this)
   }
 
   componentDidMount () {
-    // fetch all trips
+    // fetch all activities
     db.ref('activities').on('value', snapshot => {
-      const keys = []
-      const activities = []
+      let keys = Object.keys(snapshot.val())
+      let activities = new Array(keys.length).fill(null)
       for (var key in snapshot.val()) {
-        keys.push(key)
-        activities.push(snapshot.val()[key])
-        this.setState({
-          keys: keys,
-          activities: activities,
-          total: keys.length
-        })
+        let ind = keys.indexOf(key)
+        activities[ind] = [key, snapshot.val()[key]]
       }
-    })
-
-    // fetch all and trending
-    db.ref('all').on('value', snapshot => {
       this.setState({
-        all: allObjectToArray(snapshot.val())
+        keys: keys,
+        activities: activities,
+        total: keys.length
       })
     })
+
+    // fetch user following
+    if (window.localStorage[storageKey]) {
+      db.ref('users/' + window.localStorage[storageKey]).on('value', snap => {
+        let filter = snap.val() && snap.val().following ? Object.keys(snap.val().following) : ''
+        filter.push(window.localStorage[storageKey])
+        this.setState({
+          filter: filter
+        })
+      })
+    }
+
+    // fetch trending
     db.ref('trending').on('value', snapshot => {
       this.setState({
         trending: trendingObjectToArray(snapshot.val())
       })
+    })
+
+    // initialise infinite scroll
+    this.setState({
+      showing: this.state.activities.slice(0, this.state.numberToShow)
     })
   }
 
@@ -53,7 +66,7 @@ class Home extends React.Component {
     this.setState({
       showing: this.state.activities.slice(0, this.state.numberToShow)
     })
-    let newNumber = this.state.numberToShow + 10
+    let newNumber = this.state.numberToShow + 5
     setTimeout(() => {
       this.setState({
         numberToShow: newNumber
@@ -67,36 +80,31 @@ class Home extends React.Component {
   }
 
   render () {
-    const reverseActivities = this.state.showing.reverse().map((activity, index) => {
-      return <ActivityOverview key={this.state.keys[index]} activityID={this.state.keys.slice().reverse()[index]} activity={activity} />
+    // const reverseActivities = this.state.showing.reverse().map((activity, index) => {
+    //   return <ActivityOverview key={this.state.keys[index]} activityID={this.state.keys.slice().reverse()[index]} activity={activity} />
+    // })
+
+    const reverseActivities = this.state.showing.filter((activity) => { return this.state.filter.includes(activity[1].user) }).reverse().map((activity, index) => {
+      return <ActivityOverview key={activity[0]} activityID={activity[0]} activity={activity[1]} />
     })
+
     return (
       <div>
         <div className='trending'>
           <b>Trending</b>
           <ul>
             <li><b>countries</b></li>
-            {this.state.trending[0].slice(0, 10).map((tag) => { return <li key={tag}>{tag}</li> })}
+            {this.state.trending[0].slice(0, 10).map((tag) => { return <li key={tag}><button onClick={() => this.props.clickToSearch(tag)}>{tag}</button></li> })}
             <li><b>cities</b></li>
-            {this.state.trending[1].slice(0, 10).map((tag) => { return <li key={tag}>{tag}</li> })}
+            {this.state.trending[1].slice(0, 10).map((tag) => { return <li key={tag}><button onClick={() => this.props.clickToSearch(tag)}>{tag}</button></li> })}
             <li><b>saved</b></li>
-            {this.state.trending[2].slice(0, 10).map((tag) => { return <li key={tag}>{tag}</li> })}
+            {this.state.trending[2].slice(0, 10).map((tag) => { return <li key={tag}><button onClick={() => this.props.clickToSearch(tag)}>{tag}</button></li> })}
             <li><b>tags</b></li>
-            {this.state.trending[3].slice(0, 10).map((tag) => { return <li key={tag}>{tag}</li> })}
-          </ul>
-          <b>Evergreen</b>
-          <ul>
-            <li><b>countries</b></li>
-            {this.state.all[0].slice(0, 10).map((tag) => { return <li key={tag}>{tag}</li> })}
-            <li><b>cities</b></li>
-            {this.state.all[1].slice(0, 10).map((tag) => { return <li key={tag}>{tag}</li> })}
-            <li><b>saved</b></li>
-            {this.state.all[2].slice(0, 10).map((tag) => { return <li key={tag}>{tag}</li> })}
-            <li><b>tags</b></li>
-            {this.state.all[3].slice(0, 10).map((tag) => { return <li key={tag}>{tag}</li> })}
+            {this.state.trending[3].slice(0, 10).map((tag) => { return <li key={tag}><button onClick={() => this.props.clickToSearch(tag)}>{tag}</button></li> })}
           </ul>
         </div>
         <InfiniteScroll
+          className='infinite'
           next={this.loadMore}
           hasMore={this.state.hasMore}
           loader={<h4>Loading...</h4>}

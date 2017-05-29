@@ -8,6 +8,27 @@ body {
   font-family: sans-serif;
 }
 
+.topNav {
+  background-color: red;
+  height: 48px;
+  width:100%;
+  position: fixed;
+  display: flex;
+  flex-flow: row;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 3;
+}
+
+.topNavBG {
+  z-index: 2;
+}
+
+.bodyContainer {
+top: 48px;
+position: relative;
+}
+
 img {
   width: 100px;
   height: 75px;

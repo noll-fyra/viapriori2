@@ -156,7 +156,7 @@ class Profile extends React.Component {
     db.ref('users/' + userToUnfollow + '/followed/' + window.localStorage[storageKey]).remove()
     db.ref('users/' + window.localStorage[storageKey] + '/following/' + userToUnfollow).remove()
     let following = this.state.following
-    following.splice(following.indexOf(userToUnfollow), 1)
+    following.splice(following.indexOf(userToUnfollow),   1)
     this.setState({
       following: following,
       isFollowing: false

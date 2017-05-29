@@ -9,14 +9,15 @@ class Rating extends React.Component {
     }
     this.starClick = this.starClick.bind(this)
   }
-componentDidUpdate(){
-if (this.props.stars !== this.state.stars){
-  this.setState({
-    stars:this.props.stars
-  })
-  console.log(this.state.stars)
-}
-}
+
+  componentDidUpdate () {
+    if (this.props.stars !== this.state.stars) {
+      this.setState({
+        stars: this.props.stars
+      })
+    }
+  }
+
   starClick (number) {
     if (this.state.isEnabled) {
       this.props.starClick(number)

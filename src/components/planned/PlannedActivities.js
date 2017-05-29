@@ -16,7 +16,6 @@ class PlannedActivities extends React.Component {
   }
 
   componentDidMount () {
-
     db.ref('planned/' + this.props.match.params.id + '/activities').on('value', snapshot => {
       if (snapshot.val()) {
         // saved activity keys
@@ -43,8 +42,7 @@ class PlannedActivities extends React.Component {
       }
     })
       // check if there are any planned trips
-      db.ref('users/' + window.localStorage[storageKey]).on('value', snapshot => {
-
+    db.ref('users/' + window.localStorage[storageKey]).on('value', snapshot => {
       if (snapshot.val() && snapshot.val().planned) {
         // planned trip keys
         let plannedKeys = Object.keys(snapshot.val().planned)
@@ -62,8 +60,7 @@ class PlannedActivities extends React.Component {
             })
           })
         }
-      }
-      else {
+      } else {
         this.setState({
           plannedTrips: [],
           plannedKeys: []
@@ -73,67 +70,63 @@ class PlannedActivities extends React.Component {
   }
 
   componentDidUpdate () {
-    if (this.props.match.params.id !== this.state.tripId){
-    this.setState({
-      tripId: this.props.match.params.id
-    })
-    db.ref('planned/' + this.props.match.params.id + '/activities').on('value', snapshot => {
-
-      if (snapshot.val()) {
+    if (this.props.match.params.id !== this.state.tripId) {
+      this.setState({
+        tripId: this.props.match.params.id
+      })
+      db.ref('planned/' + this.props.match.params.id + '/activities').on('value', snapshot => {
+        if (snapshot.val()) {
         // saved activity keys
-        let savedKeys = Object.keys(snapshot.val())
-        this.setState({
-          savedKeys: savedKeys
-        })
+          let savedKeys = Object.keys(snapshot.val())
+          this.setState({
+            savedKeys: savedKeys
+          })
         // saved activity details
-        let savedActivities = new Array(savedKeys.length).fill(null)
-        for (var activity in snapshot.val()) {
-          let ind = savedKeys.indexOf(activity)
-          db.ref('activities/' + activity).once('value').then((snap) => {
-            savedActivities[ind] = snap.val()
-            this.setState({
-              savedActivities: savedActivities
+          let savedActivities = new Array(savedKeys.length).fill(null)
+          for (var activity in snapshot.val()) {
+            let ind = savedKeys.indexOf(activity)
+            db.ref('activities/' + activity).once('value').then((snap) => {
+              savedActivities[ind] = snap.val()
+              this.setState({
+                savedActivities: savedActivities
+              })
             })
+          }
+        } else {
+          this.setState({
+            savedKeys: [],
+            savedActivities: []
           })
         }
-      } else {
-        this.setState({
-          savedKeys: [],
-          savedActivities: []
-        })
-      }
-    })
+      })
       // check if there are any planned trips
       db.ref('users/' + window.localStorage[storageKey]).on('value', snapshot => {
-
-      if (snapshot.val() && snapshot.val().planned) {
+        if (snapshot.val() && snapshot.val().planned) {
         // planned trip keys
-        let plannedKeys = Object.keys(snapshot.val().planned)
-        this.setState({
-          plannedKeys: plannedKeys
-        })
+          let plannedKeys = Object.keys(snapshot.val().planned)
+          this.setState({
+            plannedKeys: plannedKeys
+          })
         // planned trip details
-        let plannedTrips = new Array(plannedKeys.length).fill(null)
-        for (var trip in snapshot.val().planned) {
-          let ind = plannedKeys.indexOf(trip)
-          db.ref('planned/' + trip).on('value', snap => {
-            plannedTrips[ind] = snap.val()
-            this.setState({
-              plannedTrips: plannedTrips
+          let plannedTrips = new Array(plannedKeys.length).fill(null)
+          for (var trip in snapshot.val().planned) {
+            let ind = plannedKeys.indexOf(trip)
+            db.ref('planned/' + trip).on('value', snap => {
+              plannedTrips[ind] = snap.val()
+              this.setState({
+                plannedTrips: plannedTrips
+              })
             })
+          }
+        } else {
+          this.setState({
+            plannedTrips: [],
+            plannedKeys: []
           })
         }
-      }
-      else {
-        this.setState({
-          plannedTrips: [],
-          plannedKeys: []
-        })
-      }
-    })
+      })
+    }
   }
-}
-
 
   render () {
     // let reverseSaved = this.state.savedActivities.slice().reverse()
@@ -144,7 +137,7 @@ class PlannedActivities extends React.Component {
 
     return (
       <div>
-        <Planned plannedKeys = {this.state.plannedKeys} plannedTrips = {this.state.plannedTrips}/>
+        <Planned plannedKeys={this.state.plannedKeys} plannedTrips={this.state.plannedTrips} />
 
         <h1> Saved Activities</h1>
 

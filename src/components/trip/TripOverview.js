@@ -1,6 +1,5 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
-import {convertImageToDataURL} from '../../utils/format'
 
 const TripOverview = (props) => {
   function averageRating () {
