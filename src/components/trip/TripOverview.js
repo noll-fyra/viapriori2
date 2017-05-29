@@ -10,7 +10,7 @@ const TripOverview = (props) => {
   }
   return (
     <div>
-      <Link to={'trips/' + props.tripID}>
+      <Link to={'/trips/' + props.tripID}>
         <div className='tripOverview'>
           <p>{props.trip.title || ''} <span>Ratings:{averageRating()}</span></p>
           <img src={props.trip.image} alt={props.trip.title} />

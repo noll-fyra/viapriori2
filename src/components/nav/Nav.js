@@ -41,7 +41,7 @@ class Nav extends React.Component {
     return (
       <nav className='topNav'>
         <Link to='/'>Via Postale</Link>
-        <SearchForm placeholder='Search' onChange={this.props.onChange} onKeyUp={this.props.onKeyUp} />
+        <SearchForm placeholder='Search' value={this.props.searchValue} onChange={this.props.onChange} onKeyUp={this.props.onKeyUp} />
         <Link to='/search' className='searchButton' ref={this.props.linkToSearch} style={{display: 'none'}} />
         {!this.state.isAuthenticated &&
           <span>

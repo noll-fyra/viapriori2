@@ -12,13 +12,16 @@ class Profile extends React.Component {
       profileImage: require('./profile_by_jivan_from_noun_project.png'),
       keys: [],
       trips: [],
+      followingKeys: [],
       following: [],
+      followedKeys: [],
       followed: [],
       isFollowing: false,
       isCurrentUser: props.isCurrentUser,
       currentUser: props.match.params.id || window.localStorage[storageKey],
       showing: 'trips'
     }
+    this.updateCurrentUser = this.updateCurrentUser.bind(this)
     this.addProfileImage = this.addProfileImage.bind(this)
     this.changeShowing = this.changeShowing.bind(this)
     this.handleFollow = this.handleFollow.bind(this)
@@ -26,7 +29,23 @@ class Profile extends React.Component {
   }
 
   componentDidMount () {
-    db.ref('users/' + this.state.currentUser).on('value', snapshot => {
+    this.setState({
+      currentUser: this.props.match.params.id || window.localStorage[storageKey]
+    })
+    console.log(this.state.currentUser)
+    this.updateCurrentUser(this.state.currentUser)
+  }
+
+  componentWillReceiveProps (nextProps) {
+    this.setState({
+      currentUser: nextProps.match.params.id || window.localStorage[storageKey]
+    })
+    console.log(nextProps);
+    this.updateCurrentUser(this.state.currentUser)
+  }
+
+  updateCurrentUser (userID) {
+    db.ref('users/' + userID).on('value', (snapshot) => {
       // fetch user profile
       if (snapshot.val() && snapshot.val().profile) {
         this.setState({
@@ -59,6 +78,7 @@ class Profile extends React.Component {
           db.ref('users/' + user).once('value').then((snap) => {
             users.push(snap.val())
             this.setState({
+              followingKeys: following,
               following: users
             })
           })
@@ -75,6 +95,7 @@ class Profile extends React.Component {
           db.ref('users/' + user).once('value').then((snap) => {
             users.push(snap.val())
             this.setState({
+              followedKeys: followed,
               followed: users
             })
           })
@@ -112,26 +133,32 @@ class Profile extends React.Component {
     })
   }
 
-  handleFollow () {
+  handleFollow (userToFollow) {
     db.ref('users/' + window.localStorage[storageKey] + '/following').once('value').then((snap) => {
       let newObj = snap.val() || {}
-      newObj[this.props.match.params.id] = true
+      newObj[userToFollow] = true
       db.ref('users/' + window.localStorage[storageKey] + '/following').set(newObj)
     })
-    db.ref('users/' + this.state.currentUser + '/followed').once('value').then((snap) => {
+    db.ref('users/' + userToFollow + '/followed').once('value').then((snap) => {
       let newObj = snap.val() || {}
       newObj[window.localStorage[storageKey]] = true
-      db.ref('users/' + this.state.currentUser + '/followed').set(newObj)
+      db.ref('users/' + userToFollow + '/followed').set(newObj)
     })
+    let following = this.state.following
+    following.push(userToFollow)
     this.setState({
+      following: following,
       isFollowing: true
     })
   }
 
-  handleUnfollow () {
-    db.ref('users/' + this.state.currentUser + '/followed/' + window.localStorage[storageKey]).remove()
-    db.ref('users/' + window.localStorage[storageKey] + '/following/' + this.props.match.params.id).remove()
+  handleUnfollow (userToUnfollow) {
+    db.ref('users/' + userToUnfollow + '/followed/' + window.localStorage[storageKey]).remove()
+    db.ref('users/' + window.localStorage[storageKey] + '/following/' + userToUnfollow).remove()
+    let following = this.state.following
+    following.splice(following.indexOf(userToUnfollow),   1)
     this.setState({
+      following: following,
       isFollowing: false
     })
   }
@@ -142,7 +169,14 @@ class Profile extends React.Component {
     })
     return (
       <div>
+        <p>{JSON.stringify(this.state.username)}</p>
+        <p>{JSON.stringify(this.state.profileImage)}</p>
+        <p>{JSON.stringify(this.state.currentUser)}</p>
+        <p>{JSON.stringify(this.state.followingKeys)}</p>
+        <p>{JSON.stringify(this.state.followedKeys)}</p>
+        {/* <p>{JSON.stringify(this.state.username)}</p> */}
         <Details
+          userID={this.state.currentUser}
           username={this.state.username}
           profileImage={this.state.profileImage}
           numberOfTrips={this.state.trips.length}
@@ -162,12 +196,27 @@ class Profile extends React.Component {
         }
         {this.state.showing === 'following' &&
           <div className='following'>
-            <Follow users={this.state.following} />
+            <h1>Following</h1>
+            <Follow
+              userKeys={this.state.followingKeys}
+              users={this.state.following}
+              handleFollow={this.handleFollow}
+              handleUnfollow={this.handleUnfollow}
+              updateCurrentUser={this.updateCurrentUser}
+            />
+
           </div>
         }
         {this.state.showing === 'followed' &&
           <div className='followed'>
-            <Follow users={this.state.followed} />
+            <h1>Followed by</h1>
+            <Follow
+              userKeys={this.state.followedKeys}
+              users={this.state.followed}
+              handleFollow={this.handleFollow}
+              handleUnfollow={this.handleUnfollow}
+              updateCurrentUser={this.updateCurrentUser}
+            />
           </div>
         }
       </div>

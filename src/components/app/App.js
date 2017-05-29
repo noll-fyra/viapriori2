@@ -8,9 +8,7 @@ import SearchResults from '../search/SearchResults'
 import NewActivity from '../activity/NewActivity'
 import Trip from '../trip/Trip'
 import Profile from '../profile/Profile'
-import Planned from '../planned/Planned'
 import PlannedActivities from '../planned/PlannedActivities'
-
 import Saved from '../saved/Saved'
 import {auth, storageKey, isAuthenticated, logOut} from '../../utils/firebase'
 import search from '../../utils/search'
@@ -27,6 +25,7 @@ class App extends Component {
     this.addNewActivity = this.addNewActivity.bind(this)
     this.handleSearch = this.handleSearch.bind(this)
     this.handleLogin = this.handleLogin.bind(this)
+    this.clickToSearch = this.clickToSearch.bind(this)
     this.linkToSearch = null
   }
 
@@ -58,6 +57,13 @@ class App extends Component {
     })
   }
 
+  clickToSearch (query) {
+    this.setState({
+      searchQuery: query.toLowerCase()
+    })
+    this.linkToSearch.handleClick(new window.MouseEvent('click'))
+  }
+
   render () {
     return (
       <Router>
@@ -68,19 +74,23 @@ class App extends Component {
             isLogin={this.handleLogin}
             logOut={logOut}
             onChange={this.search}
+            searchValue={this.state.searchQuery}
             onKeyUp={(e) => this.handleSearch(e)}
             linkToSearch={(ref) => { this.linkToSearch = ref }}
           />
-          <Route exact path='/' component={Home} />
-          <Route exact path='/search' component={() => <SearchResults searchQuery={this.state.searchQuery} />} />
-          {/* <PrivateRoute exact path='/saved/search' component={() => <Saved searchQuery={this.state.searchQuery} />} /> */}
-          <PrivateRoute exact path='/saved' component={Saved} />
-          <PrivateRoute exact path='/profile' component={(props) => <Profile isCurrentUser={true} {...props} />} />
-          <Route path='/users/:id' component={(props) => <Profile isCurrentUser={false} {...props} />} />
-          <PrivateRoute path='/planned/:id' component={PlannedActivities} />
-          <PrivateRoute path='/trips/:id' component={Trip} />
-          <Route path='/auth' component={(props) => <Auth isLogin={this.state.isLogin} {...props} />} />
-          <NewActivity isEnabled={this.state.addNewActivity} addNewActivity={this.addNewActivity} suggestions={suggestions} />
+
+          <div className='topNav topNavBG' />
+          <div className='bodyContainer'>
+            <Route exact path='/' component={() => <Home clickToSearch={this.clickToSearch} />} />
+            <Route path='/search' component={() => <SearchResults searchQuery={this.state.searchQuery} />} />
+            <PrivateRoute path='/saved' component={Saved} />
+            <PrivateRoute exact path='/profile' component={(props) => <Profile isCurrentUser {...props} />} />
+            <Route path='/users/:id' component={(props) => <Profile isCurrentUser={false} {...props} />} />
+            <PrivateRoute path='/planned/:id' component={PlannedActivities} />
+            <PrivateRoute path='/trips/:id' component={Trip} />
+            <Route path='/auth' component={(props) => <Auth isLogin={this.state.isLogin} {...props} />} />
+            <NewActivity isEnabled={this.state.addNewActivity} addNewActivity={this.addNewActivity} suggestions={suggestions} />
+          </div>
         </div>
       </Router>
     )

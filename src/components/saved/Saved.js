@@ -20,10 +20,12 @@ class Saved extends React.Component {
   }
 
   componentDidMount () {
+
     console.log('search')
     // if (this.state.searchQuery === !this.props.searchQuery){
     let activityKeys = []
     let activityDetails = []
+
     db.ref('users/' + window.localStorage[storageKey]).on('value', snapshot => {
       if (snapshot.val() && snapshot.val().saved) {
         // saved activity keys
@@ -71,7 +73,6 @@ class Saved extends React.Component {
         })
       }
       // check if there are any planned trips
-
       if (snapshot.val() && snapshot.val().planned) {
         // planned trip keys
         let plannedKeys = Object.keys(snapshot.val().planned)
@@ -89,8 +90,7 @@ class Saved extends React.Component {
             })
           })
         }
-      }
-      else {
+      } else {
         this.setState({
           plannedTrips: [],
           plannedKeys: []
@@ -115,11 +115,7 @@ class Saved extends React.Component {
     return newRef.key
   }
 
-  // handleSearch (e) {
-  //   if (e.key === 'Enter') {
-  //     this.linkToSearch.handleClick(new window.MouseEvent('click'))
-  //   }
-  // }
+
   render () {
     console.log(this.state.searchQuery)
     console.log(this.state.activityKeys)
@@ -136,10 +132,9 @@ class Saved extends React.Component {
         {/* <SearchForm placeholder='Search' onChange={this.search} onKeyUp={(e) => this.handleSearch(e)} /> */}
         {/* <Link to='/saved/search' className='searchButton' ref={this.props.linkToSearch} style={{display: 'none'}} /> */}
 
-
         <Planned plannedKeys={this.state.plannedKeys}
           plannedTrips={this.state.plannedTrips} />
-          <h1> Saved Activities</h1>
+        <h1> Saved Activities</h1>
 
         {this.state.savedActivities &&
           reverseSaved.map((activity, index) => {
