@@ -12,15 +12,15 @@ class Planned extends React.Component {
     this.removePlanned = this.removePlanned.bind(this)
   }
 
-  removePlanned () {
-    db.ref('planned/' + this.tripID).remove()
-    db.ref('users/' + window.localStorage[storageKey] + '/planned/' + this.tripID).remove()
+  removePlanned (id) {
+    db.ref('planned/' + id).remove()
+    db.ref('users/' + window.localStorage[storageKey] + '/planned/' + id).remove()
   }
 
   render () {
     return (
       <div>
-        <h1> Planned Activities</h1>
+        <h1> Planned Trips</h1>
         {this.props.plannedKeys &&
             this.props.plannedTrips.map((trip, index) => {
               return <PlannedOverview key={this.props.plannedKeys[index]} tripID={this.props.plannedKeys[index]} trip={trip} removePlanned={this.removePlanned} />

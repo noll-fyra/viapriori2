@@ -13,8 +13,8 @@ const ActivityOverview = (props) => {
       db.ref('users/' + window.localStorage[storageKey] + '/saved').set(newObj)
     })
   }
-
   return (
+
     <div>
       <div className='activityOverview'><p>Activity: {props.activity.title || ''}</p>
         <img src={props.activity.image} alt={props.activity.title} />
@@ -24,6 +24,7 @@ const ActivityOverview = (props) => {
         <p>Caption:{props.activity.caption || ''}</p>
         <p>Tags:{props.activity.tags ? tagsObjectToArray(props.activity.tags) : ''}</p>
         <Rating stars={props.activity.rating} isEnabled={false} />
+        {/* <p>{props.activity.rating}</p> */}
         <button name={props.activityID} onClick={saveActivity}>Save Activity</button>
         <Link to={'/trips/' + props.activity.trip}>View Trip</Link>
       </div>

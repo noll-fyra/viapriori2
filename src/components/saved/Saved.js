@@ -16,6 +16,7 @@ class Saved extends React.Component {
   }
 
   componentDidMount () {
+
     db.ref('users/' + window.localStorage[storageKey]).on('value', snapshot => {
       if (snapshot.val() && snapshot.val().saved) {
         // saved activity keys
@@ -60,8 +61,6 @@ class Saved extends React.Component {
             })
           })
         }
-        console.log(this.state.plannedTrips)
-        console.log(this.state.plannedKeys)
       }
       else {
         this.setState({
@@ -97,8 +96,13 @@ class Saved extends React.Component {
 
     return (
       <div>
+        {/* <SearchForm placeholder='Search' onChange={this.props.onChange} onKeyUp={this.props.onKeyUp} />
+        <Link to='/search' className='searchButton' ref={this.props.linkToSearch} style={{display: 'none'}} /> */}
+
+
         <Planned plannedKeys={this.state.plannedKeys}
           plannedTrips={this.state.plannedTrips} />
+          <h1> Saved Activities</h1>
 
         {this.state.savedActivities &&
           reverseSaved.map((activity, index) => {
