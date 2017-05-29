@@ -1,6 +1,28 @@
 import React from 'react'
-import db from '../../utils/firebase'
+import {SortableContainer, SortableElement, SortableHandle, arrayMove} from 'react-sortable-hoc'
 import ActivityOverview from '../activity/ActivityOverview'
+import db from '../../utils/firebase'
+
+const DragHandle = SortableHandle(() => <span>||||||</span>) // This can be any component you want
+
+const SortableItem = SortableElement(({value, id}) => {
+  return (
+    <li>
+      <DragHandle />
+      <ActivityOverview activityID={id} activity={value} />
+    </li>
+  )
+})
+
+const SortableList = SortableContainer(({activities, id}) => {
+  return (
+    <ul>
+      {activities.map((value, index) => (
+        <SortableItem key={`item-${index}`} index={index} value={value} id={id[index]} />
+      ))}
+    </ul>
+  )
+})
 
 class Trip extends React.Component {
   constructor (props) {
@@ -10,6 +32,7 @@ class Trip extends React.Component {
       keys: [],
       details: {}
     }
+    this.onSortEnd = this.onSortEnd.bind(this)
   }
 
   componentDidMount () {
@@ -34,15 +57,33 @@ class Trip extends React.Component {
     })
   }
 
+  onSortEnd ({oldIndex, newIndex}) {
+    let activities = this.state.activities
+    let keys = this.state.keys
+    this.setState({
+      activities: arrayMove(activities, oldIndex, newIndex),
+      keys: arrayMove(keys, oldIndex, newIndex)
+    })
+    db.ref('trips/' + this.props.match.params.id + '/activities').once('value').then((snap) => {
+      let newObj = snap.val() || {}
+      this.state.keys.forEach((key, index) => {
+        newObj[key] = index
+      })
+      db.ref('trips/' + this.props.match.params.id + '/activities').set(newObj)
+    })
+  }
+
   render () {
     return (
       <div>
-        <h1>Activities for {this.state.details.title || ''} </h1>
-        {this.state.activities &&
+        <h1>Activities for {this.state.details.title || ''}</h1>
+        {JSON.stringify(this.state.activities)}
+        <SortableList activities={this.state.activities} onSortEnd={this.onSortEnd} useDragHandle id={this.state.keys} />
+        {/* {this.state.activities &&
           this.state.activities.map((activity, index) => {
             return <ActivityOverview key={this.state.keys[index]} activityID={this.state.keys[index]} activity={activity} />
           })
-        }
+        } */}
       </div>
     )
   }

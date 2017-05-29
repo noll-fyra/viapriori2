@@ -15,6 +15,7 @@
     "react-infinite-scroll-component": "^2.3.0",
     "react-router": "^4.1.1",
     "react-router-dom": "^4.1.1",
+    "react-sortable-hoc": "^0.6.3",
     "react-tag-input": "^4.7.2"
   },
   "homepage": "https://via-priori.firebaseapp.com",

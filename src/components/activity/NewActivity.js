@@ -250,7 +250,7 @@ class NewActivity extends React.Component {
         db.ref('trips/' + tripID).once('value').then((snap) => {
           let newObj = snap.val() || {}
           let currentActivities = snap.val().activities || {}
-          currentActivities[newActivityID] = true
+          currentActivities[newActivityID] = this.state.isNewTrip ? 0 : snap.val() && snap.val().activities ? Object.keys(snap.val().activities).length : 0
           newObj['activities'] = currentActivities
 
           let currentRating = snap.val().totalRating || 0
