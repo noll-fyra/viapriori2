@@ -4,6 +4,7 @@ import Nav from '../nav/Nav'
 import Auth from '../auth/Auth'
 import Home from '../home/Home'
 import SearchResults from '../search/SearchResults'
+// import SavedSearchResults from '../filter/SavedSearchResults'
 import NewActivity from '../activity/NewActivity'
 import Trip from '../trip/Trip'
 import Profile from '../profile/Profile'
@@ -71,8 +72,9 @@ class App extends Component {
             linkToSearch={(ref) => { this.linkToSearch = ref }}
           />
           <Route exact path='/' component={Home} />
-          <Route path='/search' component={() => <SearchResults searchQuery={this.state.searchQuery} />} />
-          <PrivateRoute path='/saved' component={Saved} />
+          <Route exact path='/search' component={() => <SearchResults searchQuery={this.state.searchQuery} />} />
+          {/* <PrivateRoute exact path='/saved/search' component={() => <Saved searchQuery={this.state.searchQuery} />} /> */}
+          <PrivateRoute exact path='/saved' component={Saved} />
           <PrivateRoute exact path='/profile' component={(props) => <Profile isCurrentUser={true} {...props} />} />
           <Route path='/users/:id' component={(props) => <Profile isCurrentUser={false} {...props} />} />
           <PrivateRoute path='/planned/:id' component={PlannedActivities} />
