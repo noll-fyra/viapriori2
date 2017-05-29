@@ -25,6 +25,31 @@ class SearchResults extends React.Component {
     let activityKeys = []
     let userId = []
     let userDetails = []
+    let filteredActivities = []
+////////////TO ASK YISHENG TMR
+    db.ref('users').on('value', (snapshot) => {
+      for (var user in snapshot.val()) {
+        console.log(snapshot.val()[user].details.username && snapshot.val()[user].details.username.toLowerCase().includes(this.state.searchQuery.toLowerCase()))
+        if (snapshot.val()[user].details.username && snapshot.val()[user].details.username.toLowerCase().includes(this.state.searchQuery.toLowerCase())) {
+          userId.push(user)
+          console.log(user)
+          console.log(userId)
+        }
+      }
+      console.log('whyyy is the users for loop blocking this console log?')
+      console.log(snapshot.val())
+      let uniqueUsers = userId.filter((id, i) => {
+        return userId.indexOf(id) === i
+      })
+      uniqueUsers.forEach((user) => {
+        userDetails.push(snapshot.val()[user])
+      })
+      this.setState({
+        userId: uniqueUsers,
+        userDetails: userDetails
+      })
+      console.log(uniqueUsers)
+    })
 
     db.ref('activities').on('value', (snapshot) => {
       for (var activityId in snapshot.val()) {
@@ -49,11 +74,9 @@ class SearchResults extends React.Component {
       let uniqueActivityKeys = activityKeys.filter((id, i) => {
         return activityKeys.indexOf(id) === i
       })
-      let filteredActivities = []
       uniqueActivityKeys.forEach((activity) => {
         filteredActivities.push(snapshot.val()[activity])
       })
-
       this.setState({
         activityId: uniqueActivityKeys,
         activityFiltered: filteredActivities
@@ -76,30 +99,11 @@ class SearchResults extends React.Component {
       uniqueTripKeys.forEach((trip) => {
         filteredTrips.push(snapshot.val()[trip])
       })
-
+      // console.log(uniqueTripKeys)
       this.setState({
         tripId: uniqueTripKeys,
         tripFiltered: filteredTrips
       })
-    })
-    db.ref('users').on('value', (snapshot) => {
-      for (var key in snapshot.val()) {
-        if (snapshot.val()[key].details.username.toLowerCase().includes(this.state.searchQuery.toLowerCase())) {
-          userId.push(key)
-          console.log(userId)
-        }
-        console.log(userId)
-        let uniqueUsers = userId.filter((id, i) => {
-          return userId.indexOf(id) === i
-        })
-        uniqueUsers.forEach((user) => {
-          userDetails.push(snapshot.val()[user])
-        })
-        this.setState({
-          userId: uniqueUsers,
-          userDetails: userDetails
-        })
-      }
     })
   }
 
