@@ -25,10 +25,10 @@ const Details = (props) => (
         <div><button>Edit</button></div>
       }
       {!props.isCurrentUser && !props.isFollowing &&
-        <div><button onClick={props.handleFollow}>Follow</button></div>
+        <div><button onClick={() => props.handleFollow(props.userID)}>Follow</button></div>
       }
       {!props.isCurrentUser && props.isFollowing &&
-        <div><button onClick={props.handleUnfollow}>UnFollow</button></div>
+        <div><button onClick={() => props.handleUnfollow(props.userID)}>UnFollow</button></div>
       }
     </div>
   </div>

@@ -21,7 +21,6 @@ class NewActivity extends React.Component {
       tripIDs: [],
       tripIndex: 0,
       title: '',
-      imagePath: '',
       imageName: '',
       imageOrientation: 1,
       imageLatLng: '',
@@ -107,7 +106,7 @@ class NewActivity extends React.Component {
     var reader = new window.FileReader()
     reader.addEventListener('load', () => {
       let self = this
-      fixOrientation(reader.result, { image: true }, function (fixed, image) {
+      fixOrientation(reader.result, { image: true }, function (fixed, newImage) {
         self.setState({
           image: fixed
         })
@@ -115,7 +114,6 @@ class NewActivity extends React.Component {
     })
     reader.readAsDataURL(image)
     this.setState({
-      imagePath: image,
       imageName: image.name
     })
 
@@ -147,7 +145,6 @@ class NewActivity extends React.Component {
         })
       }
     })
-    this.activityInput.focus()
   }
 
   handleDate (e) {
@@ -224,7 +221,7 @@ class NewActivity extends React.Component {
       tripID: tripID
     })
     // save photo
-    storage.ref(window.localStorage[storageKey] + '/' + tripID + '/images/' + this.state.imageName).put(this.state.imagePath).then(() => {
+    storage.ref(window.localStorage[storageKey] + '/' + tripID + '/images/' + this.state.imageName).putString(this.state.image, 'data_url').then(() => {
       // get image url
       storage.ref(window.localStorage[storageKey] + '/' + tripID + '/images/' + this.state.imageName).getDownloadURL().then((url) => {
         // update new trip image url
@@ -344,7 +341,7 @@ class NewActivity extends React.Component {
             or <button onClick={() => this.startNewTrip(false)}>Add to existing trip</button></p>
             }
 
-            <p>Activity: <input type='text' onChange={(e) => this.handleActivityTitle(e)} ref={(input) => { this.activityInput = input }} /></p>
+            <p>Activity: <input type='text' onChange={(e) => this.handleActivityTitle(e)} /></p>
             <p>Date: <input type='date' onChange={this.handleDate} value={moment(this.state.date).format('YYYY-MM-DD')} /></p>
             <p>City: <input type='text' onChange={this.handleLocality} value={this.state.locality} /></p>
             <p>Country: <input type='text' onChange={this.handleCountry} value={this.state.country} /></p>
