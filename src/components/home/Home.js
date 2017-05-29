@@ -10,8 +10,8 @@ class Home extends React.Component {
     this.state = {
       keys: [],
       activities: [],
-      all: [[], [], []],
-      trending: [[], [], []],
+      all: [[], [], [], []],
+      trending: [[], [], [], []],
       showing: [],
       numberToShow: 5,
       total: 0,
@@ -79,8 +79,10 @@ class Home extends React.Component {
             {this.state.trending[0].slice(0, 10).map((tag) => { return <li key={tag}>{tag}</li> })}
             <li><b>cities</b></li>
             {this.state.trending[1].slice(0, 10).map((tag) => { return <li key={tag}>{tag}</li> })}
-            <li><b>tags</b></li>
+            <li><b>saved</b></li>
             {this.state.trending[2].slice(0, 10).map((tag) => { return <li key={tag}>{tag}</li> })}
+            <li><b>tags</b></li>
+            {this.state.trending[3].slice(0, 10).map((tag) => { return <li key={tag}>{tag}</li> })}
           </ul>
           <b>Evergreen</b>
           <ul>
@@ -88,8 +90,10 @@ class Home extends React.Component {
             {this.state.all[0].slice(0, 10).map((tag) => { return <li key={tag}>{tag}</li> })}
             <li><b>cities</b></li>
             {this.state.all[1].slice(0, 10).map((tag) => { return <li key={tag}>{tag}</li> })}
-            <li><b>tags</b></li>
+            <li><b>saved</b></li>
             {this.state.all[2].slice(0, 10).map((tag) => { return <li key={tag}>{tag}</li> })}
+            <li><b>tags</b></li>
+            {this.state.all[3].slice(0, 10).map((tag) => { return <li key={tag}>{tag}</li> })}
           </ul>
         </div>
         <InfiniteScroll

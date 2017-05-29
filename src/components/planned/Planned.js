@@ -7,18 +7,17 @@ class Planned extends React.Component {
     super(props)
     this.state = {
       plannedKeys: props.plannedKeys,
-      plannedTrips: [],
+      plannedTrips: props.plannedTrips
     }
+    this.removePlanned = this.removePlanned.bind(this)
   }
 
-
-
-  componentDidMount () {
-console.log('mount')
-this.setState({
-  plannedKeys: this.props.plannedKeys,
-  plannedTrips: this.props.plannedTrips
-})
+  componentWillReceiveProps () {
+    // console.log(this.props.plannedKeys)
+    this.setState({
+      plannedKeys: this.props.plannedKeys,
+      plannedTrips: this.props.plannedTrips
+    })
 
     // db.ref('users/' + window.localStorage[storageKey] + '/planned').once('value').then((snapshot) => {
       // this.displayTrips()
@@ -80,44 +79,23 @@ this.setState({
     // })
   // }
 
-  removePlanned () {
-    console.log('clicked')
-    console.log(this)
-    console.log(this.tripID)
-    // let removeActivityID = e.target.name
-    // db.ref('users/' + window.localStorage[storageKey] + '/saved/' + e.target.name).remove()
-        //
-    // console.log('users/' + window.localStorage[storageKey] + '/saved/' + e.target.name)
-
-    db.ref('users/' + window.localStorage[storageKey] + '/planned/' + this.tripID).remove()
-    db.ref('planned/' + this.tripID).remove()
-
-    // this.displayActivity()
+  removePlanned (tripID) {
+    db.ref('users/' + window.localStorage[storageKey] + '/planned/' + tripID).remove()
+    db.ref('planned/' + tripID).remove()
+    this.setState({
+      plannedKeys: this.props.plannedKeys,
+      plannedTrips: this.props.plannedTrips
+    })
   }
 
   render () {
-    console.log(this.props)
-    console.log(this.props.plannedTrips)
-    console.log(this.props.plannedKeys)
-    console.log(this.state.plannedTrips)
-    console.log(this.state.plannedKeys)
+    const planned = this.props.plannedTrips.map((trip, index) => {
+      return <PlannedOverview key={this.props.plannedKeys[index]} tripID={this.props.plannedKeys[index]} trip={trip} removePlanned={this.removePlanned} />
+    })
     return (
       <div>
-
         <h1> Planned Activities</h1>
-
-
-          {this.props.plannedKeys &&
-            this.props.plannedTrips.map((trip, index) => {
-              return <PlannedOverview key={this.props.plannedKeys[index]} tripID={this.props.plannedKeys[index]} trip={trip} removePlanned={this.removePlanned}/>
-            })
-          }
-
-        {/*
-        {this.state.savedActivities &&
-            reverseSaved.map((activity, index) => {
-              return <PlannedOverview key={index} activityID={this.state.savedArray[index]} activity={activity} handlePlannedActivity={(e) => this.plannedActivity(e)} handleRemoveSaved={(e) => this.removeActivity(e)} />
-            })} */}
+        {planned}
       </div>
     )
   }
