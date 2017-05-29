@@ -96,7 +96,8 @@ class Saved extends React.Component {
 
     return (
       <div>
-
+        {/* <SearchForm placeholder='Search' onChange={this.props.onChange} onKeyUp={this.props.onKeyUp} />
+        <Link to='/search' className='searchButton' ref={this.props.linkToSearch} style={{display: 'none'}} /> */}
 
 
         <Planned plannedKeys={this.state.plannedKeys}

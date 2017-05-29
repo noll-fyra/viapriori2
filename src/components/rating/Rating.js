@@ -27,8 +27,6 @@ if (this.props.stars !== this.state.stars){
   }
 
   render () {
-    console.log(this.state.stars)
-    console.log(this.props.stars)
     return (
       <div>
         <span className={'star ' + (this.state.stars >= 1 ? 'bright ' : 'dull ') + (this.state.isEnabled ? 'starenabled' : 'stardisabled')}
