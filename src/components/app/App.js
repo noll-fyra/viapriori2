@@ -8,6 +8,8 @@ import NewActivity from '../activity/NewActivity'
 import Trip from '../trip/Trip'
 import Profile from '../profile/Profile'
 import Planned from '../planned/Planned'
+import PlannedActivities from '../planned/PlannedActivities'
+
 import Saved from '../saved/Saved'
 import {auth, storageKey, isAuthenticated, logOut} from '../../utils/firebase'
 import search from '../../utils/search'
@@ -70,9 +72,10 @@ class App extends Component {
           />
           <Route exact path='/' component={Home} />
           <Route path='/search' component={() => <SearchResults searchQuery={this.state.searchQuery} />} />
-          <PrivateRoute path='/planned' component={Planned} />
+          {/* <PrivateRoute exact path='/planned' component={Planned} /> */}
           <PrivateRoute path='/saved' component={Saved} />
           <PrivateRoute exact path='/profile' component={Profile} />
+          <PrivateRoute path='/planned/:id' component={PlannedActivities} />
           <PrivateRoute path='/trips/:id' component={Trip} />
           <Route path='/auth' component={(props) => <Auth isLogin={this.state.isLogin} {...props} />} />
           <NewActivity isEnabled={this.state.addNewActivity} addNewActivity={this.addNewActivity} suggestions={suggestions} />

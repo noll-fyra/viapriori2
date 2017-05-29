@@ -16,9 +16,15 @@ class Saved extends React.Component {
   }
 
   componentDidMount () {
-    console.log('mounttttttttttttttttttttttttttttttttttttt')
+    if (this.props.match.params.id){
+
+      console.log('true')
+    }
+    else{
+      console.log('false')
+    }
+
     db.ref('users/' + window.localStorage[storageKey]).on('value', snapshot => {
-      console.log('mounttttaaaaaaaaaaaaaaaaaaaaaaaaaattttttttttttttttttt')
 
       if (snapshot.val() && snapshot.val().saved) {
         // saved activity keys
@@ -48,7 +54,6 @@ class Saved extends React.Component {
 
       if (snapshot.val() && snapshot.val().planned) {
         // planned trip keys
-        console.log('11111111111111111111111111111111111111111111111111111111111111111')
         let plannedKeys = Object.keys(snapshot.val().planned)
         this.setState({
           plannedKeys: plannedKeys
@@ -64,8 +69,6 @@ class Saved extends React.Component {
             })
           })
         }
-        console.log(this.state.plannedTrips)
-        console.log(this.state.plannedKeys)
       }
       else {
         this.setState({
@@ -107,6 +110,7 @@ class Saved extends React.Component {
         <p>{JSON.stringify(this.state.savedActivities)}</p>
         <p>{JSON.stringify(this.state.plannedKeys)}</p>
         <p>{JSON.stringify(this.state.plannedTrips)}</p>
+        
         <h1> Saved Activities</h1>
 
         {this.state.savedActivities &&
