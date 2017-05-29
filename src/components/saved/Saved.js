@@ -42,12 +42,6 @@ class Saved extends React.Component {
       }
 
       // check if there are any planned trips
-      if (snapshot.val() && !snapshot.val().planned) {
-        this.setState({
-          plannedTrips: [],
-          plannedKeys: []
-        })
-      }
 
       if (snapshot.val() && snapshot.val().planned) {
         // planned trip keys
@@ -66,6 +60,14 @@ class Saved extends React.Component {
             })
           })
         }
+        console.log(this.state.plannedTrips)
+        console.log(this.state.plannedKeys)
+      }
+      else {
+        this.setState({
+          plannedTrips: [],
+          plannedKeys: []
+        })
       }
     })
   }
@@ -92,16 +94,11 @@ class Saved extends React.Component {
     let options = this.state.plannedTrips.map((trip, index) => {
       return <option key={this.state.plannedKeys[index]}>{trip.title || ''}</option>
     })
+
     return (
       <div>
         <Planned plannedKeys={this.state.plannedKeys}
           plannedTrips={this.state.plannedTrips} />
-
-        <p>savedkeys{JSON.stringify(this.state.savedKeys)}</p>
-        <p>savedActivities{JSON.stringify(this.state.savedActivities)}</p>
-        <p>plannedKeys{JSON.stringify(this.state.plannedKeys)}</p>
-        <p>plannedTrips{JSON.stringify(this.state.plannedTrips)}</p>
-        <h1>Saved Activities</h1>
 
         {this.state.savedActivities &&
           reverseSaved.map((activity, index) => {
