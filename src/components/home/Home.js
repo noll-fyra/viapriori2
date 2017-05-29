@@ -11,7 +11,6 @@ class Home extends React.Component {
       keys: [],
       activities: [],
       trending: [[], [], [], []],
-      showing: [],
       numberToShow: 5,
       total: 100,
       hasMore: true,
@@ -23,6 +22,13 @@ class Home extends React.Component {
   }
 
   componentDidMount () {
+    // fetch trending
+    db.ref('trending').on('value', snapshot => {
+      this.setState({
+        trending: trendingObjectToArray(snapshot.val())
+      })
+    })
+
     // fetch all activities
     db.ref('activities').on('value', snapshot => {
       let keys = Object.keys(snapshot.val())
@@ -48,24 +54,9 @@ class Home extends React.Component {
         })
       })
     }
-
-    // fetch trending
-    db.ref('trending').on('value', snapshot => {
-      this.setState({
-        trending: trendingObjectToArray(snapshot.val())
-      })
-    })
-
-    // initialise infinite scroll
-    this.setState({
-      showing: this.state.activities.slice(0, this.state.numberToShow)
-    })
   }
 
   loadMore () {
-    this.setState({
-      showing: this.state.activities.slice(0, this.state.numberToShow)
-    })
     let newNumber = this.state.numberToShow + 5
     setTimeout(() => {
       this.setState({
@@ -80,11 +71,8 @@ class Home extends React.Component {
   }
 
   render () {
-    // const reverseActivities = this.state.showing.reverse().map((activity, index) => {
-    //   return <ActivityOverview key={this.state.keys[index]} activityID={this.state.keys.slice().reverse()[index]} activity={activity} />
-    // })
-
-    const reverseActivities = this.state.showing.filter((activity) => { return this.state.filter.includes(activity[1].user) }).reverse().map((activity, index) => {
+    // sort latest first and show top 30 trending activities, your own activities and those from users you follow
+    const reverseActivities = this.state.activities.filter((activity) => { return this.state.filter.includes(activity[1].user) || this.state.trending[2].slice(0, 30).includes(activity[0]) }).slice(0, this.state.numberToShow).reverse().map((activity, index) => {
       return <ActivityOverview key={activity[0]} activityID={activity[0]} activity={activity[1]} />
     })
 
@@ -97,8 +85,6 @@ class Home extends React.Component {
             {this.state.trending[0].slice(0, 10).map((tag) => { return <li key={tag}><button onClick={() => this.props.clickToSearch(tag)}>{tag}</button></li> })}
             <li><b>cities</b></li>
             {this.state.trending[1].slice(0, 10).map((tag) => { return <li key={tag}><button onClick={() => this.props.clickToSearch(tag)}>{tag}</button></li> })}
-            <li><b>saved</b></li>
-            {this.state.trending[2].slice(0, 10).map((tag) => { return <li key={tag}><button onClick={() => this.props.clickToSearch(tag)}>{tag}</button></li> })}
             <li><b>tags</b></li>
             {this.state.trending[3].slice(0, 10).map((tag) => { return <li key={tag}><button onClick={() => this.props.clickToSearch(tag)}>{tag}</button></li> })}
           </ul>
