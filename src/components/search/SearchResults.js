@@ -15,7 +15,7 @@ class SearchResults extends React.Component {
       tripId: [],
       activityId: [],
       userId: [],
-      userDetails:[]
+      userDetails: []
     }
   }
 
@@ -66,7 +66,7 @@ class SearchResults extends React.Component {
         let tripDuration = (tripEnd - tripStart) / 86400000
         if (snapshot.val()[key].title.toLowerCase().includes(this.state.searchQuery.toLowerCase())) {
           tripKeys.push(key)
-        } else if (tripDuration === parseInt(this.state.searchQuery,10)) {
+        } else if (tripDuration === parseInt(this.state.searchQuery, 10)) {
           tripKeys.push(key)
         }
       }
@@ -116,28 +116,28 @@ class SearchResults extends React.Component {
 
     return (
       <div>
-        <h1>Search Results</h1>
+        <h1>Search Results {this.props.searchQuery ? 'for ' + this.props.searchQuery : ''}</h1>
         {userSearched.length > 0 &&
           <div>
             <h2>Users</h2>
-          {userSearched}
-        </div>
+            {userSearched}
+          </div>
         }
         {tripsSearched.length > 0 &&
           <div>
             <h2>Trips</h2>
-          {tripsSearched}
-        </div>
+            {tripsSearched}
+          </div>
         }
 
         {activitySearched.length > 0 &&
           <div>
             <h2>Activity</h2>
-          {activitySearched}
-        </div>
+            {activitySearched}
+          </div>
         }
 
-        {userSearched.length ===0 && tripsSearched.length === 0 && activitySearched.length === 0 &&
+        {userSearched.length === 0 && tripsSearched.length === 0 && activitySearched.length === 0 &&
           <div>
             <p>Sorry, no results found</p>
           </div>
