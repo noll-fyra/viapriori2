@@ -4,6 +4,7 @@ import Nav from '../nav/Nav'
 import Auth from '../auth/Auth'
 import Home from '../home/Home'
 import SearchResults from '../search/SearchResults'
+// import SavedSearchResults from '../filter/SavedSearchResults'
 import NewActivity from '../activity/NewActivity'
 import Trip from '../trip/Trip'
 import Profile from '../profile/Profile'
@@ -77,6 +78,7 @@ class App extends Component {
             onKeyUp={(e) => this.handleSearch(e)}
             linkToSearch={(ref) => { this.linkToSearch = ref }}
           />
+
           <div className='topNav topNavBG' />
           <div className='bodyContainer'>
             <Route exact path='/' component={() => <Home clickToSearch={this.clickToSearch} />} />
