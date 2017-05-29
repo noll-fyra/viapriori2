@@ -72,9 +72,9 @@ class App extends Component {
           />
           <Route exact path='/' component={Home} />
           <Route path='/search' component={() => <SearchResults searchQuery={this.state.searchQuery} />} />
-          {/* <PrivateRoute exact path='/planned' component={Planned} /> */}
           <PrivateRoute path='/saved' component={Saved} />
-          <PrivateRoute exact path='/profile' component={Profile} />
+          <PrivateRoute exact path='/profile' component={(props) => <Profile isCurrentUser={true} {...props} />} />
+          <Route path='/users/:id' component={(props) => <Profile isCurrentUser={false} {...props} />} />
           <PrivateRoute path='/planned/:id' component={PlannedActivities} />
           <PrivateRoute path='/trips/:id' component={Trip} />
           <Route path='/auth' component={(props) => <Auth isLogin={this.state.isLogin} {...props} />} />

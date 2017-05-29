@@ -16,16 +16,8 @@ class Saved extends React.Component {
   }
 
   componentDidMount () {
-    if (this.props.match.params.id){
-
-      console.log('true')
-    }
-    else{
-      console.log('false')
-    }
 
     db.ref('users/' + window.localStorage[storageKey]).on('value', snapshot => {
-
       if (snapshot.val() && snapshot.val().saved) {
         // saved activity keys
         let savedKeys = Object.keys(snapshot.val().saved)
@@ -94,24 +86,22 @@ class Saved extends React.Component {
     return newRef.key
   }
 
+
   render () {
     let reverseSaved = this.state.savedActivities.slice().reverse()
     let reverseKeys = this.state.savedKeys.slice().reverse()
     let options = this.state.plannedTrips.map((trip, index) => {
-      return <option key={this.state.plannedKeys[index]}>{trip.title}</option>
+      return <option key={this.state.plannedKeys[index]}>{trip.title || ''}</option>
     })
-    console.log(this.state.plannedTrips)
-    console.log(this.state.plannedKeys)
+
     return (
       <div>
-        <Planned plannedKeys = {this.state.plannedKeys} plannedTrips = {this.state.plannedTrips}/>
 
-        <p>{JSON.stringify(this.state.savedKeys)}</p>
-        <p>{JSON.stringify(this.state.savedActivities)}</p>
-        <p>{JSON.stringify(this.state.plannedKeys)}</p>
-        <p>{JSON.stringify(this.state.plannedTrips)}</p>
-        
-        <h1> Saved Activities</h1>
+
+
+        <Planned plannedKeys={this.state.plannedKeys}
+          plannedTrips={this.state.plannedTrips} />
+          <h1> Saved Activities</h1>
 
         {this.state.savedActivities &&
           reverseSaved.map((activity, index) => {

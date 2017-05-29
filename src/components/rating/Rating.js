@@ -4,12 +4,19 @@ class Rating extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      stars: props.stars,
+      stars: this.props.stars,
       isEnabled: props.isEnabled
     }
     this.starClick = this.starClick.bind(this)
   }
-
+componentDidUpdate(){
+if (this.props.stars !== this.state.stars){
+  this.setState({
+    stars:this.props.stars
+  })
+  console.log(this.state.stars)
+}
+}
   starClick (number) {
     if (this.state.isEnabled) {
       this.props.starClick(number)
@@ -20,6 +27,8 @@ class Rating extends React.Component {
   }
 
   render () {
+    console.log(this.state.stars)
+    console.log(this.props.stars)
     return (
       <div>
         <span className={'star ' + (this.state.stars >= 1 ? 'bright ' : 'dull ') + (this.state.isEnabled ? 'starenabled' : 'stardisabled')}

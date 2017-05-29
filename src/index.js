@@ -14,7 +14,7 @@ ReactDOM.render(
 // remove last week's trending tags at midnight everyday
 var rule = new schedule.RecurrenceRule()
 rule.hour = 0
-var deleteLastWeeksTrending = schedule.scheduleJob(rule, () => {
+schedule.scheduleJob(rule, () => {
   db.ref('trending').once('value').then((snap) => {
     let keys = Object.keys(snap.val())
     keys.forEach((key) => {
@@ -23,4 +23,4 @@ var deleteLastWeeksTrending = schedule.scheduleJob(rule, () => {
   })
 })
 
-console.log(deleteLastWeeksTrending)
+// console.log(deleteLastWeeksTrending)

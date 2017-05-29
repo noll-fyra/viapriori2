@@ -26,7 +26,7 @@ function allObjectToArray (object) {
   arr.forEach((item) => {
     finalArray.push(item.sort((a, b) => { return b[1] - a[1] }).map((item) => { return item[0] }))
   })
-  return finalArray // format is alphabetical: [countries, localities, tags]
+  return finalArray // format is alphabetical: [countries, localities, saved, tags]
 }
 
 function trendingObjectToArray (object) {
@@ -52,7 +52,7 @@ function trendingObjectToArray (object) {
   arr.forEach((item) => {
     finalArray.push(item.sort((a, b) => { return b[1] - a[1] }).map((item) => { return item[0] }))
   })
-  return finalArray // format is alphabetical: [countries, localities, tags]
+  return finalArray // format is alphabetical: [countries, localities, saved, tags]
 }
 
 export default tagsArrayToObject
