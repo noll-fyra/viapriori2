@@ -37,6 +37,7 @@ class Trip extends React.Component {
 
   componentDidMount () {
     db.ref('trips/' + this.props.match.params.id).on('value', snapshot => {
+      if (snapshot.val()){
       let tripDetails = snapshot.val()
       let keys = Object.keys(tripDetails.activities)
       this.setState({
@@ -54,6 +55,7 @@ class Trip extends React.Component {
           })
         })
       }
+    }
     })
   }
 

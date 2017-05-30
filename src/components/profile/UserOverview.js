@@ -9,18 +9,18 @@ const UserOverview = (props) => {
           <div className='profileContainer'>
             <div className='profileImageDiv'>
 
-              <label className='profileImage' style={{backgroundImage: `url(${props.user.details.image})`, backgroundSize: 'cover'}} />
+              <label className='profileImage' style={{backgroundImage: `url(${props.user.profile.profileImage})`, backgroundSize: 'cover'}} />
             </div>
           </div>
           <div className='profileDetails'>
-            <div className='profileUsername'>{props.user.details.username}</div>
+            <div className='profileUsername'>{props.user.profile.username}</div>
             {/* <div>
               <span><b>{props.numberOfTrips}</b> trips</span>{'   '}
               <span><b>{props.following}</b> following</span>{'   '}
               <span><b>{props.followed}</b> followed</span>
             </div> */}
           </div>
-  
+
       </Link>
     </div>
   )

@@ -1,7 +1,7 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
 // import db, {storageKey} from '../../utils/firebase'
-
+// onClick={() => props.changeTripId()}
 const PlannedOverview = (props) => {
   return (
     <div>

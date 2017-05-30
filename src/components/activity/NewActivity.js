@@ -13,6 +13,7 @@ import { WithContext as ReactTags } from 'react-tag-input'
 import './tags.css'
 import './modal.css'
 
+
 class NewActivity extends React.Component {
   constructor (props) {
     super(props)
