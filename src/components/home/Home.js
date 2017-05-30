@@ -82,7 +82,6 @@ class Home extends React.Component {
 
     return (
       <div>
-        {JSON.stringify(this.state.trending)}
         <div className='trending'>
           <b>Trending</b>
           <ul>

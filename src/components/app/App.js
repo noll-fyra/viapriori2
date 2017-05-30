@@ -18,13 +18,15 @@ class App extends Component {
     super(props)
     this.state = {
       searchQuery: '',
-      addNewActivity: false
+      addNewActivity: false,
+      currentTrip: null
     }
     this.search = search.bind(this)
     this.addNewActivity = this.addNewActivity.bind(this)
     this.handleSearch = this.handleSearch.bind(this)
     this.handleLogin = this.handleLogin.bind(this)
     this.clickToSearch = this.clickToSearch.bind(this)
+    this.setCurrentTrip = this.setCurrentTrip.bind(this)
     this.linkToSearch = null
   }
 
@@ -66,6 +68,12 @@ class App extends Component {
     this.linkToSearch.handleClick(new window.MouseEvent('click'))
   }
 
+  setCurrentTrip (trip) {
+    this.setState({
+      currentTrip: trip
+    })
+  }
+
   render () {
     return (
       <Router>
@@ -89,9 +97,9 @@ class App extends Component {
             <PrivateRoute exact path='/profile' component={(props) => <Profile isCurrentUser {...props} />} />
             <Route path='/users/:id' component={(props) => <Profile isCurrentUser={false} {...props} />} />
             <PrivateRoute path='/planned/:id' component={PlannedActivities} />
-            <PrivateRoute path='/trips/:id' component={(props) => <Trip clickToSearch={this.clickToSearch} {...props} />} />
+            <PrivateRoute path='/trips/:id' component={(props) => <Trip clickToSearch={this.clickToSearch} currentTrip={this.state.currentTrip} {...props} />} />
             <Route path='/auth' component={(props) => <Auth isLogin={this.state.isLogin} {...props} />} />
-            <NewActivity isEnabled={this.state.addNewActivity} addNewActivity={this.addNewActivity} suggestions={suggestions} />
+            <NewActivity isEnabled={this.state.addNewActivity} addNewActivity={this.addNewActivity} suggestions={suggestions} setCurrentTrip={this.setCurrentTrip} />
           </div>
         </div>
       </Router>

@@ -30,13 +30,23 @@ class Trip extends React.Component {
     this.state = {
       activities: [],
       keys: [],
-      details: {}
+      details: {},
+      currentTrip: props.currentTrip || props.match.params.id
     }
     this.onSortEnd = this.onSortEnd.bind(this)
+    this.updateTrip = this.updateTrip.bind(this)
   }
 
   componentDidMount () {
-    db.ref('trips/' + this.props.match.params.id).on('value', snapshot => {
+    this.updateTrip()
+  }
+
+  componentWillReceiveProps (nextProps) {
+    this.updateTrip()
+  }
+
+  updateTrip () {
+    db.ref('trips/' + this.state.currentTrip).orderByChild('index').on('value', snapshot => {
       if (snapshot.val()) {
         let tripDetails = snapshot.val() || {}
         let keys = Object.keys(tripDetails.activities)
@@ -66,12 +76,12 @@ class Trip extends React.Component {
       activities: arrayMove(activities, oldIndex, newIndex),
       keys: arrayMove(keys, oldIndex, newIndex)
     })
-    db.ref('trips/' + this.props.match.params.id + '/activities').once('value').then((snap) => {
+    db.ref('trips/' + this.state.currentTrip + '/activities').once('value').then((snap) => {
       let newObj = snap.val() || {}
       this.state.keys.forEach((key, index) => {
         newObj[key] = index
       })
-      db.ref('trips/' + this.props.match.params.id + '/activities').set(newObj)
+      db.ref('trips/' + this.state.currentTrip + '/activities').set(newObj)
     })
   }
 
