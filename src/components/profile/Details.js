@@ -6,7 +6,7 @@ const Details = (props) => (
       {props.isCurrentUser &&
       <label className='profileImage' style={{backgroundImage: `url(${props.profileImage})`, backgroundSize: 'cover'}}>
         <span className='changeAvatar'>Change avatar</span>
-        <input className='fileInput' type='file' onChange={(e) => props.addProfileImage(e)} />
+        <input className='fileInput' type='file' onChange={(e) => props.addProfileImage(e)} accept={'image/*'} />
       </label>
     }
       {!props.isCurrentUser &&
@@ -21,9 +21,7 @@ const Details = (props) => (
         <span style={{cursor: 'pointer'}} onClick={() => props.changeShowing('following')}><b>{props.following}</b> following</span>{'   '}
         <span style={{cursor: 'pointer'}} onClick={() => props.changeShowing('followed')}><b>{props.followed}</b> followed</span>
       </div>
-      {props.isCurrentUser &&
-        <div><button>Edit</button></div>
-      }
+
       {!props.isCurrentUser && !props.isFollowing &&
         <div><button onClick={() => props.handleFollow(props.userID)}>Follow</button></div>
       }

@@ -1,5 +1,6 @@
 import React from 'react'
 import {Redirect} from 'react-router-dom'
+import Flash from '../flash/Flash'
 import db, {auth} from '../../utils/firebase'
 
 class Auth extends React.Component {
@@ -108,7 +109,7 @@ class Auth extends React.Component {
       })
       db.ref('usernames').once('value').then((snap) => {
         let newObj = snap.val() || {}
-        newObj[this.state.allUsernames] = true
+        newObj[this.state.username] = true
         db.ref('usernames').set(newObj)
       })
       this.setState({
@@ -117,7 +118,6 @@ class Auth extends React.Component {
       })
     })
     .catch((error) => {
-      // console.log(error.message)
       this.setState({
         error: true,
         message: error.message
@@ -156,7 +156,7 @@ class Auth extends React.Component {
         }
 
         {this.state.error &&
-        <h1>{this.state.message}</h1>
+        <Flash message={this.state.message} />
         }
 
         {!this.state.currentUser && this.state.isLogin &&

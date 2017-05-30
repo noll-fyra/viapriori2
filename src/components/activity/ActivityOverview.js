@@ -2,34 +2,17 @@ import React from 'react'
 import {Link} from 'react-router-dom'
 import moment from 'moment'
 import Rating from '../rating/Rating'
-import SaveActivity from './SaveActivity'
-import db, {storageKey} from '../../utils/firebase'
-import {tagsObjectToArray} from '../../utils/format'
 
 const ActivityOverview = (props) => {
-  function saveActivity () {
-    db.ref('users/' + window.localStorage[storageKey] + '/saved').once('value').then((snap) => {
-      let newObj = snap.val() || {}
-      newObj[props.activityID] = true
-      db.ref('users/' + window.localStorage[storageKey] + '/saved').set(newObj)
-    })
-  }
-  console.log(props.activity.user)
-  console.log(window.localStorage[storageKey])
-  console.log(props.activity.user === window.localStorage[storageKey])
   return (
     <div>
       <div className='activityOverview'><p>Activity: {props.activity.title || ''}</p>
         <img src={props.activity.image} alt={props.activity.title} />
+        <p>{<Link to='/search' onClick={() => props.clickToSearch(props.activity.locality)}>{props.activity.locality}</Link> || ''}, {<Link to='/search' onClick={() => props.clickToSearch(props.activity.country)}>{props.activity.country}</Link> || ''}</p>
         <p>Date: {moment(props.activity.date).format('YYYY-MM-DD') || ''}</p>
-        <p>City:{props.activity.locality || ''}</p>
-        <p>Country: {props.activity.country || ''}</p>
-        <p>Caption:{props.activity.caption || ''}</p>
-        <p>Tags:{props.activity.tags ? tagsObjectToArray(props.activity.tags) : ''}</p>
+        <p>Caption: {props.activity.caption || ''}</p>
+        <p>{props.activity.tags ? Object.keys(props.activity.tags).map((tag) => { return <Link key={tag} to='/search' onClick={() => props.clickToSearch(tag)}><i>#{tag + '  '}</i></Link> }) : []}</p>
         <Rating stars={props.activity.rating} isEnabled={false} />
-        {props.activity.user !== window.localStorage[storageKey] &&
-            <SaveActivity activityID={props.activityID} activity={props.activity}/>
-        }
       </div>
     </div>
   )

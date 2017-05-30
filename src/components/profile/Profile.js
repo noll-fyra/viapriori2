@@ -11,6 +11,8 @@ class Profile extends React.Component {
     this.state = {
       username: 'user',
       profileImage: require('./profile_by_jivan_from_noun_project.png'),
+      hasUpdatedProfileImage: false,
+      updatedProfileImage: require('./profile_by_jivan_from_noun_project.png'),
       keys: [],
       trips: [],
       followingKeys: [],
@@ -18,6 +20,7 @@ class Profile extends React.Component {
       followedKeys: [],
       followed: [],
       isFollowing: false,
+
       isCurrentUser: props.isCurrentUser,
       currentUser: props.match.params.id || window.localStorage[storageKey],
       showing: 'trips'
@@ -40,7 +43,6 @@ class Profile extends React.Component {
     this.setState({
       currentUser: nextProps.match.params.id || window.localStorage[storageKey]
     })
-    console.log(nextProps);
     this.updateCurrentUser(this.state.currentUser)
   }
 
@@ -105,6 +107,9 @@ class Profile extends React.Component {
   }
 
   addProfileImage (e) {
+    this.setState({
+      hasUpdatedProfileImage: true
+    })
     let image = e.target.files[0]
     // show user the locally uploaded file
     const reader = new window.FileReader()
@@ -112,21 +117,20 @@ class Profile extends React.Component {
       let self = this
       fixOrientation(reader.result, { image: true }, function (fixed, newImage) {
         self.setState({
-          profileImage: fixed
+          updatedProfileImage: fixed
+        })
+        // upload the file to firebase
+        storage.ref(window.localStorage[storageKey] + '/profile/avatar').putString(self.state.updatedProfileImage, 'data_url').then((snap) => {
+          storage.ref(window.localStorage[storageKey] + '/profile/avatar').getDownloadURL().then((url) => {
+            // update the profileImage url
+            db.ref('users/' + window.localStorage[storageKey] + '/profile').update({
+              profileImage: url
+            })
+          })
         })
       })
     })
     reader.readAsDataURL(image)
-
-    // upload the file to firebase
-    storage.ref(window.localStorage[storageKey] + '/profile/avatar').putString(this.state.profileImage, 'data_url').then((snap) => {
-      storage.ref(window.localStorage[storageKey] + '/profile/avatar').getDownloadURL().then((url) => {
-        // update the profileImage url
-        db.ref('users/' + window.localStorage[storageKey] + '/profile').update({
-          profileImage: url
-        })
-      })
-    })
   }
 
   changeShowing (section) {
@@ -179,7 +183,7 @@ class Profile extends React.Component {
         <Details
           userID={this.state.currentUser}
           username={this.state.username}
-          profileImage={this.state.profileImage}
+          profileImage={this.state.hasUpdatedProfileImage ? this.state.updatedProfileImage : this.state.profileImage}
           numberOfTrips={this.state.trips.length}
           addProfileImage={this.addProfileImage}
           isCurrentUser={this.state.isCurrentUser}

@@ -42,7 +42,6 @@ class SearchResults extends React.Component {
         userId: uniqueUsers,
         userDetails: userDetails
       })
-      console.log(uniqueUsers)
     })
 
     db.ref('activities').on('value', (snapshot) => {
@@ -93,7 +92,6 @@ class SearchResults extends React.Component {
       uniqueTripKeys.forEach((trip) => {
         filteredTrips.push(snapshot.val()[trip])
       })
-      // console.log(uniqueTripKeys)
       this.setState({
         tripId: uniqueTripKeys,
         tripFiltered: filteredTrips
@@ -106,7 +104,7 @@ class SearchResults extends React.Component {
       return <TripOverview key={this.state.tripId[index]} tripID={this.state.tripId[index]} trip={trip} />
     })
     let activitySearched = this.state.activityFiltered.map((activity, index) => {
-      return <ActivityOverview key={this.state.activityId[index]} activityID={this.state.activityId[index]} activity={activity} />
+      return <ActivityOverview key={this.state.activityId[index]} activityID={this.state.activityId[index]} activity={activity} clickToSearch={this.props.clickToSearch} />
     })
     let userSearched = this.state.userDetails.map((user, index) => {
       return <UserOverview key={this.state.userId[index]} userID={this.state.userId[index]} user={user} />
