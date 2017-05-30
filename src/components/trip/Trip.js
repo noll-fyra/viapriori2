@@ -1,24 +1,29 @@
 import React from 'react'
 import {SortableContainer, SortableElement, SortableHandle, arrayMove} from 'react-sortable-hoc'
 import ActivityOverview from '../activity/ActivityOverview'
-import db from '../../utils/firebase'
-
+import SaveActivity from '../activity/SaveActivity'
+import db, {storageKey} from '../../utils/firebase'
 const DragHandle = SortableHandle(() => <span>||||||</span>) // This can be any component you want
 
-const SortableItem = SortableElement(({value, id, clickToSearch}) => {
+
+const SortableItem = SortableElement(({value, id, clickToSearch, url}) => {
   return (
     <li>
       <DragHandle />
       <ActivityOverview activityID={id} activity={value} clickToSearch={clickToSearch} />
+      {value.user !== window.localStorage[storageKey] &&
+          <SaveActivity activityID={id} activity={value} url={url}/>
+      }
     </li>
   )
 })
 
-const SortableList = SortableContainer(({activities, id, clickToSearch}) => {
+
+const SortableList = SortableContainer(({activities, id, clickToSearch, url}) => {
   return (
     <ul>
       {activities.map((value, index) => (
-        <SortableItem key={`item-${index}`} index={index} value={value} id={id[index]} clickToSearch={clickToSearch} />
+        <SortableItem key={`item-${index}`} index={index} value={value} id={id[index]} clickToSearch={clickToSearch} url={url} />
       ))}
     </ul>
   )
@@ -90,6 +95,7 @@ class Trip extends React.Component {
       <div>
         <h1>{this.state.details.title || ''}</h1>
         <SortableList
+          url={this.props.match.params.id}
           activities={this.state.activities}
           onSortEnd={this.onSortEnd}
           useDragHandle

@@ -2,8 +2,9 @@ import React from 'react'
 import TripOverview from '../trip/TripOverview'
 import UserOverview from '../profile/UserOverview'
 import ActivityOverview from '../activity/ActivityOverview'
+import SaveActivity from '../activity/SaveActivity'
+import db, {storageKey} from '../../utils/firebase'
 
-import db from '../../utils/firebase'
 
 class SearchResults extends React.Component {
   constructor (props) {
@@ -20,6 +21,7 @@ class SearchResults extends React.Component {
   }
 
   componentDidMount () {
+    if(this.state.searchQuery){
     let filteredTrips = []
     let tripKeys = []
     let activityKeys = []
@@ -98,13 +100,18 @@ class SearchResults extends React.Component {
       })
     })
   }
+}
 
   render () {
     let tripsSearched = this.state.tripFiltered.map((trip, index) => {
       return <TripOverview key={this.state.tripId[index]} tripID={this.state.tripId[index]} trip={trip} />
     })
     let activitySearched = this.state.activityFiltered.map((activity, index) => {
-      return <ActivityOverview key={this.state.activityId[index]} activityID={this.state.activityId[index]} activity={activity} clickToSearch={this.props.clickToSearch} />
+      return <div><ActivityOverview key={this.state.activityId[index]} activityID={this.state.activityId[index]} activity={activity} clickToSearch={this.props.clickToSearch}/>
+      {activity.user !== window.localStorage[storageKey] &&
+          <SaveActivity key={index} activityID={this.state.activityId[index]} activity={activity}/>
+      }</div>
+
     })
     let userSearched = this.state.userDetails.map((user, index) => {
       return <UserOverview key={this.state.userId[index]} userID={this.state.userId[index]} user={user} />
@@ -132,8 +139,12 @@ class SearchResults extends React.Component {
             {activitySearched}
           </div>
         }
-
-        {userSearched.length === 0 && tripsSearched.length === 0 && activitySearched.length === 0 &&
+        {!this.state.searchQuery &&
+          <div>
+            <p>Please enter search</p>
+          </div>
+        }
+        {this.state.searchQuery && userSearched.length === 0 && tripsSearched.length === 0 && activitySearched.length === 0 &&
           <div>
             <p>Sorry, no results found</p>
           </div>

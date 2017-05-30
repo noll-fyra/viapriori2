@@ -2,8 +2,11 @@ import React from 'react'
 import {Link} from 'react-router-dom'
 import moment from 'moment'
 import Rating from '../rating/Rating'
+import db, {storageKey} from '../../utils/firebase'
+import {tagsObjectToArray} from '../../utils/format'
 
 const ActivityOverview = (props) => {
+
   return (
     <div>
       <div className='activityOverview'><p>Activity: {props.activity.title || ''}</p>
@@ -13,6 +16,7 @@ const ActivityOverview = (props) => {
         <p>Caption: {props.activity.caption || ''}</p>
         <p>{props.activity.tags ? Object.keys(props.activity.tags).map((tag) => { return <Link key={tag} to='/search' onClick={() => props.clickToSearch(tag)}><i>#{tag + '  '}</i></Link> }) : []}</p>
         <Rating stars={props.activity.rating} isEnabled={false} />
+
       </div>
     </div>
   )

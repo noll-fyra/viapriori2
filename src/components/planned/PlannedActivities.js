@@ -1,6 +1,6 @@
 import React from 'react'
 import {SortableContainer, SortableElement, SortableHandle, arrayMove} from 'react-sortable-hoc'
-import SavedOverview from '../saved/SavedOverview'
+import ActivityOverview from '../activity/ActivityOverview'
 import Planned from './Planned'
 import db, {storageKey} from '../../utils/firebase'
 
@@ -9,9 +9,12 @@ const DragHandle = SortableHandle(() => <span>||||||</span>) // This can be any 
 const SortableItem = SortableElement(({value, id, options, plannedKeys, plannedTrips, createNewPlanned}) => {
   return (
     <li>
+      {/* <ActivityOverview activityID={id} activity={value} clickToSearch={clickToSearch} />
+      {value.user !== window.localStorage[storageKey] &&
+      } */}
       <DragHandle />
-      <SavedOverview activityID={id} activity={value} options={options} plannedKeys={plannedKeys} plannedTrips={plannedTrips} createNewPlanned={createNewPlanned} />
-      {5}
+      <ActivityOverview activityID={id} activity={value} />
+      {/* <SaveActivity activityID={id} activity={value} url={url}/> */}
     </li>
   )
 })
@@ -37,7 +40,7 @@ class PlannedActivities extends React.Component {
       tripId: this.props.match.params.id
     }
 
-    this.onSortEnd = this.onSortEnd.bind(this)
+    // this.onSortEnd = this.onSortEnd.bind(this)
     this.componentUpdates = this.componentUpdates.bind(this)
   }
 
@@ -47,6 +50,9 @@ class PlannedActivities extends React.Component {
 
   componentDidUpdate () {
     if (this.props.match.params.id !== this.state.tripId) {
+      this.setState({
+        tripId:this.props.match.params.id
+      })
       this.componentUpdates()
     }
   }

@@ -2,6 +2,7 @@ import React from 'react'
 import moment from 'moment'
 import Rating from '../rating/Rating'
 import db, {storageKey} from '../../utils/firebase'
+import ActivityOverview from '../activity/ActivityOverview'
 
 class SavedOverview extends React.Component {
   constructor (props) {
@@ -79,14 +80,15 @@ class SavedOverview extends React.Component {
   render () {
     return (
       <div>
-        <div className='activityOverview'>
+        <ActivityOverview activity={this.props.activity}/>
+        {/* <div className='activityOverview'>
           <p>Activity: {this.props.activity.title || ''}</p>
           <img src={this.props.activity.image} alt={this.props.activity.title} />
           <p>Date: {moment(this.props.activity.date).format('YYYY-MM-DD') || ''}</p>
           <p>City: {this.props.activity.locality || ''}</p>
           <p>Country: {this.props.activity.country || ''}</p>
           <p>Caption: {this.props.activity.caption || ''}</p>
-          <Rating stars={this.props.activity.rating} isEnabled={false} />
+          <Rating stars={this.props.activity.rating} isEnabled={false} /> */}
 
           {this.props.plannedKeys.length === 0 &&
             <label>
@@ -120,7 +122,6 @@ class SavedOverview extends React.Component {
 
           <button onClick={() => this.removeActivity()}>Unsave</button>
         </div>
-      </div>
     )
   }
 }
