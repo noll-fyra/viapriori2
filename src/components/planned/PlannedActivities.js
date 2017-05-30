@@ -1,6 +1,5 @@
 import React from 'react'
 import {SortableContainer, SortableElement, SortableHandle, arrayMove} from 'react-sortable-hoc'
-import SavedOverview from '../saved/SavedOverview'
 import ActivityOverview from '../activity/ActivityOverview'
 import Planned from './Planned'
 import db, {storageKey} from '../../utils/firebase'
@@ -10,8 +9,12 @@ const DragHandle = SortableHandle(() => <span>||||||</span>) // This can be any 
 const SortableItem = SortableElement(({value, id, options, plannedKeys, plannedTrips, createNewPlanned}) => {
   return (
     <li>
+      {/* <ActivityOverview activityID={id} activity={value} clickToSearch={clickToSearch} />
+      {value.user !== window.localStorage[storageKey] &&
+      } */}
       <DragHandle />
       <ActivityOverview activityID={id} activity={value} />
+      {/* <SaveActivity activityID={id} activity={value} url={url}/> */}
     </li>
   )
 })
@@ -47,6 +50,9 @@ class PlannedActivities extends React.Component {
 
   componentDidUpdate () {
     if (this.props.match.params.id !== this.state.tripId) {
+      this.setState({
+        tripId:this.props.match.params.id
+      })
       this.componentUpdates()
     }
   }

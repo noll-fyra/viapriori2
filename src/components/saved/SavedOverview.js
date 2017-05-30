@@ -89,7 +89,7 @@ class SavedOverview extends React.Component {
           <p>Country: {this.props.activity.country || ''}</p>
           <p>Caption: {this.props.activity.caption || ''}</p>
           <Rating stars={this.props.activity.rating} isEnabled={false} /> */}
-\
+
           {this.props.plannedKeys.length === 0 &&
             <label>
               <input value={this.state.newPlannedTitle} type='text' placeholder='New trip title' onChange={this.handlePlannedTitle} />
