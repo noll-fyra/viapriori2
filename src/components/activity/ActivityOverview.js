@@ -11,11 +11,10 @@ const ActivityOverview = (props) => {
     <div>
       <div className='activityOverview'><p>Activity: {props.activity.title || ''}</p>
         <img src={props.activity.image} alt={props.activity.title} />
+        <p>{<Link to='/search' onClick={() => props.clickToSearch(props.activity.locality)}>{props.activity.locality}</Link> || ''}, {<Link to='/search' onClick={() => props.clickToSearch(props.activity.country)}>{props.activity.country}</Link> || ''}</p>
         <p>Date: {moment(props.activity.date).format('YYYY-MM-DD') || ''}</p>
-        <p>City:{props.activity.locality || ''}</p>
-        <p>Country: {props.activity.country || ''}</p>
-        <p>Caption:{props.activity.caption || ''}</p>
-        <p>Tags:{props.activity.tags ? tagsObjectToArray(props.activity.tags) : ''}</p>
+        <p>Caption: {props.activity.caption || ''}</p>
+        <p>{props.activity.tags ? Object.keys(props.activity.tags).map((tag) => { return <Link key={tag} to='/search' onClick={() => props.clickToSearch(tag)}><i>#{tag + '  '}</i></Link> }) : []}</p>
         <Rating stars={props.activity.rating} isEnabled={false} />
 
       </div>

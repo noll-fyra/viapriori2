@@ -4,20 +4,22 @@ import EXIF from 'exif-js'
 import geocoder from 'geocoder'
 import moment from 'moment'
 import Loading from 'react-loading'
+import fixOrientation from 'fix-orientation'
+import { WithContext as ReactTags } from 'react-tag-input'
+import Flash from '../flash/Flash'
+import Rating from '../rating/Rating'
 import db, {storage, storageKey} from '../../utils/firebase'
 import latLng, {getLocation} from '../../utils/geocoding'
 import tagsArrayToObject from '../../utils/format'
-import Rating from '../rating/Rating'
-import fixOrientation from 'fix-orientation'
-import { WithContext as ReactTags } from 'react-tag-input'
 import './tags.css'
 import './modal.css'
-
 
 class NewActivity extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
+      error: false,
+      message: '',
       isNewTrip: false,
       newTripTitle: '',
       trips: [],
@@ -52,6 +54,7 @@ class NewActivity extends React.Component {
     this.starClick = this.starClick.bind(this)
     this.handleTagDelete = this.handleTagDelete.bind(this)
     this.handleTagAddition = this.handleTagAddition.bind(this)
+    this.hasErrors = this.hasErrors.bind(this)
     this.handleActivity = this.handleActivity.bind(this)
     this.linkToTrip = null
   }
@@ -193,122 +196,143 @@ class NewActivity extends React.Component {
     this.setState({tags: tags})
   }
 
-  handleActivity () {
-    // show loading animation
-    this.setState({
-      isUploading: true
-    })
-    // create new trip if isNewTrip is true
-    let newTripID = ''
-    if (this.state.isNewTrip) {
-      let trips = db.ref('trips')
-      let newRef = trips.push()
-      newTripID = newRef.key
-      newRef.set({
-        user: window.localStorage[storageKey],
-        title: this.state.newTripTitle,
-        image: window.localStorage[storageKey] + '/' + newTripID + '/images/' + this.state.imageName,
-        imageOrientation: this.state.imageOrientation,
-        totalRating: 0,
-        start: this.state.date,
-        end: this.state.date
+  hasErrors () {
+    let self = this
+    let hasErrors = false
+    function errorMessage (message) {
+      self.setState({
+        error: true,
+        message: message
       })
-      // add new trip to the user's trips
-      db.ref('users/' + window.localStorage[storageKey] + '/trips').once('value', snap => {
-        let newObj = snap.val() || {}
-        newObj[newTripID] = true
-        db.ref('users/' + window.localStorage[storageKey] + '/trips').set(newObj)
-      })
+      hasErrors = true
     }
-    // update the tripID
-    let tripID = this.state.isNewTrip ? newTripID : this.state.trips.slice().reverse()[this.state.tripIndex][0]
-    this.setState({
-      tripID: tripID
-    })
-    // save photo
-    storage.ref(window.localStorage[storageKey] + '/' + tripID + '/images/' + this.state.imageName).putString(this.state.image, 'data_url').then(() => {
-      // get image url
-      storage.ref(window.localStorage[storageKey] + '/' + tripID + '/images/' + this.state.imageName).getDownloadURL().then((url) => {
-        // update new trip image url
-        if (this.state.isNewTrip) {
-          db.ref('trips/' + newTripID).update({image: url})
-        }
-        // create activity
-        let activityRef = db.ref('activities/').push()
-        let newActivityID = activityRef.key
-        activityRef.set({
-          trip: this.state.tripID,
+    if (!this.state.locality || !this.state.country) {
+      errorMessage('Both city and country are required')
+    }
+    if (!this.state.title) {
+      errorMessage('A valid activity name is required')
+    }
+    if (!this.state.date) {
+      errorMessage('A valid date is required')
+    }
+    if (!this.state.newTripTitle && this.state.isNewTrip) {
+      errorMessage('A trip title is required')
+    }
+    return hasErrors
+  }
+
+  handleActivity () {
+    if (this.hasErrors()) {
+      return
+    } else {
+    // show loading animation
+      this.setState({
+        isUploading: true
+      })
+    // create new trip if isNewTrip is true
+      let newTripID = ''
+      if (this.state.isNewTrip) {
+        let trips = db.ref('trips')
+        let newRef = trips.push()
+        newTripID = newRef.key
+        newRef.set({
           user: window.localStorage[storageKey],
-          title: this.state.title,
-          date: this.state.date,
-          locality: this.state.locality,
-          country: this.state.country,
-          imageLatLng: this.state.imageLatLng,
-          image: url,
+          title: this.state.newTripTitle,
+          image: window.localStorage[storageKey] + '/' + newTripID + '/images/' + this.state.imageName,
           imageOrientation: this.state.imageOrientation,
-          caption: this.state.caption,
-          rating: this.state.rating,
-          tags: tagsArrayToObject(this.state.tags)
+          totalRating: 0,
+          start: this.state.date,
+          end: this.state.date
         })
+      // add new trip to the user's trips
+        db.ref('users/' + window.localStorage[storageKey] + '/trips').once('value', snap => {
+          let newObj = snap.val() || {}
+          newObj[newTripID] = true
+          db.ref('users/' + window.localStorage[storageKey] + '/trips').set(newObj)
+        })
+      }
+    // update the tripID
+      let tripID = this.state.isNewTrip ? newTripID : this.state.trips.slice().reverse()[this.state.tripIndex][0]
+      this.setState({
+        tripID: tripID
+      })
+    // save photo
+      storage.ref(window.localStorage[storageKey] + '/' + tripID + '/images/' + this.state.imageName).putString(this.state.image, 'data_url').then(() => {
+      // get image url
+        storage.ref(window.localStorage[storageKey] + '/' + tripID + '/images/' + this.state.imageName).getDownloadURL().then((url) => {
+        // update new trip image url
+          if (this.state.isNewTrip) {
+            db.ref('trips/' + newTripID).update({image: url})
+          }
+        // create activity
+          let activityRef = db.ref('activities/').push()
+          let newActivityID = activityRef.key
+          activityRef.set({
+            trip: this.state.tripID,
+            user: window.localStorage[storageKey],
+            title: this.state.title,
+            date: this.state.date,
+            locality: this.state.locality,
+            country: this.state.country,
+            imageLatLng: this.state.imageLatLng,
+            image: url,
+            imageOrientation: this.state.imageOrientation,
+            caption: this.state.caption,
+            rating: this.state.rating,
+            tags: tagsArrayToObject(this.state.tags)
+          })
 
         // update the trip's activities, rating and date
-        db.ref('trips/' + tripID).once('value').then((snap) => {
-          let newObj = snap.val() || {}
-          let currentActivities = snap.val().activities || {}
-          currentActivities[newActivityID] = this.state.isNewTrip ? 0 : snap.val() && snap.val().activities ? Object.keys(snap.val().activities).length : 0
-          newObj['activities'] = currentActivities
+          db.ref('trips/' + tripID).once('value').then((snap) => {
+            let newObj = snap.val() || {}
+            let currentActivities = snap.val().activities || {}
+            currentActivities[newActivityID] = this.state.isNewTrip ? 0 : snap.val() && snap.val().activities ? Object.keys(snap.val().activities).length : 0
+            newObj['activities'] = currentActivities
 
-          let currentRating = snap.val().totalRating || 0
-          newObj['totalRating'] = currentRating + this.state.rating
+            let currentRating = snap.val().totalRating || 0
+            newObj['totalRating'] = currentRating + this.state.rating
 
-          let currentStart = snap.val().start
-          let currentEnd = snap.val().end
-          newObj['start'] = currentStart < this.state.date ? currentStart : this.state.date
-          newObj['end'] = currentEnd > this.state.date ? currentEnd : this.state.date
+            let currentStart = snap.val().start
+            let currentEnd = snap.val().end
+            newObj['start'] = currentStart < this.state.date ? currentStart : this.state.date
+            newObj['end'] = currentEnd > this.state.date ? currentEnd : this.state.date
 
-          db.ref('trips/' + tripID).set(newObj)
-        })
+            db.ref('trips/' + tripID).set(newObj)
+          })
+
+        // update database counts
+          function updateDB (path, item) {
+            db.ref(path).once('value').then((snap) => {
+              let newObj = snap.val() || {}
+              newObj[item] = newObj[item] ? newObj[item] + 1 : 1
+              db.ref(path).set(newObj)
+            })
+          }
 
         // add tags to all and trending
-        this.state.tags.forEach((tag) => {
-          db.ref('all/tags/').once('value').then((snap) => {
-            let newObj = snap.val() || {}
-            newObj[tag.text] = newObj[tag.text] ? newObj[tag.text] + 1 : 1
-            db.ref('all/tags/').set(newObj)
+          this.state.tags.forEach((tag) => {
+            let lowerTag = tag.text.toLowerCase()
+            updateDB('all/tags/', lowerTag)
+            updateDB('trending/tags/' + moment().format('dddd'), lowerTag)
           })
-          db.ref('trending/tags/' + moment().format('dddd')).once('value').then((snap) => {
-            let newObj = snap.val() || {}
-            newObj[tag.text] = newObj[tag.text] ? newObj[tag.text] + 1 : 1
-            db.ref('trending/tags/' + moment().format('dddd')).set(newObj)
-          })
-        })
 
         // add locality and country to all and trending
-        db.ref('all/localities/').once('value').then((snap) => {
-          let newObj = snap.val() || {}
-          newObj[this.state.locality] = newObj[this.state.locality] ? newObj[this.state.locality] + 1 : 1
-          db.ref('all/localities/').set(newObj)
-        })
-        db.ref('trending/localities/' + moment().format('dddd')).once('value').then((snap) => {
-          let newObj = snap.val() || {}
-          newObj[this.state.locality] = newObj[this.state.locality] ? newObj[this.state.locality] + 1 : 1
-          db.ref('trending/localities/' + moment().format('dddd')).set(newObj)
-        })
-        db.ref('all/countries/').once('value').then((snap) => {
-          let newObj = snap.val() || {}
-          newObj[this.state.country] = newObj[this.state.country] ? newObj[this.state.country] + 1 : 1
-          db.ref('all/countries/').set(newObj)
-        })
-        db.ref('trending/countries/' + moment().format('dddd')).once('value').then((snap) => {
-          let newObj = snap.val() || {}
-          newObj[this.state.country] = newObj[this.state.country] ? newObj[this.state.country] + 1 : 1
-          db.ref('trending/countries/' + moment().format('dddd')).set(newObj)
-        })
+          let lowerLocality = this.state.locality
+          updateDB('all/localities/', lowerLocality)
+          updateDB('trending/localities/' + moment().format('dddd'), lowerLocality)
 
-        this.props.addNewActivity(false)
-        this.linkToTrip.handleClick(new window.MouseEvent('click'))
+          let lowerCountry = this.state.country
+          updateDB('all/countries/', lowerCountry)
+          updateDB('trending/countries/' + moment().format('dddd'), lowerCountry)
+
+          this.setState({
+            isUploading: false
+          })
+          this.props.addNewActivity(false)
+          this.linkToTrip.handleClick(new window.MouseEvent('click'))
+        })
       })
-    })
+    }
   }
 
   render () {
@@ -324,7 +348,7 @@ class NewActivity extends React.Component {
         <div className='modal'>
           <label className='imageLabel'>
             <span>Post a photo</span>
-            <input className='fileInput' type='file' onChange={(e) => this.handleFile(e)} />
+            <input className='fileInput' type='file' onChange={(e) => this.handleFile(e)} accept={'image/*'} />
           </label>
         </div>
         }
@@ -334,11 +358,13 @@ class NewActivity extends React.Component {
           <div className='modal'>
             <label className='imageLabelActive' style={{backgroundImage: `url(${this.state.image})`, backgroundSize: 'cover'}}>
               <span>Post a photo</span>
-              <input className='fileInput' type='file' onChange={(e) => this.handleFile(e)} />
+              <input className='fileInput' type='file' onChange={(e) => this.handleFile(e)} accept={'image/*'} />
             </label>
           </div>
           <div className='modal modal2'>
-
+            {this.state.error &&
+            <Flash message={this.state.message} />
+            }
             {this.state.trips.length === 0 &&
               <p><input type='text' onChange={this.handleTripTitle} placeholder='Add your first trip' /></p>
             }
@@ -374,7 +400,7 @@ class NewActivity extends React.Component {
             <button onClick={this.handleActivity}>Share</button>
           </div>
           <div className={this.state.isUploading ? 'backdrop' : 'notUploading'} />
-          <Loading className={this.state.isUploading ? 'uploading' : 'notUploading'} type={'spinningBubbles'} color={'blue'} height='400' width='400' />
+          <Loading className={this.state.isUploading ? 'uploading' : 'notUploading'} type={'spinningBubbles'} color={'blue'} height='400px' width='400px' />
         </div>
         }
 

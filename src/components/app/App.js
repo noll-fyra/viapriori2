@@ -67,7 +67,6 @@ class App extends Component {
   }
 
   render () {
-    console.log(this.state.searchQuery)
     return (
       <Router>
         <div>
@@ -85,12 +84,12 @@ class App extends Component {
           <div className='topNav topNavBG' />
           <div className='bodyContainer'>
             <Route exact path='/' component={() => <Home clickToSearch={this.clickToSearch} />} />
-            <Route path='/search' component={(props) => <SearchResults searchQuery={this.state.searchQuery} {...props} />} />
+            <Route path='/search' component={(props) => <SearchResults searchQuery={this.state.searchQuery} clickToSearch={this.clickToSearch} {...props} />} />
             <PrivateRoute path='/saved' component={Saved} />
             <PrivateRoute exact path='/profile' component={(props) => <Profile isCurrentUser {...props} />} />
             <Route path='/users/:id' component={(props) => <Profile isCurrentUser={false} {...props} />} />
             <PrivateRoute path='/planned/:id' component={PlannedActivities} />
-            <PrivateRoute path='/trips/:id' component={Trip} />
+            <PrivateRoute path='/trips/:id' component={(props) => <Trip clickToSearch={this.clickToSearch} {...props} />} />
             <Route path='/auth' component={(props) => <Auth isLogin={this.state.isLogin} {...props} />} />
             <NewActivity isEnabled={this.state.addNewActivity} addNewActivity={this.addNewActivity} suggestions={suggestions} />
           </div>
