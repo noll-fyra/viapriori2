@@ -28,7 +28,7 @@ class SearchResults extends React.Component {
     let filteredActivities = []
     db.ref('users').on('value', (snapshot) => {
       for (var user in snapshot.val()) {
-        if (snapshot.val()[user].details.username && snapshot.val()[user].details.username.toLowerCase().includes(this.state.searchQuery.toLowerCase())) {
+        if (snapshot.val()[user].profile.username && snapshot.val()[user].profile.username.toLowerCase().includes(this.state.searchQuery.toLowerCase())) {
           userId.push(user)
         }
       }
