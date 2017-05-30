@@ -47,6 +47,9 @@ class App extends Component {
 
   handleSearch (e) {
     if (e.key === 'Enter') {
+      this.setState({
+        searchQuery: this.state.searchQuery.toLowerCase()
+      })
       this.linkToSearch.handleClick(new window.MouseEvent('click'))
     }
   }
@@ -65,6 +68,7 @@ class App extends Component {
   }
 
   render () {
+    console.log(this.state.searchQuery)
     return (
       <Router>
         <div>

@@ -26,18 +26,12 @@ class SearchResults extends React.Component {
     let userId = []
     let userDetails = []
     let filteredActivities = []
-////////////TO ASK YISHENG TMR
     db.ref('users').on('value', (snapshot) => {
       for (var user in snapshot.val()) {
-        console.log(snapshot.val()[user].details.username && snapshot.val()[user].details.username.toLowerCase().includes(this.state.searchQuery.toLowerCase()))
         if (snapshot.val()[user].details.username && snapshot.val()[user].details.username.toLowerCase().includes(this.state.searchQuery.toLowerCase())) {
           userId.push(user)
-          console.log(user)
-          console.log(userId)
         }
       }
-      console.log('whyyy is the users for loop blocking this console log?')
-      console.log(snapshot.val())
       let uniqueUsers = userId.filter((id, i) => {
         return userId.indexOf(id) === i
       })

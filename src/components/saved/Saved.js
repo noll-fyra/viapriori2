@@ -77,6 +77,7 @@ class Saved extends React.Component {
   }
 
     componentDidUpdate (prevProps, prevState) {
+
       if (this.state.searchQuery !== prevState.searchQuery) {
         let activityKeys = []
         let activityDetails = []
@@ -86,7 +87,6 @@ class Saved extends React.Component {
         db.ref('users/' + window.localStorage[storageKey]).on('value', snapshot => {
           if (snapshot.val() && snapshot.val().saved) {
         // saved activity keys
-
             let savedKeys = Object.keys(snapshot.val().saved)
             this.setState({
               savedKeys: savedKeys
@@ -95,11 +95,13 @@ class Saved extends React.Component {
         // let savedActivities = new Array(savedKeys.length).fill(null)
             for (var activity in snapshot.val().saved) {
               let index = savedKeys.indexOf(activity)
+
               db.ref('activities/' + activity).on('value', snap => {
             // savedActivities[ind] = snap.val()
                 if (snap.val().title.toLowerCase().includes(this.state.searchQuery.toLowerCase())) {
                   activityKeys.push(savedKeys[index])
                   activityDetails.push(snap.val())
+
                 } else if (snap.val().locality.toLowerCase().includes(this.state.searchQuery.toLowerCase())) {
                   activityKeys.push(savedKeys[index])
                   activityDetails.push(snap.val())
@@ -113,16 +115,13 @@ class Saved extends React.Component {
                   activityDetails.push(snap.val())
                 }
               }
-              }
-              })
             }
             this.setState({
               savedActivities: activityDetails,
               activityKeys: activityKeys
             })
-            console.log(this.state.searchQuery)
-            console.log(activityDetails)
-            console.log(activityKeys)
+              })
+            }
           } else {
             this.setState({
               savedKeys: [],
@@ -132,6 +131,7 @@ class Saved extends React.Component {
           }
       // check if there are any planned trips
           if (snapshot.val() && snapshot.val().planned) {
+
         // planned trip keys
             let plannedKeys = Object.keys(snapshot.val().planned)
             this.setState({
@@ -190,7 +190,6 @@ class Saved extends React.Component {
   //   }
   // }
   render () {
-    console.log(this.state.searchQuery)
     let reverseSaved = this.state.savedActivities.slice().reverse()
     let reverseKeys = this.state.savedKeys.slice().reverse()
     let options = this.state.plannedTrips.map((trip, index) => {
