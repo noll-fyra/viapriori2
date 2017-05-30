@@ -76,14 +76,15 @@ class Trip extends React.Component {
   render () {
     return (
       <div>
-        <h1>Activities for {this.state.details.title || ''}</h1>
+        <h1>{this.state.details.title || ''}</h1>
         {JSON.stringify(this.state.activities)}
-        <SortableList activities={this.state.activities} onSortEnd={this.onSortEnd} useDragHandle id={this.state.keys} />
-        {/* {this.state.activities &&
-          this.state.activities.map((activity, index) => {
-            return <ActivityOverview key={this.state.keys[index]} activityID={this.state.keys[index]} activity={activity} />
-          })
-        } */}
+        <SortableList
+          activities={this.state.activities}
+          onSortEnd={this.onSortEnd}
+          useDragHandle
+          id={this.state.keys}
+          lockAxis='y'
+        />
       </div>
     )
   }

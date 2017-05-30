@@ -2,6 +2,7 @@ import React from 'react'
 import {Link} from 'react-router-dom'
 import SearchForm from '../search/SearchForm'
 import {isAuthenticated, storageKey, storageEmail, auth} from '../../utils/firebase'
+import './nav.css'
 
 class Nav extends React.Component {
   constructor (props) {
@@ -43,12 +44,14 @@ class Nav extends React.Component {
         <Link to='/'>Via Postale</Link>
         <SearchForm placeholder='Search' value={this.props.searchValue} onChange={this.props.onChange} onKeyUp={this.props.onKeyUp} />
         <Link to={'/search/' + this.props.searchValue} className='searchButton' ref={this.props.linkToSearch} style={{display: 'none'}} />
+
         {!this.state.isAuthenticated &&
           <span>
             <Link to='/auth' onClick={() => this.props.isLogin(true)}>Login</Link>
             <Link to='/auth' onClick={() => this.props.isLogin(false)}>Register</Link>
           </span>
         }
+
         {this.state.isAuthenticated &&
           <span>
             <button onClick={() => this.props.addNewActivity(true)}>+NEW</button>

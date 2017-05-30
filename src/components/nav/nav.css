@@ -1,0 +1,19 @@
+.topNav {
+  background-color: red;
+  height: 48px;
+  width: 100%;
+  position: fixed;
+  display: flex;
+  flex-flow: row;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 3;
+}
+
+.topNavBG {
+  z-index: 2;
+}
+
+.topNav a {
+  margin: 0px 10px;
+}
