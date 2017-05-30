@@ -1,6 +1,7 @@
 import React from 'react'
 import {SortableContainer, SortableElement, SortableHandle, arrayMove} from 'react-sortable-hoc'
 import SavedOverview from '../saved/SavedOverview'
+import ActivityOverview from '../activity/ActivityOverview'
 import Planned from './Planned'
 import db, {storageKey} from '../../utils/firebase'
 
@@ -10,8 +11,7 @@ const SortableItem = SortableElement(({value, id, options, plannedKeys, plannedT
   return (
     <li>
       <DragHandle />
-      <SavedOverview activityID={id} activity={value} options={options} plannedKeys={plannedKeys} plannedTrips={plannedTrips} createNewPlanned={createNewPlanned} />
-      {5}
+      <ActivityOverview activityID={id} activity={value} />
     </li>
   )
 })
@@ -37,7 +37,7 @@ class PlannedActivities extends React.Component {
       tripId: this.props.match.params.id
     }
 
-    this.onSortEnd = this.onSortEnd.bind(this)
+    // this.onSortEnd = this.onSortEnd.bind(this)
     this.componentUpdates = this.componentUpdates.bind(this)
   }
 
