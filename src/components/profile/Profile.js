@@ -174,7 +174,6 @@ class Profile extends React.Component {
         <p>{JSON.stringify(this.state.currentUser)}</p>
         <p>{JSON.stringify(this.state.followingKeys)}</p>
         <p>{JSON.stringify(this.state.followedKeys)}</p>
-        {/* <p>{JSON.stringify(this.state.username)}</p> */}
         <Details
           userID={this.state.currentUser}
           username={this.state.username}

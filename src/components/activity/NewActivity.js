@@ -3,19 +3,22 @@ import {Link} from 'react-router-dom'
 import EXIF from 'exif-js'
 import geocoder from 'geocoder'
 import moment from 'moment'
+import Loading from 'react-loading'
 import db, {storage, storageKey} from '../../utils/firebase'
 import latLng, {getLocation} from '../../utils/geocoding'
 import tagsArrayToObject from '../../utils/format'
 import Rating from '../rating/Rating'
 import fixOrientation from 'fix-orientation'
 import { WithContext as ReactTags } from 'react-tag-input'
+import './tags.css'
+import './modal.css'
 
 class NewActivity extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
       isNewTrip: false,
-      newTripName: '',
+      newTripTitle: '',
       trips: [],
       tripID: '',
       tripIDs: [],
@@ -32,71 +35,44 @@ class NewActivity extends React.Component {
       editLocation: false,
       rating: 0,
       tags: [],
-      suggestions: props.suggestions
+      suggestions: props.suggestions,
+      isUploading: false
     }
 
+    this.handleFile = this.handleFile.bind(this)
     this.chooseTrip = this.chooseTrip.bind(this)
     this.startNewTrip = this.startNewTrip.bind(this)
     this.handleTripTitle = this.handleTripTitle.bind(this)
     this.handleActivityTitle = this.handleActivityTitle.bind(this)
-    this.handleFile = this.handleFile.bind(this)
     this.handleDate = this.handleDate.bind(this)
     this.handleLocality = this.handleLocality.bind(this)
     this.handleCountry = this.handleCountry.bind(this)
     this.handleCaption = this.handleCaption.bind(this)
     this.starClick = this.starClick.bind(this)
-    this.handleDelete = this.handleDelete.bind(this)
-    this.handleAddition = this.handleAddition.bind(this)
+    this.handleTagDelete = this.handleTagDelete.bind(this)
+    this.handleTagAddition = this.handleTagAddition.bind(this)
     this.handleActivity = this.handleActivity.bind(this)
     this.linkToTrip = null
   }
 
   componentDidMount () {
-    // get all the user's trip IDs
+    // get all the user's trips
     db.ref('users/' + window.localStorage[storageKey] + '/trips').once('value').then((snapshot) => {
-      let keys = snapshot.val() ? Object.keys(snapshot.val()) : []
-      this.setState({
-        tripIDs: keys
-      })
-      if (keys.length === 0) {
+      if (!snapshot.val()) {
         this.setState({
           isNewTrip: true
         })
       }
-      // get all the trips' details
-      let trips = new Array(keys.length).fill(null)
-      keys.forEach((trip, index) => {
-        db.ref('trips/' + trip).once('value').then((snap) => {
-          trips[index] = snap.val().title
+      let keys = Object.keys(snapshot.val())
+      let trips = []
+      keys.forEach((key, index) => {
+        db.ref('trips/' + key).once('value').then((snap) => {
+          trips.push([keys[index], snap.val()])
           this.setState({
             trips: trips
           })
         })
       })
-    })
-  }
-
-  chooseTrip (e) {
-    this.setState({
-      tripIndex: e.target.selectedIndex
-    })
-  }
-
-  startNewTrip (bool) {
-    this.setState({
-      isNewTrip: bool
-    })
-  }
-
-  handleTripTitle (e) {
-    this.setState({
-      newTripName: e.target.value
-    })
-  }
-
-  handleActivityTitle (e) {
-    this.setState({
-      title: e.target.value
     })
   }
 
@@ -147,6 +123,30 @@ class NewActivity extends React.Component {
     })
   }
 
+  chooseTrip (e) {
+    this.setState({
+      tripIndex: e.target.selectedIndex
+    })
+  }
+
+  startNewTrip (bool) {
+    this.setState({
+      isNewTrip: bool
+    })
+  }
+
+  handleTripTitle (e) {
+    this.setState({
+      newTripTitle: e.target.value
+    })
+  }
+
+  handleActivityTitle (e) {
+    this.setState({
+      title: e.target.value
+    })
+  }
+
   handleDate (e) {
     this.setState({
       date: moment(e.target.value).valueOf()
@@ -177,13 +177,13 @@ class NewActivity extends React.Component {
     })
   }
 
-  handleDelete (i) {
+  handleTagDelete (i) {
     let tags = this.state.tags
     tags.splice(i, 1)
     this.setState({tags: tags})
   }
 
-  handleAddition (tag) {
+  handleTagAddition (tag) {
     let tags = this.state.tags
     tags.push({
       id: tags.length + 1,
@@ -193,6 +193,10 @@ class NewActivity extends React.Component {
   }
 
   handleActivity () {
+    // show loading animation
+    this.setState({
+      isUploading: true
+    })
     // create new trip if isNewTrip is true
     let newTripID = ''
     if (this.state.isNewTrip) {
@@ -201,7 +205,7 @@ class NewActivity extends React.Component {
       newTripID = newRef.key
       newRef.set({
         user: window.localStorage[storageKey],
-        title: this.state.newTripName,
+        title: this.state.newTripTitle,
         image: window.localStorage[storageKey] + '/' + newTripID + '/images/' + this.state.imageName,
         imageOrientation: this.state.imageOrientation,
         totalRating: 0,
@@ -216,7 +220,7 @@ class NewActivity extends React.Component {
       })
     }
     // update the tripID
-    let tripID = this.state.isNewTrip ? newTripID : this.state.tripIDs.reverse()[this.state.tripIndex]
+    let tripID = this.state.isNewTrip ? newTripID : this.state.trips.slice().reverse()[this.state.tripIndex][0]
     this.setState({
       tripID: tripID
     })
@@ -266,26 +270,38 @@ class NewActivity extends React.Component {
 
         // add tags to all and trending
         this.state.tags.forEach((tag) => {
-          db.ref('all/tags/' + tag.text).once('value').then((snap) => {
-            db.ref('all/tags/' + tag.text).set(snap.val() + 1 || 1)
+          db.ref('all/tags/').once('value').then((snap) => {
+            let newObj = snap.val() || {}
+            newObj[tag.text] = newObj[tag.text] ? newObj[tag.text] + 1 : 1
+            db.ref('all/tags/').set(newObj)
           })
-          db.ref('trending/tags/' + moment().format('dddd') + '/' + tag.text).once('value').then((snap) => {
-            db.ref('trending/tags/' + moment().format('dddd') + '/' + tag.text).set(snap.val() + 1 || 1)
+          db.ref('trending/tags/' + moment().format('dddd')).once('value').then((snap) => {
+            let newObj = snap.val() || {}
+            newObj[tag.text] = newObj[tag.text] ? newObj[tag.text] + 1 : 1
+            db.ref('trending/tags/' + moment().format('dddd')).set(newObj)
           })
         })
 
         // add locality and country to all and trending
-        db.ref('all/localities/' + this.state.locality).once('value').then((snap) => {
-          db.ref('all/localities/' + this.state.locality).set(snap.val() + 1 || 1)
+        db.ref('all/localities/').once('value').then((snap) => {
+          let newObj = snap.val() || {}
+          newObj[this.state.locality] = newObj[this.state.locality] ? newObj[this.state.locality] + 1 : 1
+          db.ref('all/localities/').set(newObj)
         })
-        db.ref('trending/localities/' + moment().format('dddd') + '/' + this.state.locality).once('value').then((snap) => {
-          db.ref('trending/localities/' + moment().format('dddd') + '/' + this.state.locality).set(snap.val() + 1 || 1)
+        db.ref('trending/localities/' + moment().format('dddd')).once('value').then((snap) => {
+          let newObj = snap.val() || {}
+          newObj[this.state.locality] = newObj[this.state.locality] ? newObj[this.state.locality] + 1 : 1
+          db.ref('trending/localities/' + moment().format('dddd')).set(newObj)
         })
-        db.ref('all/countries/' + this.state.country).once('value').then((snap) => {
-          db.ref('all/countries/' + this.state.country).set(snap.val() + 1 || 1)
+        db.ref('all/countries/').once('value').then((snap) => {
+          let newObj = snap.val() || {}
+          newObj[this.state.country] = newObj[this.state.country] ? newObj[this.state.country] + 1 : 1
+          db.ref('all/countries/').set(newObj)
         })
-        db.ref('trending/countries/' + moment().format('dddd') + '/' + this.state.country).once('value').then((snap) => {
-          db.ref('trending/countries/' + moment().format('dddd') + '/' + this.state.country).set(snap.val() + 1 || 1)
+        db.ref('trending/countries/' + moment().format('dddd')).once('value').then((snap) => {
+          let newObj = snap.val() || {}
+          newObj[this.state.country] = newObj[this.state.country] ? newObj[this.state.country] + 1 : 1
+          db.ref('trending/countries/' + moment().format('dddd')).set(newObj)
         })
 
         this.props.addNewActivity(false)
@@ -295,16 +311,15 @@ class NewActivity extends React.Component {
   }
 
   render () {
-    const temp = this.state.trips.slice().reverse()
-    const options = temp.map((title, index) => {
-      return <option key={index}>{title}</option>
+    const options = this.state.trips.slice().reverse().map((trip, index) => {
+      return <option key={index}>{trip[1].title}</option>
     })
     return (
 
       <div className='modalWrapper' style={this.props.isEnabled ? {display: 'block'} : {display: 'none'}}>
         <div className='backdrop' onClick={() => this.props.addNewActivity(false)} />
 
-        {this.state.imagePath === '' &&
+        {this.state.image === '' &&
         <div className='modal'>
           <label className='imageLabel'>
             <span>Post a photo</span>
@@ -313,7 +328,7 @@ class NewActivity extends React.Component {
         </div>
         }
 
-        {this.state.imagePath !== '' &&
+        {this.state.image !== '' &&
         <div >
           <div className='modal'>
             <label className='imageLabelActive' style={{backgroundImage: `url(${this.state.image})`, backgroundSize: 'cover'}}>
@@ -322,9 +337,11 @@ class NewActivity extends React.Component {
             </label>
           </div>
           <div className='modal modal2'>
+
             {this.state.trips.length === 0 &&
               <p><input type='text' onChange={this.handleTripTitle} placeholder='Add your first trip' /></p>
             }
+
             {!this.state.isNewTrip && this.state.trips.length > 0 &&
             <p>
               <label>
@@ -336,11 +353,11 @@ class NewActivity extends React.Component {
                or <button onClick={() => this.startNewTrip(true)}>Start a new trip</button>
             </p>
             }
+
             {this.state.isNewTrip && this.state.trips.length > 0 &&
               <p><input type='text' onChange={this.handleTripTitle} placeholder='Add new trip' />
             or <button onClick={() => this.startNewTrip(false)}>Add to existing trip</button></p>
             }
-
             <p>Activity: <input type='text' onChange={(e) => this.handleActivityTitle(e)} /></p>
             <p>Date: <input type='date' onChange={this.handleDate} value={moment(this.state.date).format('YYYY-MM-DD')} /></p>
             <p>City: <input type='text' onChange={this.handleLocality} value={this.state.locality} /></p>
@@ -349,14 +366,17 @@ class NewActivity extends React.Component {
             <Rating stars={this.state.rating} starClick={this.starClick} isEnabled />
             <ReactTags tags={this.state.tags}
               suggestions={this.state.suggestions}
-              handleDelete={this.handleDelete}
-              handleAddition={this.handleAddition}
+              handleDelete={this.handleTagDelete}
+              handleAddition={this.handleTagAddition}
               autofocus={false}
              />
             <button onClick={this.handleActivity}>Share</button>
           </div>
+          <div className={this.state.isUploading ? 'backdrop' : 'notUploading'} />
+          <Loading className={this.state.isUploading ? 'uploading' : 'notUploading'} type={'spinningBubbles'} color={'blue'} height='400' width='400' />
         </div>
         }
+
         <Link to={'/trips/' + this.state.tripID} style={{display: 'none'}} ref={(link) => { this.linkToTrip = link }} />
       </div>
     )

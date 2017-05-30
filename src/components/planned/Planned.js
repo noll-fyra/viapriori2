@@ -1,6 +1,6 @@
 import React from 'react'
-import db, {storageKey} from '../../utils/firebase'
 import PlannedOverview from './PlannedOverview'
+import db, {storageKey} from '../../utils/firebase'
 
 class Planned extends React.Component {
   constructor (props) {

@@ -1,0 +1,15 @@
+.star {
+  color: yellow;
+}
+
+.starenabled:hover {
+  cursor: pointer;
+}
+
+.bright {
+  background-color: red;
+}
+
+.dull {
+  background-color: black;
+}

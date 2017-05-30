@@ -1,7 +1,30 @@
 import React from 'react'
-import db, {storageKey} from '../../utils/firebase'
+import {SortableContainer, SortableElement, SortableHandle, arrayMove} from 'react-sortable-hoc'
 import SavedOverview from '../saved/SavedOverview'
 import Planned from './Planned'
+import db, {storageKey} from '../../utils/firebase'
+
+const DragHandle = SortableHandle(() => <span>||||||</span>) // This can be any component you want
+
+const SortableItem = SortableElement(({value, id, options, plannedKeys, plannedTrips, createNewPlanned}) => {
+  return (
+    <li>
+      <DragHandle />
+      <SavedOverview activityID={id} activity={value} options={options} plannedKeys={plannedKeys} plannedTrips={plannedTrips} createNewPlanned={createNewPlanned} />
+      {5}
+    </li>
+  )
+})
+
+const SortableList = SortableContainer(({activities, id, options, plannedKeys, plannedTrips, createNewPlanned}) => {
+  return (
+    <ul>
+      {activities.map((value, index) => (
+        <SortableItem key={`item-${index}`} index={index} value={value} id={id[index]} options={options} plannedKeys={plannedKeys} plannedTrips={plannedTrips} createNewPlanned={createNewPlanned} />
+      ))}
+    </ul>
+  )
+})
 
 class PlannedActivities extends React.Component {
   constructor (props) {
@@ -13,8 +36,13 @@ class PlannedActivities extends React.Component {
       plannedKeys: [],
       tripId:this.props.match.params.id
     }
+
     // this.changeTripId = this.changeTripId.bind(this)
     // this.changeTripId = null
+
+    this.onSortEnd = this.onSortEnd.bind(this)
+    this.createNewPlanned = this.createNewPlanned.bind(this)
+  }
 
   }
 //   componentWillReceiveProps(nextProp){
@@ -141,6 +169,29 @@ class PlannedActivities extends React.Component {
   //     })
   //   }
   // }
+<<<<<<< HEAD
+=======
+
+  onSortEnd ({oldIndex, newIndex}) {
+    let savedActivities = this.state.savedActivities
+    let savedKeys = this.state.savedKeys
+    this.setState({
+      savedActivities: arrayMove(savedActivities, oldIndex, newIndex),
+      savedKeys: arrayMove(savedKeys, oldIndex, newIndex)
+    })
+    // db.ref('trips/' + this.props.match.params.id + '/activities').once('value').then((snap) => {
+    //   let newObj = snap.val() || {}
+    //   this.state.keys.forEach((key, index) => {
+    //     newObj[key] = index
+    //   })
+    //   db.ref('trips/' + this.props.match.params.id + '/activities').set(newObj)
+    // })
+  }
+
+  createNewPlanned(){
+
+  }
+>>>>>>> b2c2290ff32133144397963ded5157fc2bd8756a
 
 
 // changeTripId(){
@@ -153,6 +204,7 @@ class PlannedActivities extends React.Component {
 
     // let reverseSaved = this.state.savedActivities.slice().reverse()
     // let reverseKeys = this.state.savedKeys.slice().reverse()
+
     let options = this.state.plannedTrips.map((trip, index) => {
       return <option key={this.state.plannedKeys[index]}>{trip.title}</option>
     })
@@ -162,8 +214,19 @@ class PlannedActivities extends React.Component {
         <Planned plannedKeys={this.state.plannedKeys} plannedTrips={this.state.plannedTrips}  />
 
         <h1> Saved Activities</h1>
+        <SortableList
+          activities={this.state.savedActivities}
+          onSortEnd={this.onSortEnd}
+          useDragHandle={true}
+          lockAxis='y'
+          id={this.state.savedKeys}
+          options={options}
+          plannedKeys={this.state.plannedKeys}
+          plannedTrips={this.state.plannedTrips}
+          createNewPlanned={this.createNewPlanned}
+        />
 
-        {this.state.savedActivities &&
+        {/* {this.state.savedActivities &&
           this.state.savedActivities.map((activity, index) => {
             return <SavedOverview
               key={this.state.savedKeys[index]}
@@ -175,7 +238,7 @@ class PlannedActivities extends React.Component {
               createNewPlanned={this.createNewPlanned}
             />
           })
-        }
+        } */}
       </div>
     )
   }

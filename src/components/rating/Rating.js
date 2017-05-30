@@ -1,4 +1,5 @@
 import React from 'react'
+import './rating.css'
 
 class Rating extends React.Component {
   constructor (props) {
