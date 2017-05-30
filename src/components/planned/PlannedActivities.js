@@ -1,7 +1,8 @@
 import React from 'react'
 import {SortableContainer, SortableElement, SortableHandle, arrayMove} from 'react-sortable-hoc'
 import ActivityOverview from '../activity/ActivityOverview'
-import SaveActivity from '../activity/SaveActivity'
+import RemoveActivity from '../activity/SaveActivity'
+import LinkToTrips from '../activity/LinkToTrips'
 
 import Planned from './Planned'
 import db, {storageKey} from '../../utils/firebase'
@@ -17,7 +18,10 @@ const SortableItem = SortableElement(({value, id, url, removeActivity}) => {
       <DragHandle />
       <ActivityOverview activityID={id} activity={value} />
       {value.user !== window.localStorage[storageKey] &&
-        <SaveActivity activityID={id} activity={value} url={url} removeActivity={removeActivity}/>
+        <div>
+        <RemoveActivity activityID={id} activity={value} removeActivity={removeActivity}/>
+        <LinkToTrips activity={value}/>
+      </div>
       }
     </li>
   )

@@ -4,7 +4,7 @@ import UserOverview from '../profile/UserOverview'
 import ActivityOverview from '../activity/ActivityOverview'
 import SaveActivity from '../activity/SaveActivity'
 import db, {storageKey} from '../../utils/firebase'
-
+import LinkToTrips from '../activity/LinkToTrips'
 
 class SearchResults extends React.Component {
   constructor (props) {
@@ -109,7 +109,10 @@ class SearchResults extends React.Component {
     let activitySearched = this.state.activityFiltered.map((activity, index) => {
       return <div><ActivityOverview key={this.state.activityId[index]} activityID={this.state.activityId[index]} activity={activity} clickToSearch={this.props.clickToSearch}/>
       {activity.user !== window.localStorage[storageKey] &&
+        <div>
           <SaveActivity key={index} activityID={this.state.activityId[index]} activity={activity}/>
+          <LinkToTrips activity={activity}/>
+          </div>
       }</div>
 
     })

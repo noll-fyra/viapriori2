@@ -3,6 +3,8 @@ import {SortableContainer, SortableElement, SortableHandle, arrayMove} from 'rea
 import ActivityOverview from '../activity/ActivityOverview'
 import SaveActivity from '../activity/SaveActivity'
 import db, {storageKey} from '../../utils/firebase'
+import RemoveActivity from '../activity/RemoveActivity'
+
 const DragHandle = SortableHandle(() => <span>||||||</span>) // This can be any component you want
 
 
@@ -12,7 +14,10 @@ const SortableItem = SortableElement(({value, id, clickToSearch, url}) => {
       <DragHandle />
       <ActivityOverview activityID={id} activity={value} clickToSearch={clickToSearch} />
       {value.user !== window.localStorage[storageKey] &&
+        <div>
           <SaveActivity activityID={id} activity={value} url={url}/>
+          <RemoveActivity activityID={id} activity={value} removeActivity={this.removeActivity}/>
+        </div>
       }
     </li>
   )
