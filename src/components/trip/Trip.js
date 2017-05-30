@@ -5,19 +5,17 @@ import SaveActivity from '../activity/SaveActivity'
 import db, {storageKey} from '../../utils/firebase'
 const DragHandle = SortableHandle(() => <span>||||||</span>) // This can be any component you want
 
-
 const SortableItem = SortableElement(({value, id, clickToSearch, url}) => {
   return (
     <li>
       <DragHandle />
       <ActivityOverview activityID={id} activity={value} clickToSearch={clickToSearch} />
       {value.user !== window.localStorage[storageKey] &&
-          <SaveActivity activityID={id} activity={value} url={url}/>
+      <SaveActivity activityID={id} activity={value} url={url} />
       }
     </li>
   )
 })
-
 
 const SortableList = SortableContainer(({activities, id, clickToSearch, url}) => {
   return (
@@ -51,10 +49,17 @@ class Trip extends React.Component {
   }
 
   updateTrip () {
-    db.ref('trips/' + this.state.currentTrip).orderByChild('index').on('value', snapshot => {
+    this.setState({
+      currentUser: this.props.currentTrip || this.props.match.params.id
+    })
+    db.ref('trips/' + this.state.currentTrip).on('value', snapshot => {
       if (snapshot.val()) {
         let tripDetails = snapshot.val() || {}
-        let keys = Object.keys(tripDetails.activities)
+        let tempKeys = []
+        for (var key in tripDetails.activities) {
+          tempKeys.push([key, tripDetails.activities[key]])
+        }
+        let keys = tempKeys.sort((a, b) => { return a[1] - b[1] }).map((key) => { return key[0] })
         this.setState({
           keys: keys,
           details: tripDetails
@@ -94,6 +99,8 @@ class Trip extends React.Component {
     return (
       <div>
         <h1>{this.state.details.title || ''}</h1>
+        <p>activities{JSON.stringify(this.state.activities)}</p>
+        <p>keys{JSON.stringify(this.state.keys)}</p>
         <SortableList
           url={this.props.match.params.id}
           activities={this.state.activities}

@@ -19,7 +19,8 @@ class App extends Component {
     this.state = {
       searchQuery: '',
       addNewActivity: false,
-      currentTrip: null
+      currentTrip: null,
+      currentProfile: null
     }
     this.search = search.bind(this)
     this.addNewActivity = this.addNewActivity.bind(this)
@@ -27,6 +28,7 @@ class App extends Component {
     this.handleLogin = this.handleLogin.bind(this)
     this.clickToSearch = this.clickToSearch.bind(this)
     this.setCurrentTrip = this.setCurrentTrip.bind(this)
+    this.setCurrentProfile = this.setCurrentProfile.bind(this)
     this.linkToSearch = null
   }
 
@@ -74,6 +76,12 @@ class App extends Component {
     })
   }
 
+  setCurrentProfile (profile) {
+    this.setState({
+      currentProfile: profile
+    })
+  }
+
   render () {
     return (
       <Router>
@@ -95,7 +103,7 @@ class App extends Component {
             <Route path='/search' component={(props) => <SearchResults searchQuery={this.state.searchQuery} clickToSearch={this.clickToSearch} {...props} />} />
             <PrivateRoute path='/saved' component={Saved} />
             <PrivateRoute exact path='/profile' component={(props) => <Profile isCurrentUser {...props} />} />
-            <Route path='/users/:id' component={(props) => <Profile isCurrentUser={false} {...props} />} />
+            <Route path='/users/:id' component={(props) => <Profile isCurrentUser={false} currentProfile={this.state.currentProfile} setCurrentProfile={this.setCurrentProfile} {...props} />} />
             <PrivateRoute path='/planned/:id' component={PlannedActivities} />
             <PrivateRoute path='/trips/:id' component={(props) => <Trip clickToSearch={this.clickToSearch} currentTrip={this.state.currentTrip} {...props} />} />
             <Route path='/auth' component={(props) => <Auth isLogin={this.state.isLogin} {...props} />} />

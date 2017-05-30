@@ -2,11 +2,8 @@ import React from 'react'
 import {Link} from 'react-router-dom'
 import moment from 'moment'
 import Rating from '../rating/Rating'
-import db, {storageKey} from '../../utils/firebase'
-import {tagsObjectToArray} from '../../utils/format'
 
 const ActivityOverview = (props) => {
-
   return (
     <div>
       <div className='activityOverview'><p>Activity: {props.activity.title || ''}</p>

@@ -66,7 +66,7 @@ class NewActivity extends React.Component {
           isNewTrip: true
         })
       }
-      let keys = Object.keys(snapshot.val())
+      let keys = snapshot.val() ? Object.keys(snapshot.val()) : []
       let trips = []
       keys.forEach((key, index) => {
         db.ref('trips/' + key).once('value').then((snap) => {
