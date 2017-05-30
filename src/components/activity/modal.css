@@ -9,7 +9,7 @@ label:focus {
   left: 0px;
   width: 100%;
   height: 100%;
-  z-index: 9998;
+  z-index: 8000;
   background: rgba(0, 0, 0, 0.3);
 }
 
@@ -35,7 +35,7 @@ label:focus {
   border: 1px solid rgba(50, 50, 50, 0.25);
   /*border-radius: 8px;*/
   /*margin-left: -25%;*/
-  z-index: 9999;
+  z-index: 9000;
   background-color: white;
 }
 
@@ -43,4 +43,18 @@ label:focus {
   top: 1%;
   left: 50%;
   width: 20%;
+}
+
+.uploading {
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  margin-top: -25%;
+  display: block;
+  z-index: 9005;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.notUploading {
+  display: none;
 }

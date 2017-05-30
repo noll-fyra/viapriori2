@@ -81,7 +81,7 @@ class App extends Component {
           <div className='topNav topNavBG' />
           <div className='bodyContainer'>
             <Route exact path='/' component={() => <Home clickToSearch={this.clickToSearch} />} />
-            <Route path='/search/:query' component={(props) => <SearchResults searchQuery={this.state.searchQuery} {...props} />} />
+            <Route path='/search' component={(props) => <SearchResults searchQuery={this.state.searchQuery} {...props} />} />
             <PrivateRoute path='/saved' component={Saved} />
             <PrivateRoute exact path='/profile' component={(props) => <Profile isCurrentUser {...props} />} />
             <Route path='/users/:id' component={(props) => <Profile isCurrentUser={false} {...props} />} />

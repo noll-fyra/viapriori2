@@ -3,6 +3,7 @@ import {Link} from 'react-router-dom'
 import EXIF from 'exif-js'
 import geocoder from 'geocoder'
 import moment from 'moment'
+import Loading from 'react-loading'
 import db, {storage, storageKey} from '../../utils/firebase'
 import latLng, {getLocation} from '../../utils/geocoding'
 import tagsArrayToObject from '../../utils/format'
@@ -34,7 +35,8 @@ class NewActivity extends React.Component {
       editLocation: false,
       rating: 0,
       tags: [],
-      suggestions: props.suggestions
+      suggestions: props.suggestions,
+      isUploading: false
     }
 
     this.handleFile = this.handleFile.bind(this)
@@ -191,6 +193,10 @@ class NewActivity extends React.Component {
   }
 
   handleActivity () {
+    // show loading animation
+    this.setState({
+      isUploading: true
+    })
     // create new trip if isNewTrip is true
     let newTripID = ''
     if (this.state.isNewTrip) {
@@ -366,8 +372,11 @@ class NewActivity extends React.Component {
              />
             <button onClick={this.handleActivity}>Share</button>
           </div>
+          <div className={this.state.isUploading ? 'backdrop' : 'notUploading'} />
+          <Loading className={this.state.isUploading ? 'uploading' : 'notUploading'} type={'spinningBubbles'} color={'blue'} height='400' width='400' />
         </div>
         }
+
         <Link to={'/trips/' + this.state.tripID} style={{display: 'none'}} ref={(link) => { this.linkToTrip = link }} />
       </div>
     )

@@ -1,7 +1,7 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
 import SearchForm from '../search/SearchForm'
-import {isAuthenticated, storageKey, storageEmail, auth} from '../../utils/firebase'
+import {isAuthenticated, storageKey, auth} from '../../utils/firebase'
 import './nav.css'
 
 class Nav extends React.Component {
@@ -17,13 +17,11 @@ class Nav extends React.Component {
     auth.onAuthStateChanged(user => {
       if (user) {
         window.localStorage.setItem(storageKey, user.uid)
-        window.localStorage.setItem(storageEmail, user.email)
         this.setState({
           isAuthenticated: true
         })
       } else {
         window.localStorage.removeItem(storageKey)
-        window.localStorage.removeItem(storageEmail)
         this.setState({
           isAuthenticated: false
         })
@@ -43,7 +41,7 @@ class Nav extends React.Component {
       <nav className='topNav'>
         <Link to='/'>Via Postale</Link>
         <SearchForm placeholder='Search' value={this.props.searchValue} onChange={this.props.onChange} onKeyUp={this.props.onKeyUp} />
-        <Link to={'/search/' + this.props.searchValue} className='searchButton' ref={this.props.linkToSearch} style={{display: 'none'}} />
+        <Link to={'/search'} className='searchButton' ref={this.props.linkToSearch} style={{display: 'none'}} />
 
         {!this.state.isAuthenticated &&
           <span>

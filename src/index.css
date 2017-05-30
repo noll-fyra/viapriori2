@@ -13,11 +13,10 @@ body {
   position: relative;
 }
 
-
-/*img {
+img {
   width: 100px;
   height: 75px;
-}*/
+}
 
 .fixed {
   font-weight: 900;
