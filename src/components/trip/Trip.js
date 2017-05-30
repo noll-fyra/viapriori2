@@ -77,7 +77,6 @@ class Trip extends React.Component {
     return (
       <div>
         <h1>{this.state.details.title || ''}</h1>
-        {JSON.stringify(this.state.activities)}
         <SortableList
           activities={this.state.activities}
           onSortEnd={this.onSortEnd}

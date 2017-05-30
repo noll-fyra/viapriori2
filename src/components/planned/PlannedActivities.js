@@ -1,7 +1,29 @@
 import React from 'react'
-import db, {storageKey} from '../../utils/firebase'
+import {SortableContainer, SortableElement, SortableHandle, arrayMove} from 'react-sortable-hoc'
 import SavedOverview from '../saved/SavedOverview'
 import Planned from './Planned'
+import db, {storageKey} from '../../utils/firebase'
+
+const DragHandle = SortableHandle(() => <span>||||||</span>) // This can be any component you want
+
+const SortableItem = SortableElement(({value, id}) => {
+  return (
+    <li>
+      <DragHandle />
+      <SavedOverview activityID={id} activity={value} />
+    </li>
+  )
+})
+
+const SortableList = SortableContainer(({activities, id}) => {
+  return (
+    <ul>
+      {activities.map((value, index) => (
+        <SortableItem key={`item-${index}`} index={index} value={value} id={id[index]} />
+      ))}
+    </ul>
+  )
+})
 
 class PlannedActivities extends React.Component {
   constructor (props) {
@@ -128,6 +150,22 @@ class PlannedActivities extends React.Component {
     }
   }
 
+  onSortEnd ({oldIndex, newIndex}) {
+    let activities = this.state.activities
+    let keys = this.state.keys
+    this.setState({
+      activities: arrayMove(activities, oldIndex, newIndex),
+      keys: arrayMove(keys, oldIndex, newIndex)
+    })
+    db.ref('trips/' + this.props.match.params.id + '/activities').once('value').then((snap) => {
+      let newObj = snap.val() || {}
+      this.state.keys.forEach((key, index) => {
+        newObj[key] = index
+      })
+      db.ref('trips/' + this.props.match.params.id + '/activities').set(newObj)
+    })
+  }
+
   render () {
     // let reverseSaved = this.state.savedActivities.slice().reverse()
     // let reverseKeys = this.state.savedKeys.slice().reverse()
@@ -140,6 +178,13 @@ class PlannedActivities extends React.Component {
         <Planned plannedKeys={this.state.plannedKeys} plannedTrips={this.state.plannedTrips} />
 
         <h1> Saved Activities</h1>
+        <SortableList
+          activities={this.state.activities}
+          onSortEnd={this.onSortEnd}
+          useDragHandle
+          id={this.state.keys}
+          lockAxis='y'
+        />
 
         {this.state.savedActivities &&
           this.state.savedActivities.map((activity, index) => {

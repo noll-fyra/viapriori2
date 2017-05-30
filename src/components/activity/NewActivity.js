@@ -264,26 +264,38 @@ class NewActivity extends React.Component {
 
         // add tags to all and trending
         this.state.tags.forEach((tag) => {
-          db.ref('all/tags/' + tag.text).once('value').then((snap) => {
-            db.ref('all/tags/' + tag.text).set(snap.val() + 1 || 1)
+          db.ref('all/tags/').once('value').then((snap) => {
+            let newObj = snap.val() || {}
+            newObj[tag.text] = newObj[tag.text] ? newObj[tag.text] + 1 : 1
+            db.ref('all/tags/').set(newObj)
           })
-          db.ref('trending/tags/' + moment().format('dddd') + '/' + tag.text).once('value').then((snap) => {
-            db.ref('trending/tags/' + moment().format('dddd') + '/' + tag.text).set(snap.val() + 1 || 1)
+          db.ref('trending/tags/' + moment().format('dddd')).once('value').then((snap) => {
+            let newObj = snap.val() || {}
+            newObj[tag.text] = newObj[tag.text] ? newObj[tag.text] + 1 : 1
+            db.ref('trending/tags/' + moment().format('dddd')).set(newObj)
           })
         })
 
         // add locality and country to all and trending
-        db.ref('all/localities/' + this.state.locality).once('value').then((snap) => {
-          db.ref('all/localities/' + this.state.locality).set(snap.val() + 1 || 1)
+        db.ref('all/localities/').once('value').then((snap) => {
+          let newObj = snap.val() || {}
+          newObj[this.state.locality] = newObj[this.state.locality] ? newObj[this.state.locality] + 1 : 1
+          db.ref('all/localities/').set(newObj)
         })
-        db.ref('trending/localities/' + moment().format('dddd') + '/' + this.state.locality).once('value').then((snap) => {
-          db.ref('trending/localities/' + moment().format('dddd') + '/' + this.state.locality).set(snap.val() + 1 || 1)
+        db.ref('trending/localities/' + moment().format('dddd')).once('value').then((snap) => {
+          let newObj = snap.val() || {}
+          newObj[this.state.locality] = newObj[this.state.locality] ? newObj[this.state.locality] + 1 : 1
+          db.ref('trending/localities/' + moment().format('dddd')).set(newObj)
         })
-        db.ref('all/countries/' + this.state.country).once('value').then((snap) => {
-          db.ref('all/countries/' + this.state.country).set(snap.val() + 1 || 1)
+        db.ref('all/countries/').once('value').then((snap) => {
+          let newObj = snap.val() || {}
+          newObj[this.state.country] = newObj[this.state.country] ? newObj[this.state.country] + 1 : 1
+          db.ref('all/countries/').set(newObj)
         })
-        db.ref('trending/countries/' + moment().format('dddd') + '/' + this.state.country).once('value').then((snap) => {
-          db.ref('trending/countries/' + moment().format('dddd') + '/' + this.state.country).set(snap.val() + 1 || 1)
+        db.ref('trending/countries/' + moment().format('dddd')).once('value').then((snap) => {
+          let newObj = snap.val() || {}
+          newObj[this.state.country] = newObj[this.state.country] ? newObj[this.state.country] + 1 : 1
+          db.ref('trending/countries/' + moment().format('dddd')).set(newObj)
         })
 
         this.props.addNewActivity(false)
