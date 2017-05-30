@@ -1,4 +1,5 @@
 import React from 'react'
+import fixOrientation from 'fix-orientation'
 import Details from './Details'
 import TripOverview from '../trip/TripOverview'
 import Follow from '../follow/Follow'
@@ -32,7 +33,6 @@ class Profile extends React.Component {
     this.setState({
       currentUser: this.props.match.params.id || window.localStorage[storageKey]
     })
-    console.log(this.state.currentUser)
     this.updateCurrentUser(this.state.currentUser)
   }
 
@@ -49,8 +49,8 @@ class Profile extends React.Component {
       // fetch user profile
       if (snapshot.val() && snapshot.val().profile) {
         this.setState({
-          username: snapshot.val().profile.username || this.state.username,
-          profileImage: snapshot.val().profile.profileImage || this.state.profileImage
+          username: snapshot.val().profile.username || 'user',
+          profileImage: snapshot.val().profile.profileImage || require('./profile_by_jivan_from_noun_project.png')
         })
       }
       // fetch user trips
@@ -106,18 +106,20 @@ class Profile extends React.Component {
 
   addProfileImage (e) {
     let image = e.target.files[0]
-
     // show user the locally uploaded file
     const reader = new window.FileReader()
     reader.addEventListener('load', () => {
-      this.setState({
-        profileImage: reader.result
+      let self = this
+      fixOrientation(reader.result, { image: true }, function (fixed, newImage) {
+        self.setState({
+          profileImage: fixed
+        })
       })
     })
     reader.readAsDataURL(image)
 
     // upload the file to firebase
-    storage.ref(window.localStorage[storageKey] + '/profile/avatar').put(image).then((snap) => {
+    storage.ref(window.localStorage[storageKey] + '/profile/avatar').putString(this.state.profileImage, 'data_url').then((snap) => {
       storage.ref(window.localStorage[storageKey] + '/profile/avatar').getDownloadURL().then((url) => {
         // update the profileImage url
         db.ref('users/' + window.localStorage[storageKey] + '/profile').update({
@@ -127,9 +129,9 @@ class Profile extends React.Component {
     })
   }
 
-  changeShowing (name) {
+  changeShowing (section) {
     this.setState({
-      showing: name
+      showing: section
     })
   }
 
@@ -156,7 +158,7 @@ class Profile extends React.Component {
     db.ref('users/' + userToUnfollow + '/followed/' + window.localStorage[storageKey]).remove()
     db.ref('users/' + window.localStorage[storageKey] + '/following/' + userToUnfollow).remove()
     let following = this.state.following
-    following.splice(following.indexOf(userToUnfollow),   1)
+    following.splice(following.indexOf(userToUnfollow), 1)
     this.setState({
       following: following,
       isFollowing: false

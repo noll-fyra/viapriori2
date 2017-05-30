@@ -9,7 +9,7 @@ class SearchResults extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      searchQuery: props.match.params.query,
+      searchQuery: props.searchQuery,
       tripFiltered: [],
       activityFiltered: [],
       tripId: [],
@@ -26,7 +26,7 @@ class SearchResults extends React.Component {
     let userId = []
     let userDetails = []
     let filteredActivities = []
-////////////TO ASK YISHENG TMR
+// //////////TO ASK YISHENG TMR
     db.ref('users').on('value', (snapshot) => {
       for (var user in snapshot.val()) {
         console.log(snapshot.val()[user].details.username && snapshot.val()[user].details.username.toLowerCase().includes(this.state.searchQuery.toLowerCase()))

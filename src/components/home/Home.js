@@ -24,30 +24,34 @@ class Home extends React.Component {
   componentDidMount () {
     // fetch trending
     db.ref('trending').on('value', snapshot => {
-      this.setState({
-        trending: trendingObjectToArray(snapshot.val())
-      })
+      if (snapshot.val()) {
+        this.setState({
+          trending: trendingObjectToArray(snapshot.val())
+        })
+      }
     })
 
     // fetch all activities
     db.ref('activities').on('value', snapshot => {
-      let keys = Object.keys(snapshot.val())
-      let activities = new Array(keys.length).fill(null)
-      for (var key in snapshot.val()) {
-        let ind = keys.indexOf(key)
-        activities[ind] = [key, snapshot.val()[key]]
+      if (snapshot.val()) {
+        let keys = Object.keys(snapshot.val())
+        let activities = new Array(keys.length).fill(null)
+        for (var key in snapshot.val()) {
+          let ind = keys.indexOf(key)
+          activities[ind] = [key, snapshot.val()[key]]
+        }
+        this.setState({
+          keys: keys,
+          activities: activities,
+          total: keys.length
+        })
       }
-      this.setState({
-        keys: keys,
-        activities: activities,
-        total: keys.length
-      })
     })
 
     // fetch user following
     if (window.localStorage[storageKey]) {
       db.ref('users/' + window.localStorage[storageKey]).on('value', snap => {
-        let filter = snap.val() && snap.val().following ? Object.keys(snap.val().following) : ''
+        let filter = snap.val() && snap.val().following ? Object.keys(snap.val().following) : []
         filter.push(window.localStorage[storageKey])
         this.setState({
           filter: filter
@@ -78,6 +82,7 @@ class Home extends React.Component {
 
     return (
       <div>
+        {JSON.stringify(this.state.trending)}
         <div className='trending'>
           <b>Trending</b>
           <ul>

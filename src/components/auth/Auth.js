@@ -7,9 +7,12 @@ class Auth extends React.Component {
     super(props)
     this.state = {
       isLogin: props.isLogin,
-      email: '',
-      password: '',
-      username: '',
+      allUsernames: {},
+      error: false,
+      message: '',
+      email: null,
+      password: null,
+      username: null,
       currentUser: auth.currentUser,
       redirectToReferrer: false
     }
@@ -19,6 +22,15 @@ class Auth extends React.Component {
     this.handleLogin = this.handleLogin.bind(this)
     this.handleSignup = this.handleSignup.bind(this)
     this.intentionToLogin = this.intentionToLogin.bind(this)
+  }
+
+  componentDidMount () {
+    db.ref('usernames').on('value', (snap) => {
+      let allUsernames = snap.val() || {}
+      this.setState({
+        allUsernames: allUsernames
+      })
+    })
   }
 
   handleEmail (e) {
@@ -40,6 +52,16 @@ class Auth extends React.Component {
   }
 
   handleLogin () {
+    if (!this.state.email || !this.state.password) {
+      this.setState({
+        error: true,
+        message: 'Please fill in all the fields',
+        username: null,
+        password: null,
+        email: null
+      })
+      return
+    }
     const authPromise = auth.signInWithEmailAndPassword(this.state.email, this.state.password)
     authPromise
     .then((user) => {
@@ -48,10 +70,34 @@ class Auth extends React.Component {
         redirectToReferrer: true
       })
     })
-    .catch((error) => { console.log(error.message) })
+    .catch((error) => {
+      // console.log(error.message)
+      this.setState({
+        error: true,
+        message: error.message,
+        username: null,
+        password: null,
+        email: null
+      })
+    })
   }
 
   handleSignup () {
+    if (!this.state.email || !this.state.password || !this.state.username) {
+      this.setState({
+        error: true,
+        message: 'Please fill in all the fields'
+      })
+      return
+    }
+    if (this.state.allUsernames[this.state.username]) {
+      this.setState({
+        error: true,
+        message: 'That username is already taken.',
+        username: null
+      })
+      return
+    }
     const authPromise = auth.createUserWithEmailAndPassword(this.state.email, this.state.password)
     authPromise
     .then((user) => {
@@ -60,18 +106,34 @@ class Auth extends React.Component {
         uid: auth.currentUser.uid,
         username: this.state.username
       })
+      db.ref('usernames').once('value').then((snap) => {
+        let newObj = snap.val() || {}
+        newObj[this.state.allUsernames] = true
+        db.ref('usernames').set(newObj)
+      })
       this.setState({
         currentUser: auth.currentUser,
         redirectToReferrer: true
       })
-      console.log(auth.currentUser.uid)
     })
-    .catch((error) => { console.log(error.message) })
+    .catch((error) => {
+      // console.log(error.message)
+      this.setState({
+        error: true,
+        message: error.message
+      })
+    })
   }
 
   intentionToLogin (bool) {
     this.setState({
       isLogin: bool
+    })
+    this.setState({
+      error: false,
+      username: null,
+      email: null,
+      password: null
     })
   }
 
@@ -91,6 +153,10 @@ class Auth extends React.Component {
 
         {!this.state.currentUser && from.pathname !== '/' &&
         <p>You must log in to view the page at {from.pathname}</p>
+        }
+
+        {this.state.error &&
+        <h1>{this.state.message}</h1>
         }
 
         {!this.state.currentUser && this.state.isLogin &&

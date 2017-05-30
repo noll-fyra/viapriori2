@@ -30,16 +30,17 @@ function allObjectToArray (object) {
 }
 
 function trendingObjectToArray (object) {
+  let groups = ['countries', 'localities', 'saved', 'tags']
   let keys = Object.keys(object)
-  let arr = new Array(keys.length).fill(null)
-  keys.forEach((primaryKey, index) => {
+  let arr = new Array(groups.length).fill([])
+  keys.forEach((primaryKey) => {
     let primaryObj = {}
     for (var dateKey in object[primaryKey]) {
       for (var thing in object[primaryKey][dateKey]) {
         primaryObj[thing] = primaryObj[thing] ? primaryObj[thing] + object[primaryKey][dateKey][thing] : object[primaryKey][dateKey][thing]
       }
     }
-    arr[index] = primaryObj
+    arr[groups.indexOf(primaryKey)] = primaryObj
   })
   let finalArray = []
   arr.forEach((obj, index) => {
@@ -47,10 +48,10 @@ function trendingObjectToArray (object) {
     for (var key in obj) {
       tempArray.push([key, obj[key]])
     }
-    arr[index] = tempArray
+    arr[arr.indexOf(obj)] = tempArray
   })
   arr.forEach((item) => {
-    finalArray.push(item.sort((a, b) => { return b[1] - a[1] }).map((item) => { return item[0] }))
+    finalArray[arr.indexOf(item)] = item.sort((a, b) => { return b[1] - a[1] }).map((item) => { return item[0] })
   })
   return finalArray // format is alphabetical: [countries, localities, saved, tags]
 }
