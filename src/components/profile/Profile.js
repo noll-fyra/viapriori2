@@ -20,10 +20,10 @@ class Profile extends React.Component {
       followedKeys: [],
       followed: [],
       isFollowing: false,
-
       isCurrentUser: props.isCurrentUser,
       currentUser: props.match.params.id || window.localStorage[storageKey],
-      showing: 'trips'
+      showing: 'trips',
+      currentProfile: props.currentProfile || props.match.params.id
     }
     this.updateCurrentUser = this.updateCurrentUser.bind(this)
     this.addProfileImage = this.addProfileImage.bind(this)
@@ -43,7 +43,7 @@ class Profile extends React.Component {
     this.setState({
       currentUser: nextProps.match.params.id || window.localStorage[storageKey]
     })
-    this.updateCurrentUser(this.state.currentUser)
+    this.updateCurrentUser(this.state.currentProfile)
   }
 
   updateCurrentUser (userID) {

@@ -24,7 +24,6 @@ class NewActivity extends React.Component {
       newTripTitle: '',
       trips: [],
       tripID: '',
-      tripIDs: [],
       tripIndex: 0,
       title: '',
       imageName: '',
@@ -35,7 +34,6 @@ class NewActivity extends React.Component {
       image: '',
       locality: '',
       country: '',
-      editLocation: false,
       rating: 0,
       tags: [],
       suggestions: props.suggestions,
@@ -56,6 +54,7 @@ class NewActivity extends React.Component {
     this.handleTagAddition = this.handleTagAddition.bind(this)
     this.hasErrors = this.hasErrors.bind(this)
     this.handleActivity = this.handleActivity.bind(this)
+    this.resetState = this.resetState.bind(this)
     this.linkToTrip = null
   }
 
@@ -67,7 +66,7 @@ class NewActivity extends React.Component {
           isNewTrip: true
         })
       }
-      let keys = Object.keys(snapshot.val())
+      let keys = snapshot.val() ? Object.keys(snapshot.val()) : []
       let trips = []
       keys.forEach((key, index) => {
         db.ref('trips/' + key).once('value').then((snap) => {
@@ -81,6 +80,10 @@ class NewActivity extends React.Component {
   }
 
   handleFile (e) {
+    // show loading animation
+    this.setState({
+      isUploading: true
+    })
     // show file preview
     let image = e.target.files[0]
     var reader = new window.FileReader()
@@ -124,6 +127,10 @@ class NewActivity extends React.Component {
           country: ''
         })
       }
+    })
+    // stop loading animation
+    this.setState({
+      isUploading: false
     })
   }
 
@@ -221,6 +228,46 @@ class NewActivity extends React.Component {
     return hasErrors
   }
 
+  resetState () {
+    this.setState({
+      error: false,
+      message: '',
+      isNewTrip: false,
+      newTripTitle: '',
+      tripIndex: 0,
+      title: '',
+      imageName: '',
+      imageOrientation: 1,
+      imageLatLng: '',
+      date: Date.now(),
+      caption: '',
+      image: '',
+      locality: '',
+      country: '',
+      rating: 0,
+      tags: [],
+      isUploading: false
+    })
+    // get all the user's trips
+    db.ref('users/' + window.localStorage[storageKey] + '/trips').once('value').then((snapshot) => {
+      if (!snapshot.val()) {
+        this.setState({
+          isNewTrip: true
+        })
+      }
+      let keys = Object.keys(snapshot.val())
+      let trips = []
+      keys.forEach((key, index) => {
+        db.ref('trips/' + key).once('value').then((snap) => {
+          trips.push([keys[index], snap.val()])
+          this.setState({
+            trips: trips
+          })
+        })
+      })
+    })
+  }
+
   handleActivity () {
     if (this.hasErrors()) {
       return
@@ -252,7 +299,7 @@ class NewActivity extends React.Component {
         })
       }
     // update the tripID
-      let tripID = this.state.isNewTrip ? newTripID : this.state.trips.slice().reverse()[this.state.tripIndex][0]
+      let tripID = this.state.isNewTrip ? newTripID : this.state.trips.slice()[this.state.tripIndex][0]
       this.setState({
         tripID: tripID
       })
@@ -325,9 +372,12 @@ class NewActivity extends React.Component {
           updateDB('all/countries/', lowerCountry)
           updateDB('trending/countries/' + moment().format('dddd'), lowerCountry)
 
+          // stop loading animation
           this.setState({
             isUploading: false
           })
+
+          this.resetState()
           this.props.addNewActivity(false)
           this.linkToTrip.handleClick(new window.MouseEvent('click'))
         })
@@ -336,11 +386,10 @@ class NewActivity extends React.Component {
   }
 
   render () {
-    const options = this.state.trips.slice().reverse().map((trip, index) => {
+    const options = this.state.trips.slice().map((trip, index) => {
       return <option key={index}>{trip[1].title}</option>
     })
     return (
-
       <div className='modalWrapper' style={this.props.isEnabled ? {display: 'block'} : {display: 'none'}}>
         <div className='backdrop' onClick={() => this.props.addNewActivity(false)} />
 
@@ -404,7 +453,7 @@ class NewActivity extends React.Component {
         </div>
         }
 
-        <Link to={'/trips/' + this.state.tripID} style={{display: 'none'}} ref={(link) => { this.linkToTrip = link }} />
+        <Link to={'/trips/' + this.state.tripID} style={{display: 'none'}} onClick={() => this.props.setCurrentTrip(this.state.tripID)} ref={(link) => { this.linkToTrip = link }} />
       </div>
     )
   }

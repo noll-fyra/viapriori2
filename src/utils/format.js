@@ -6,13 +6,6 @@ function tagsArrayToObject (array) {
   return obj
 }
 
-// function tagsObjectToArray (object) {
-//   let keys = Object.keys(object)
-//   let first = keys.pop()
-//   first = '#' + first
-//   return keys.reduce((a, b) => { return a + ', #' + b }, first)
-// }
-
 function allObjectToArray (object) {
   let keys = Object.keys(object)
   let arr = new Array(keys.length).fill(null)

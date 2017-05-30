@@ -7,7 +7,6 @@ import RemoveActivity from '../activity/RemoveActivity'
 
 const DragHandle = SortableHandle(() => <span>||||||</span>) // This can be any component you want
 
-
 const SortableItem = SortableElement(({value, id, clickToSearch, url}) => {
   return (
     <li>
@@ -18,11 +17,11 @@ const SortableItem = SortableElement(({value, id, clickToSearch, url}) => {
           <SaveActivity activityID={id} activity={value} url={url}/>
           <RemoveActivity activityID={id} activity={value} removeActivity={this.removeActivity}/>
         </div>
+
       }
     </li>
   )
 })
-
 
 const SortableList = SortableContainer(({activities, id, clickToSearch, url}) => {
   return (
@@ -40,16 +39,33 @@ class Trip extends React.Component {
     this.state = {
       activities: [],
       keys: [],
-      details: {}
+      details: {},
+      currentTrip: props.currentTrip || props.match.params.id
     }
     this.onSortEnd = this.onSortEnd.bind(this)
+    this.updateTrip = this.updateTrip.bind(this)
   }
 
   componentDidMount () {
-    db.ref('trips/' + this.props.match.params.id).on('value', snapshot => {
+    this.updateTrip()
+  }
+
+  componentWillReceiveProps (nextProps) {
+    this.updateTrip()
+  }
+
+  updateTrip () {
+    this.setState({
+      currentUser: this.props.currentTrip || this.props.match.params.id
+    })
+    db.ref('trips/' + this.state.currentTrip).on('value', snapshot => {
       if (snapshot.val()) {
         let tripDetails = snapshot.val() || {}
-        let keys = Object.keys(tripDetails.activities)
+        let tempKeys = []
+        for (var key in tripDetails.activities) {
+          tempKeys.push([key, tripDetails.activities[key]])
+        }
+        let keys = tempKeys.sort((a, b) => { return a[1] - b[1] }).map((key) => { return key[0] })
         this.setState({
           keys: keys,
           details: tripDetails
@@ -76,12 +92,12 @@ class Trip extends React.Component {
       activities: arrayMove(activities, oldIndex, newIndex),
       keys: arrayMove(keys, oldIndex, newIndex)
     })
-    db.ref('trips/' + this.props.match.params.id + '/activities').once('value').then((snap) => {
+    db.ref('trips/' + this.state.currentTrip + '/activities').once('value').then((snap) => {
       let newObj = snap.val() || {}
       this.state.keys.forEach((key, index) => {
         newObj[key] = index
       })
-      db.ref('trips/' + this.props.match.params.id + '/activities').set(newObj)
+      db.ref('trips/' + this.state.currentTrip + '/activities').set(newObj)
     })
   }
 
@@ -89,6 +105,8 @@ class Trip extends React.Component {
     return (
       <div>
         <h1>{this.state.details.title || ''}</h1>
+        <p>activities{JSON.stringify(this.state.activities)}</p>
+        <p>keys{JSON.stringify(this.state.keys)}</p>
         <SortableList
           url={this.props.match.params.id}
           activities={this.state.activities}

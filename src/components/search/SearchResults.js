@@ -6,6 +6,7 @@ import SaveActivity from '../activity/SaveActivity'
 import db, {storageKey} from '../../utils/firebase'
 import LinkToTrips from '../activity/LinkToTrips'
 
+
 class SearchResults extends React.Component {
   constructor (props) {
     super(props)
@@ -21,86 +22,86 @@ class SearchResults extends React.Component {
   }
 
   componentDidMount () {
-    if(this.state.searchQuery){
-    let filteredTrips = []
-    let tripKeys = []
-    let activityKeys = []
-    let userId = []
-    let userDetails = []
-    let filteredActivities = []
-    db.ref('users').on('value', (snapshot) => {
-      for (var user in snapshot.val()) {
-        if (snapshot.val()[user].profile.username && snapshot.val()[user].profile.username.toLowerCase().includes(this.state.searchQuery.toLowerCase())) {
-          userId.push(user)
+    if (this.state.searchQuery) {
+      let filteredTrips = []
+      let tripKeys = []
+      let activityKeys = []
+      let userId = []
+      let userDetails = []
+      let filteredActivities = []
+      db.ref('users').on('value', (snapshot) => {
+        for (var user in snapshot.val()) {
+          if (snapshot.val()[user].profile.username && snapshot.val()[user].profile.username.toLowerCase().includes(this.state.searchQuery.toLowerCase())) {
+            userId.push(user)
+          }
         }
-      }
-      let uniqueUsers = userId.filter((id, i) => {
-        return userId.indexOf(id) === i
+        let uniqueUsers = userId.filter((id, i) => {
+          return userId.indexOf(id) === i
+        })
+        uniqueUsers.forEach((user) => {
+          userDetails.push(snapshot.val()[user])
+        })
+        this.setState({
+          userId: uniqueUsers,
+          userDetails: userDetails
+        })
       })
-      uniqueUsers.forEach((user) => {
-        userDetails.push(snapshot.val()[user])
-      })
-      this.setState({
-        userId: uniqueUsers,
-        userDetails: userDetails
-      })
-    })
 
-    db.ref('activities').on('value', (snapshot) => {
-      for (var activityId in snapshot.val()) {
-        if (snapshot.val()[activityId].title.toLowerCase().includes(this.state.searchQuery.toLowerCase())) {
-          activityKeys.push(activityId)
-          tripKeys.push(snapshot.val()[activityId].trip)
-        } else if (snapshot.val()[activityId].locality.toLowerCase().includes(this.state.searchQuery.toLowerCase())) {
-          activityKeys.push(activityId)
-          tripKeys.push(snapshot.val()[activityId].trip)
-        } else if (snapshot.val()[activityId].country.toLowerCase().includes(this.state.searchQuery.toLowerCase())) {
-          activityKeys.push(activityId)
-          tripKeys.push(snapshot.val()[activityId].trip)
-        } else if (snapshot.val()[activityId].tags) {
-          for (var tags in snapshot.val()[activityId].tags) {
-            if (tags.toLowerCase().includes(this.state.searchQuery.toLowerCase())) {
-              activityKeys.push(activityId)
-              tripKeys.push(snapshot.val()[activityId].trip)
+      db.ref('activities').on('value', (snapshot) => {
+        for (var activityId in snapshot.val()) {
+          if (snapshot.val()[activityId].title.toLowerCase().includes(this.state.searchQuery.toLowerCase())) {
+            activityKeys.push(activityId)
+            tripKeys.push(snapshot.val()[activityId].trip)
+          } else if (snapshot.val()[activityId].locality.toLowerCase().includes(this.state.searchQuery.toLowerCase())) {
+            activityKeys.push(activityId)
+            tripKeys.push(snapshot.val()[activityId].trip)
+          } else if (snapshot.val()[activityId].country.toLowerCase().includes(this.state.searchQuery.toLowerCase())) {
+            activityKeys.push(activityId)
+            tripKeys.push(snapshot.val()[activityId].trip)
+          } else if (snapshot.val()[activityId].tags) {
+            for (var tags in snapshot.val()[activityId].tags) {
+              if (tags.toLowerCase().includes(this.state.searchQuery.toLowerCase())) {
+                activityKeys.push(activityId)
+                tripKeys.push(snapshot.val()[activityId].trip)
+              }
             }
           }
         }
-      }
-      let uniqueActivityKeys = activityKeys.filter((id, i) => {
-        return activityKeys.indexOf(id) === i
+        let uniqueActivityKeys = activityKeys.filter((id, i) => {
+          return activityKeys.indexOf(id) === i
+        })
+        uniqueActivityKeys.forEach((activity) => {
+          filteredActivities.push(snapshot.val()[activity])
+        })
+        this.setState({
+          activityId: uniqueActivityKeys,
+          activityFiltered: filteredActivities
+        })
       })
-      uniqueActivityKeys.forEach((activity) => {
-        filteredActivities.push(snapshot.val()[activity])
-      })
-      this.setState({
-        activityId: uniqueActivityKeys,
-        activityFiltered: filteredActivities
-      })
-    })
-    db.ref('trips').on('value', (snapshot) => {
-      for (var key in snapshot.val()) {
-        let tripEnd = new Date(snapshot.val()[key].end)
-        let tripStart = new Date(snapshot.val()[key].start)
-        let tripDuration = (tripEnd - tripStart) / 86400000
-        if (snapshot.val()[key].title.toLowerCase().includes(this.state.searchQuery.toLowerCase())) {
-          tripKeys.push(key)
-        } else if (tripDuration === parseInt(this.state.searchQuery, 10)) {
-          tripKeys.push(key)
+      db.ref('trips').on('value', (snapshot) => {
+        for (var key in snapshot.val()) {
+          let tripEnd = new Date(snapshot.val()[key].end)
+          let tripStart = new Date(snapshot.val()[key].start)
+          let tripDuration = (tripEnd - tripStart) / 86400000
+          if (snapshot.val()[key].title.toLowerCase().includes(this.state.searchQuery.toLowerCase())) {
+            tripKeys.push(key)
+          } else if (tripDuration === parseInt(this.state.searchQuery, 10)) {
+            tripKeys.push(key)
+          }
         }
-      }
-      let uniqueTripKeys = tripKeys.filter((id, i) => {
-        return tripKeys.indexOf(id) === i
+        let uniqueTripKeys = tripKeys.filter((id, i) => {
+          return tripKeys.indexOf(id) === i
+        })
+        uniqueTripKeys.forEach((trip) => {
+          filteredTrips.push(snapshot.val()[trip])
+        })
+        this.setState({
+          tripId: uniqueTripKeys,
+          tripFiltered: filteredTrips
+        })
       })
-      uniqueTripKeys.forEach((trip) => {
-        filteredTrips.push(snapshot.val()[trip])
-      })
-      this.setState({
-        tripId: uniqueTripKeys,
-        tripFiltered: filteredTrips
-      })
-    })
+    }
   }
-}
 
   render () {
     let tripsSearched = this.state.tripFiltered.map((trip, index) => {
@@ -113,8 +114,8 @@ class SearchResults extends React.Component {
           <SaveActivity key={index} activityID={this.state.activityId[index]} activity={activity}/>
           <LinkToTrips activity={activity}/>
           </div>
-      }</div>
 
+      }</div>
     })
     let userSearched = this.state.userDetails.map((user, index) => {
       return <UserOverview key={this.state.userId[index]} userID={this.state.userId[index]} user={user} />
