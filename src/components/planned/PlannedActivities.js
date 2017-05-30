@@ -8,7 +8,7 @@ import db, {storageKey} from '../../utils/firebase'
 
 const DragHandle = SortableHandle(() => <span>||||||</span>) // This can be any component you want
 
-const SortableItem = SortableElement(({value, id, url}) => {
+const SortableItem = SortableElement(({value, id, url, removeActivity}) => {
   return (
     <li>
       {/* <ActivityOverview activityID={id} activity={value} clickToSearch={clickToSearch} />
@@ -17,17 +17,17 @@ const SortableItem = SortableElement(({value, id, url}) => {
       <DragHandle />
       <ActivityOverview activityID={id} activity={value} />
       {value.user !== window.localStorage[storageKey] &&
-        <SaveActivity activityID={id} activity={value} url={url}/>
+        <SaveActivity activityID={id} activity={value} url={url} removeActivity={removeActivity}/>
       }
     </li>
   )
 })
 
-const SortableList = SortableContainer(({activities, id, url}) => {
+const SortableList = SortableContainer(({activities, id, url, removeActivity}) => {
   return (
     <ul>
       {activities.map((value, index) => (
-        <SortableItem key={`item-${index}`} index={index} value={value} id={id[index]} url={url} />
+        <SortableItem key={`item-${index}`} index={index} value={value} id={id[index]} url={url} removeActivity={removeActivity}/>
       ))}
     </ul>
   )
@@ -46,6 +46,8 @@ class PlannedActivities extends React.Component {
 
     // this.onSortEnd = this.onSortEnd.bind(this)
     this.componentUpdates = this.componentUpdates.bind(this)
+    this.removeActivity = this.removeActivity.bind(this)
+
   }
 
   componentDidMount () {
@@ -114,7 +116,12 @@ class PlannedActivities extends React.Component {
       }
     })
   }
+  removeActivity(id){
+    console.log(id)
+    console.log('planned/' + this.props.match.params.id + '/activities/' + id)
+    db.ref('planned/' + this.props.match.params.id + '/activities/' + id).remove()
 
+  }
   render () {
 
     let options = this.state.plannedTrips.map((trip, index) => {
@@ -133,6 +140,7 @@ class PlannedActivities extends React.Component {
           lockAxis='y'
           id={this.state.savedKeys}
           url={this.props.match.params.id}
+          removeActivity={this.removeActivity}
         />
 
         {/* {this.state.savedActivities &&

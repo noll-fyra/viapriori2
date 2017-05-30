@@ -3,6 +3,7 @@ import moment from 'moment'
 import Rating from '../rating/Rating'
 import db, {storageKey} from '../../utils/firebase'
 import ActivityOverview from '../activity/ActivityOverview'
+import SaveActivity from '../activity/SaveActivity'
 
 class SavedOverview extends React.Component {
   constructor (props) {
@@ -119,8 +120,9 @@ class SavedOverview extends React.Component {
               <p>or <button onClick={() => this.switchNewPlanned()}>Add to an existing plan</button></p>
             </div>
           }
+          <SaveActivity activityID={this.props.activityID} activity={this.props.activity} url='/' removeActivity={this.removeActivity}/>
 
-          <button onClick={() => this.removeActivity()}>Unsave</button>
+          {/* <button onClick={() => this.removeActivity()}>Unsave</button> */}
         </div>
     )
   }

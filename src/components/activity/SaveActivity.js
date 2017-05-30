@@ -13,9 +13,12 @@ const SaveActivity = (props) => {
   return (
 
     <div>
-      {props.url === props.activity.trip &&
+      {props.url === props.activity.trip && props.url ==='/' &&
         <button name={props.activityID} onClick={saveActivity}>Save Activity</button>
       }
+      {props.url !== props.activity.trip && props.url==='/' &&
+      <button onClick={() => props.removeActivity(props.activityID)}>Remove</button>
+    }
       {props.url !== props.activity.trip &&
           <Link to={'/trips/' + props.activity.trip}>View Full Trip</Link>
         }

@@ -12,7 +12,7 @@ const PlannedOverview = (props) => {
           {/* <img src={props.trip.image} alt={props.trip.title || ''} /> */}
         </div>
       </Link>
-      <button onClick={() => props.removePlanned(props.tripID)}>Remove</button>
+      <button onClick={() => props.removePlanned(props.tripID)}>Delete Plan</button>
     </div>
   )
 }
