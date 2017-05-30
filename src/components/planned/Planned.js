@@ -23,7 +23,7 @@ class Planned extends React.Component {
         <h1> Planned Trips</h1>
         {this.props.plannedKeys &&
             this.props.plannedTrips.map((trip, index) => {
-              return <PlannedOverview key={this.props.plannedKeys[index]} tripID={this.props.plannedKeys[index]} trip={trip} removePlanned={this.removePlanned} />
+              return <PlannedOverview key={this.props.plannedKeys[index]} tripID={this.props.plannedKeys[index]} trip={trip} removePlanned={this.removePlanned}/>
             })
           }
       </div>
