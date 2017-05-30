@@ -1,12 +1,14 @@
 import React from 'react'
 import {SortableContainer, SortableElement, SortableHandle, arrayMove} from 'react-sortable-hoc'
 import ActivityOverview from '../activity/ActivityOverview'
+import SaveActivity from '../activity/SaveActivity'
+
 import Planned from './Planned'
 import db, {storageKey} from '../../utils/firebase'
 
 const DragHandle = SortableHandle(() => <span>||||||</span>) // This can be any component you want
 
-const SortableItem = SortableElement(({value, id, options, plannedKeys, plannedTrips, createNewPlanned}) => {
+const SortableItem = SortableElement(({value, id, url}) => {
   return (
     <li>
       {/* <ActivityOverview activityID={id} activity={value} clickToSearch={clickToSearch} />
@@ -14,16 +16,18 @@ const SortableItem = SortableElement(({value, id, options, plannedKeys, plannedT
       } */}
       <DragHandle />
       <ActivityOverview activityID={id} activity={value} />
-      {/* <SaveActivity activityID={id} activity={value} url={url}/> */}
+      {value.user !== window.localStorage[storageKey] &&
+        <SaveActivity activityID={id} activity={value} url={url}/>
+      }
     </li>
   )
 })
 
-const SortableList = SortableContainer(({activities, id, options, plannedKeys, plannedTrips, createNewPlanned}) => {
+const SortableList = SortableContainer(({activities, id, url}) => {
   return (
     <ul>
       {activities.map((value, index) => (
-        <SortableItem key={`item-${index}`} index={index} value={value} id={id[index]} options={options} plannedKeys={plannedKeys} plannedTrips={plannedTrips} createNewPlanned={createNewPlanned} />
+        <SortableItem key={`item-${index}`} index={index} value={value} id={id[index]} url={url} />
       ))}
     </ul>
   )
@@ -128,10 +132,7 @@ class PlannedActivities extends React.Component {
           useDragHandle
           lockAxis='y'
           id={this.state.savedKeys}
-          options={options}
-          plannedKeys={this.state.plannedKeys}
-          plannedTrips={this.state.plannedTrips}
-          createNewPlanned={this.createNewPlanned}
+          url={this.props.match.params.id}
         />
 
         {/* {this.state.savedActivities &&

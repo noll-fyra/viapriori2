@@ -11,12 +11,13 @@ const SaveActivity = (props) => {
     })
   }
   return (
-    // const { from } = this.props.location.state || { from: { pathname: '/' } }
 
     <div>
+      {props.url === props.activity.trip &&
         <button name={props.activityID} onClick={saveActivity}>Save Activity</button>
+      }
       {props.url !== props.activity.trip &&
-          <Link to={'/trips/' + props.activity.trip}>View Trip</Link>
+          <Link to={'/trips/' + props.activity.trip}>View Full Trip</Link>
         }
     </div>
   )
