@@ -3,6 +3,9 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 import ActivityOverview from '../activity/ActivityOverview'
 import db, {storageKey} from '../../utils/firebase'
 import {trendingObjectToArray} from '../../utils/format'
+import SaveActivity from '../activity/SaveActivity'
+import LinkToTrips from '../activity/LinkToTrips'
+
 
 class Home extends React.Component {
   constructor (props) {
@@ -75,9 +78,19 @@ class Home extends React.Component {
   }
 
   render () {
+    console.log(window.localStorage[storageKey])
     // sort latest first and show top 30 trending activities, your own activities and those from users you follow
     const reverseActivities = this.state.activities.filter((activity) => { return this.state.filter.includes(activity[1].user) || this.state.trending[2].slice(0, 30).includes(activity[0]) }).slice(0, this.state.numberToShow).reverse().map((activity, index) => {
-      return <ActivityOverview key={activity[0]} activityID={activity[0]} activity={activity[1]} />
+      return (
+        <div><ActivityOverview key={activity[0]} activityID={activity[0]} activity={activity[1]} />
+      {activity[1].user !== window.localStorage[storageKey] && window.localStorage[storageKey] &&
+        <div>
+          <SaveActivity key={activity[0]} activityID={activity[0]} activity={activity[1]}/>
+          <LinkToTrips activity={activity[1]}/>
+        </div>
+        }
+    </div>
+      )
     })
 
     return (

@@ -51,11 +51,14 @@ class Nav extends React.Component {
         }
 
         {this.state.isAuthenticated &&
-          <span>
-            <button onClick={() => this.props.addNewActivity(true)}>+NEW</button>
-            <Link to='/saved'>Saved</Link>
-            <Link to={'/users/' + window.localStorage[storageKey]}>Profile</Link>
-            <Link to='/' onClick={this.logOut}>Logout</Link>
+          <span className='sideNav'>
+            <img onClick={() => this.props.addNewActivity(true)} className='newIcon' src={require('./new_by_setyo_from_noun_project.png')} />
+            <Link to='/saved'><img className='savedIcon' src={require('./saved_by_ayasofya_from_noun_project.png')} /></Link>
+            <Link to='/profile'>
+              <img className='profileIcon' src={require('./profile_by_icongeek_from_noun_project.png')} />
+            </Link>
+            <Link to='/' onClick={this.logOut}><img className='logoutIcon' src={require('./logout_by_myladkings_from_noun_project.png')} /></Link>
+
           </span>
         }
       </nav>

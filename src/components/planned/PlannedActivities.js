@@ -1,7 +1,7 @@
 import React from 'react'
 import {SortableContainer, SortableElement, SortableHandle, arrayMove} from 'react-sortable-hoc'
 import ActivityOverview from '../activity/ActivityOverview'
-import RemoveActivity from '../activity/SaveActivity'
+import RemoveActivity from '../activity/RemoveActivity'
 import LinkToTrips from '../activity/LinkToTrips'
 
 import Planned from './Planned'
