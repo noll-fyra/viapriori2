@@ -1,11 +1,11 @@
 .topNav {
-  background-color: red;
-  height: 48px;
+  background-color: #CED3DC;
+  height: 75px;
   width: 100%;
   position: fixed;
   display: flex;
   flex-flow: row;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
   z-index: 3;
 }
@@ -16,4 +16,34 @@
 
 .topNav a {
   margin: 0px 10px;
+}
+.newIcon{
+  height:70px;
+  width:70px;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+.profileIcon{
+  height:45px;
+  width:45px;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+.savedIcon{
+  height:40px;
+  width:40px;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+.logoutIcon{
+  height:35px;
+  width:35px;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+.sideNav{
+  margin-top: auto;
+  margin-bottom: auto;
+  display:flex;
+  align-items: center;
 }

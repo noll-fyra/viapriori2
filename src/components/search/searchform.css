@@ -1,0 +1,28 @@
+.searchbar {
+  height: 50px;
+  width: 400px;
+  margin-top: auto;
+  margin-bottom: auto;
+  position:relative;
+}
+/*.searchwrap{
+  display: inline-block;
+  margin-top: auto;
+  margin-bottom: auto;
+}*/
+.search {
+  height:40px;
+  width:40px;
+  margin-top: auto;
+  margin-bottom: auto;
+  position:relative;
+  left:5px;
+}
+.search-container{
+  height:50px;
+  width:450px;
+  display:flex;
+  /*margin-top: auto;
+  margin-bottom: auto;*/
+  /*display: inline-block;*/
+}
