@@ -15,7 +15,7 @@ const SortableItem = SortableElement(({value, id, clickToSearch, url}) => {
       {value.user !== window.localStorage[storageKey] &&
         <div>
           <SaveActivity activityID={id} activity={value} url={url}/>
-          <RemoveActivity activityID={id} activity={value} removeActivity={this.removeActivity}/>
+          {/* <RemoveActivity activityID={id} activity={value} removeActivity={this.removeActivity}/> */}
         </div>
 
       }
