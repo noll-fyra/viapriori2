@@ -1,11 +1,12 @@
 import React from 'react'
+import './profile.css'
 
 const Details = (props) => (
-  <div className='profileContainer'>
+  <div className='profileWrap'>
     <div className='profileImageDiv'>
+      {/* <span className='changeAvatar'>Change avatar</span> */}
       {props.isCurrentUser &&
       <label className='profileImage' style={{backgroundImage: `url(${props.profileImage})`, backgroundSize: 'cover'}}>
-        <span className='changeAvatar'>Change avatar</span>
         <input className='fileInput' type='file' onChange={(e) => props.addProfileImage(e)} accept={'image/*'} />
       </label>
     }

@@ -4,6 +4,8 @@ import Details from './Details'
 import TripOverview from '../trip/TripOverview'
 import Follow from '../follow/Follow'
 import db, {storageKey, storage} from '../../utils/firebase'
+import './profile.css'
+
 
 class Profile extends React.Component {
   constructor (props) {
@@ -174,12 +176,7 @@ class Profile extends React.Component {
       return <TripOverview key={this.state.keys.slice().reverse()[index]} tripID={this.state.keys.slice().reverse()[index]} trip={trip} />
     })
     return (
-      <div>
-        <p>{JSON.stringify(this.state.username)}</p>
-        <p>{JSON.stringify(this.state.profileImage)}</p>
-        <p>{JSON.stringify(this.state.currentUser)}</p>
-        <p>{JSON.stringify(this.state.followingKeys)}</p>
-        <p>{JSON.stringify(this.state.followedKeys)}</p>
+      <div className='profilecontainer'>
         <Details
           userID={this.state.currentUser}
           username={this.state.username}
