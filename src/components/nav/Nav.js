@@ -54,7 +54,7 @@ class Nav extends React.Component {
           <span>
             <button onClick={() => this.props.addNewActivity(true)}>+NEW</button>
             <Link to='/saved'>Saved</Link>
-            <Link to='/profile'>Profile</Link>
+            <Link to={'/users/' + window.localStorage[storageKey]}>Profile</Link>
             <Link to='/' onClick={this.logOut}>Logout</Link>
           </span>
         }

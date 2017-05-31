@@ -7,9 +7,10 @@ import SearchResults from '../search/SearchResults'
 import NewActivity from '../activity/NewActivity'
 import Trip from '../trip/Trip'
 import Profile from '../profile/Profile'
+import Follow from '../follow/Follow'
 import PlannedActivities from '../planned/PlannedActivities'
 import Saved from '../saved/Saved'
-import {auth, storageKey, isAuthenticated, logOut} from '../../utils/firebase'
+import db, {auth, storageKey, isAuthenticated, logOut} from '../../utils/firebase'
 import search from '../../utils/search'
 import suggestions from '../../utils/suggestions'
 
@@ -20,7 +21,7 @@ class App extends Component {
       searchQuery: '',
       addNewActivity: false,
       currentTrip: null,
-      currentProfile: null
+      currentUser: {}
     }
     this.search = search.bind(this)
     this.addNewActivity = this.addNewActivity.bind(this)
@@ -28,7 +29,6 @@ class App extends Component {
     this.handleLogin = this.handleLogin.bind(this)
     this.clickToSearch = this.clickToSearch.bind(this)
     this.setCurrentTrip = this.setCurrentTrip.bind(this)
-    this.setCurrentProfile = this.setCurrentProfile.bind(this)
     this.linkToSearch = null
   }
 
@@ -36,8 +36,16 @@ class App extends Component {
     auth.onAuthStateChanged(user => {
       if (user) {
         window.localStorage.setItem(storageKey, user.uid)
+        db.ref('users/' + window.localStorage[storageKey]).on('value', snapshot => {
+          this.setState({
+            currentUser: snapshot.val()
+          })
+        })
       } else {
         window.localStorage.removeItem(storageKey)
+        this.setState({
+          currentUser: {}
+        })
       }
     })
   }
@@ -76,12 +84,6 @@ class App extends Component {
     })
   }
 
-  setCurrentProfile (profile) {
-    this.setState({
-      currentProfile: profile
-    })
-  }
-
   render () {
     return (
       <Router>
@@ -102,8 +104,9 @@ class App extends Component {
             <Route exact path='/' component={() => <Home clickToSearch={this.clickToSearch} />} />
             <Route path='/search' component={(props) => <SearchResults searchQuery={this.state.searchQuery} clickToSearch={this.clickToSearch} {...props} />} />
             <PrivateRoute path='/saved' component={Saved} />
-            <PrivateRoute exact path='/profile' component={(props) => <Profile isCurrentUser {...props} />} />
-            <Route path='/users/:id' component={(props) => <Profile isCurrentUser={false} currentProfile={this.state.currentProfile} setCurrentProfile={this.setCurrentProfile} {...props} />} />
+            <Route exact path='/users/:id' component={(props) => <Profile currentUser={this.state.currentUser} {...props} />} />
+            <Route path='/users/:id/following' component={(props) => <Follow currentUser={this.state.currentUser} type={'following'} {...props} />} />
+            <Route path='/users/:id/followers' component={(props) => <Follow currentUser={this.state.currentUser} type={'followers'} {...props} />} />
             <PrivateRoute path='/planned/:id' component={PlannedActivities} />
             <PrivateRoute path='/trips/:id' component={(props) => <Trip clickToSearch={this.clickToSearch} currentTrip={this.state.currentTrip} {...props} />} />
             <Route path='/auth' component={(props) => <Auth isLogin={this.state.isLogin} {...props} />} />

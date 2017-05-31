@@ -11,6 +11,7 @@ import Rating from '../rating/Rating'
 import db, {storage, storageKey} from '../../utils/firebase'
 import latLng, {getLocation} from '../../utils/geocoding'
 import tagsArrayToObject from '../../utils/format'
+import updateDB, {updateDBPlusOne} from '../../utils/updateDB'
 import './tags.css'
 import './modal.css'
 
@@ -291,12 +292,11 @@ class NewActivity extends React.Component {
           start: this.state.date,
           end: this.state.date
         })
-      // add new trip to the user's trips
-        db.ref('users/' + window.localStorage[storageKey] + '/trips').once('value', snap => {
-          let newObj = snap.val() || {}
-          newObj[newTripID] = true
-          db.ref('users/' + window.localStorage[storageKey] + '/trips').set(newObj)
-        })
+      // add new trip to the user's trips and set activity count to 1
+      updateDB('users/' + window.localStorage[storageKey] + '/trips', newTripID, 1)
+    } else {
+      // update existing trip and set activity count + 1
+      updateDBPlusOne('users/' + window.localStorage[storageKey] + '/trips', newTripID)
       }
     // update the tripID
       let tripID = this.state.isNewTrip ? newTripID : this.state.trips.slice()[this.state.tripIndex][0]
@@ -347,30 +347,21 @@ class NewActivity extends React.Component {
             db.ref('trips/' + tripID).set(newObj)
           })
 
-        // update database counts
-          function updateDB (path, item) {
-            db.ref(path).once('value').then((snap) => {
-              let newObj = snap.val() || {}
-              newObj[item] = newObj[item] ? newObj[item] + 1 : 1
-              db.ref(path).set(newObj)
-            })
-          }
-
         // add tags to all and trending
           this.state.tags.forEach((tag) => {
             let lowerTag = tag.text.toLowerCase()
-            updateDB('all/tags/', lowerTag)
-            updateDB('trending/tags/' + moment().format('dddd'), lowerTag)
+            updateDBPlusOne('all/tags/', lowerTag)
+            updateDBPlusOne('trending/tags/' + moment().format('dddd'), lowerTag)
           })
 
         // add locality and country to all and trending
           let lowerLocality = this.state.locality
-          updateDB('all/localities/', lowerLocality)
-          updateDB('trending/localities/' + moment().format('dddd'), lowerLocality)
+          updateDBPlusOne('all/localities/', lowerLocality)
+          updateDBPlusOne('trending/localities/' + moment().format('dddd'), lowerLocality)
 
           let lowerCountry = this.state.country
-          updateDB('all/countries/', lowerCountry)
-          updateDB('trending/countries/' + moment().format('dddd'), lowerCountry)
+          updateDBPlusOne('all/countries/', lowerCountry)
+          updateDBPlusOne('trending/countries/' + moment().format('dddd'), lowerCountry)
 
           // stop loading animation
           this.setState({
