@@ -1,6 +1,6 @@
 import React from 'react'
 // import {Link} from 'react-router-dom'
-// import Details from '../profile/Details'
+import Details from '../profile/Details'
 import db from '../../utils/firebase'
 
 class Follow extends React.Component {
@@ -13,6 +13,7 @@ class Follow extends React.Component {
       follows: []
     }
   }
+
   componentDidMount () {
     db.ref('users/' + this.state.userID).once('value').then(snap => {
       this.setState({
@@ -24,7 +25,7 @@ class Follow extends React.Component {
           let follows = []
           keys.forEach((key) => {
             db.ref('users/' + key).once('value').then((snapshot) => {
-              follows.push(snapshot.val() && snapshot.val().profile && snapshot.val().profile.username ? [key, snapshot.val().profile.username] : [null, 'user'])
+              follows.push(snapshot.val() ? [key, snapshot.val()] : [null, 'user'])
               this.setState({
                 follows: follows
               })
@@ -37,7 +38,7 @@ class Follow extends React.Component {
           let follows = []
           keys.forEach((key) => {
             db.ref('users/' + key).once('value').then((snapshot) => {
-              follows.push(snapshot.val() && snapshot.val().profile && snapshot.val().profile.username ? [key, snapshot.val().profile.username] : [null, 'user'])
+              follows.push(snapshot.val() ? [key, snapshot.val()] : [null, 'user'])
               this.setState({
                 follows: follows
               })
@@ -51,39 +52,23 @@ class Follow extends React.Component {
     const follows = this.state.follows.map((item) => {
       return <Details
         key={item[0]}
-        currentUser={this.state.currentUser}
-        userID={this.state.userID}
-        user={this.state.user}
-        hasUpdatedProfileImage={this.state.hasUpdatedProfileImage}
-        updatedProfileImage={this.state.updatedProfileImage}
-        addProfileImage={this.addProfileImage}
-        isFollowing={this.state.isFollowing}
-        handleFollow={this.handleFollow}
-        handleUnfollow={this.handleUnfollow}
+        currentUser={this.props.currentUser}
+        userID={item[0]}
+        user={item[1]}
+        type={this.state.type}
       />
     })
     return (
       <div>
-        {/* {JSON.stringify(this.state)} */}
+        <Details
+          key={this.state.userID}
+          currentUser={this.props.currentUser}
+          userID={this.state.userID}
+          user={this.state.user}
+          type='profile'
+        />
+        <h1>{this.state.type === 'following' ? 'Following' : 'Followers'}</h1>
         {follows}
-        {/* {this.props.users.map((user, index) => {
-          return <Link onClick={() => this.props.updateCurrentUser(this.props.userKeys[index])} key={this.props.userKeys[index]} to={this.props.userKeys[index] === window.localStorage[storageKey] ? '/profile' : '/users/' + this.props.userKeys[index]}>
-            <Details
-              userID={this.props.userKeys[index]}
-              username={user.profile && user.profile.username ? user.profile.username : 'user'}
-              profileImage={user.profile && user.profile.profileImage ? user.profile.profileImage : require('../profile/profile_by_jivan_from_noun_project.png')}
-              numberOfTrips={user.trips ? Object.keys(user.trips).length : 0}
-              addProfileImage={doNothing}
-              isCurrentUser={false}
-              changeShowing={doNothing}
-              isFollowing={user.followers ? Object.keys(user.followers).includes(window.localStorage[storageKey]) : false}
-              following={user.following ? Object.keys(user.following).length : 0}
-              followers={user.followers ? Object.keys(user.followers).length : 0}
-              handleFollow={this.props.handleFollow}
-              handleUnfollow={this.props.handleUnfollow}
-          /></Link>
-        })
-      } */}
       </div>
     )
   }

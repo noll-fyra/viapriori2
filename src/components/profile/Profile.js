@@ -1,9 +1,7 @@
 import React from 'react'
-import fixOrientation from 'fix-orientation'
 import Details from './Details'
 import TripOverview from '../trip/TripOverview'
-import db, {storageKey, storage} from '../../utils/firebase'
-import updateDB from '../../utils/updateDB'
+import db, {storageKey} from '../../utils/firebase'
 
 class Profile extends React.Component {
   constructor (props) {
@@ -13,21 +11,11 @@ class Profile extends React.Component {
       user: {},
       keys: [],
       trips: [],
-      hasUpdatedProfileImage: false,
-      updatedProfileImage: require('./profile_by_jivan_from_noun_project.png'),
-      isFollowing: false,
-      userID: props.match.params.id
+      userID: props.match.params.id || window.localStorage[storageKey]
     }
-    this.addProfileImage = this.addProfileImage.bind(this)
-    this.handleFollow = this.handleFollow.bind(this)
-    this.handleUnfollow = this.handleUnfollow.bind(this)
   }
 
   componentDidMount () {
-    this.setState({
-      isFollowing: this.state.currentUser.following ? this.state.currentUser.following[this.state.userID] !== null : false
-    })
-
     db.ref('users/' + this.state.userID).on('value', snapshot => {
       this.setState({
         user: snapshot.val() || {}
@@ -55,43 +43,6 @@ class Profile extends React.Component {
     })
   }
 
-  addProfileImage (e) {
-    this.setState({
-      hasUpdatedProfileImage: true
-    })
-    let image = e.target.files[0]
-    // show user the locally uploaded file
-    const reader = new window.FileReader()
-    reader.addEventListener('load', () => {
-      let self = this
-      fixOrientation(reader.result, { image: true }, function (fixed, newImage) {
-        self.setState({
-          updatedProfileImage: fixed
-        })
-        // upload the file to firebase
-        storage.ref(window.localStorage[storageKey] + '/profile/avatar').putString(self.state.updatedProfileImage, 'data_url').then((snap) => {
-          storage.ref(window.localStorage[storageKey] + '/profile/avatar').getDownloadURL().then((url) => {
-            // update the profileImage url
-            db.ref('users/' + window.localStorage[storageKey] + '/profile').update({
-              profileImage: url
-            })
-          })
-        })
-      })
-    })
-    reader.readAsDataURL(image)
-  }
-
-  handleFollow () {
-    updateDB('users/' + window.localStorage[storageKey] + '/following', this.state.userID, true)
-    updateDB('users/' + this.state.userID + '/followers', window.localStorage[storageKey], true)
-  }
-
-  handleUnfollow () {
-    db.ref('users/' + this.state.userID + '/followers/' + window.localStorage[storageKey]).remove()
-    db.ref('users/' + window.localStorage[storageKey] + '/following/' + this.state.userID).remove()
-  }
-
   render () {
     const reverseTrips = this.state.trips.slice().reverse().map((trip, index) => {
       return <TripOverview key={this.state.keys.slice().reverse()[index]} tripID={this.state.keys.slice().reverse()[index]} trip={trip} />
@@ -103,11 +54,7 @@ class Profile extends React.Component {
           userID={this.state.userID}
           user={this.state.user}
           hasUpdatedProfileImage={this.state.hasUpdatedProfileImage}
-          updatedProfileImage={this.state.updatedProfileImage}
-          addProfileImage={this.addProfileImage}
-          isFollowing={this.state.isFollowing}
-          handleFollow={this.handleFollow}
-          handleUnfollow={this.handleUnfollow}
+          type='profile'
         />
         <div className='trips'>
           {reverseTrips}

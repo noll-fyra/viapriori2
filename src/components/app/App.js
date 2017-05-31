@@ -98,12 +98,13 @@ class App extends Component {
             onKeyUp={(e) => this.handleSearch(e)}
             linkToSearch={(ref) => { this.linkToSearch = ref }}
           />
-
           <div className='topNav topNavBG' />
+          
           <div className='bodyContainer'>
             <Route exact path='/' component={() => <Home clickToSearch={this.clickToSearch} />} />
             <Route path='/search' component={(props) => <SearchResults searchQuery={this.state.searchQuery} clickToSearch={this.clickToSearch} {...props} />} />
             <PrivateRoute path='/saved' component={Saved} />
+            <Route exact path='/profile' component={(props) => <Profile currentUser={this.state.currentUser} {...props} />} />
             <Route exact path='/users/:id' component={(props) => <Profile currentUser={this.state.currentUser} {...props} />} />
             <Route path='/users/:id/following' component={(props) => <Follow currentUser={this.state.currentUser} type={'following'} {...props} />} />
             <Route path='/users/:id/followers' component={(props) => <Follow currentUser={this.state.currentUser} type={'followers'} {...props} />} />
