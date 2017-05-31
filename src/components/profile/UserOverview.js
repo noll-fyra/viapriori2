@@ -17,7 +17,7 @@ const UserOverview = (props) => {
             {/* <div>
               <span><b>{props.numberOfTrips}</b> trips</span>{'   '}
               <span><b>{props.following}</b> following</span>{'   '}
-              <span><b>{props.followed}</b> followed</span>
+              <span><b>{props.followers}</b> followers</span>
             </div> */}
           </div>
 
