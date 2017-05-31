@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "dotenv": "^4.0.0",
     "exif-js": "^2.2.1",
     "firebase": "^4.0.0",
     "fix-orientation": "0.0.2",

@@ -6,7 +6,6 @@ import SaveActivity from '../activity/SaveActivity'
 import db, {storageKey} from '../../utils/firebase'
 import LinkToTrips from '../activity/LinkToTrips'
 
-
 class SearchResults extends React.Component {
   constructor (props) {
     super(props)

@@ -99,7 +99,7 @@ class App extends Component {
             linkToSearch={(ref) => { this.linkToSearch = ref }}
           />
           <div className='topNav topNavBG' />
-          
+
           <div className='bodyContainer'>
             <Route exact path='/' component={() => <Home clickToSearch={this.clickToSearch} />} />
             <Route path='/search' component={(props) => <SearchResults searchQuery={this.state.searchQuery} clickToSearch={this.clickToSearch} {...props} />} />

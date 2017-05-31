@@ -6,7 +6,6 @@ import {trendingObjectToArray} from '../../utils/format'
 import SaveActivity from '../activity/SaveActivity'
 import LinkToTrips from '../activity/LinkToTrips'
 
-
 class Home extends React.Component {
   constructor (props) {
     super(props)
@@ -82,14 +81,14 @@ class Home extends React.Component {
     // sort latest first and show top 30 trending activities, your own activities and those from users you follow
     const reverseActivities = this.state.activities.filter((activity) => { return this.state.filter.includes(activity[1].user) || this.state.trending[2].slice(0, 30).includes(activity[0]) }).slice(0, this.state.numberToShow).reverse().map((activity, index) => {
       return (
-        <div><ActivityOverview key={activity[0]} activityID={activity[0]} activity={activity[1]} />
-      {activity[1].user !== window.localStorage[storageKey] && window.localStorage[storageKey] &&
-        <div>
-          <SaveActivity key={activity[0]} activityID={activity[0]} activity={activity[1]}/>
-          <LinkToTrips activity={activity[1]}/>
-        </div>
+        <div><ActivityOverview key={activity[0]} activityID={activity[0]} activity={activity[1]} clickToSearch={this.props.clickToSearch} />
+          {activity[1].user !== window.localStorage[storageKey] && window.localStorage[storageKey] &&
+          <div>
+            <SaveActivity key={activity[0]} activityID={activity[0]} activity={activity[1]} />
+            <LinkToTrips activity={activity[1]} />
+          </div>
         }
-    </div>
+        </div>
       )
     })
 
@@ -99,11 +98,11 @@ class Home extends React.Component {
           <b>Trending</b>
           <ul>
             <li><b>countries</b></li>
-            {this.state.trending[0].slice(0, 10).map((tag) => { return <li key={tag}><button onClick={() => this.props.clickToSearch(tag)}>{tag}</button></li> })}
+            {this.state.trending[0].slice(0, 10).map((tag, index) => { return <li key={tag + index}><button onClick={() => this.props.clickToSearch(tag)}>{tag}</button></li> })}
             <li><b>cities</b></li>
-            {this.state.trending[1].slice(0, 10).map((tag) => { return <li key={tag}><button onClick={() => this.props.clickToSearch(tag)}>{tag}</button></li> })}
+            {this.state.trending[1].slice(0, 10).map((tag, index) => { return <li key={tag + index}><button onClick={() => this.props.clickToSearch(tag)}>{tag}</button></li> })}
             <li><b>tags</b></li>
-            {this.state.trending[3].slice(0, 10).map((tag) => { return <li key={tag}><button onClick={() => this.props.clickToSearch(tag)}>{tag}</button></li> })}
+            {this.state.trending[3].slice(0, 10).map((tag, index) => { return <li key={tag + index}><button onClick={() => this.props.clickToSearch(tag)}>{tag}</button></li> })}
           </ul>
         </div>
         <InfiniteScroll

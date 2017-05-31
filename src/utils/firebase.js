@@ -1,11 +1,12 @@
 import * as firebase from 'firebase'
 
 const config = {
-  apiKey: 'AIzaSyCQXrdf9q_2vLoLSktz9y_feIxljBLESo8',
-  authDomain: 'via-priori.firebaseapp.com',
-  databaseURL: 'https://via-priori.firebaseio.com',
-  storageBucket: 'via-priori.appspot.com'
+  apiKey: process.env.REACT_APP_API_KEY,
+  authDomain: process.env.REACT_APP_AUTH_DOMAIN,
+  databaseURL: process.env.REACT_APP_DATABASE_URL,
+  storageBucket: process.env.REACT_APP_STORAGE_BUCKET
 }
+
 firebase.initializeApp(config)
 
 const db = firebase.database()
