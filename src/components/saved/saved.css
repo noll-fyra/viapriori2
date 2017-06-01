@@ -1,0 +1,21 @@
+/*.plannedOverview{
+  margin-top: 12px;
+  padding: 0 12px;
+  text-align: center;
+}*/
+.savedContainer {
+  display: grid;
+  grid-template-columns: 1fr 4fr 1fr;
+}
+
+.savedHeading{
+  text-align: left;
+  margin-top: 12px;
+  padding: 0 12px;
+}
+
+.final{
+  margin-top: 0;
+  height:100%;
+  width:100%;
+}

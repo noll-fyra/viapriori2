@@ -4,6 +4,7 @@ import SavedOverview from './SavedOverview'
 import Planned from '../planned/Planned'
 import search from '../../utils/search'
 import SearchForm from '../search/SearchForm'
+import './saved.css'
 
 class Saved extends React.Component {
   constructor (props) {
@@ -195,18 +196,21 @@ class Saved extends React.Component {
     let options = this.state.plannedTrips.map((trip, index) => {
       return <option key={this.state.plannedKeys[index]}>{trip.title || ''}</option>
     })
-
+console.log(this.state.searchQuery)
     return (
       <div>
-        <SearchForm placeholder='Search saved activities and planned trips' onChange={this.search}/>
         {/* <SearchForm placeholder='Search' onChange={this.search} onKeyUp={(e) => this.handleSearch(e)} /> */}
         {/* <Link to='/saved/search' className='searchButton' ref={this.props.linkToSearch} style={{display: 'none'}} /> */}
-
-
+        <div className="savedContainer">
+        <div>
+          {/* {this.state.plannedTrips.length > 0 &&  */}
         <Planned plannedKeys={this.state.plannedKeys}
           plannedTrips={this.state.plannedTrips} />
-          <h1> Saved Activities</h1>
-
+        {/* } */}
+        </div>
+        <div className="saved">
+          <SearchForm placeholder='Search your saved activities and planned trips' onChange={this.search}/>
+          <h3 className='savedHeading'> Saved Activities</h3>
         {this.state.savedActivities &&
           reverseSaved.map((activity, index) => {
             return <SavedOverview
@@ -220,6 +224,11 @@ class Saved extends React.Component {
             />
           })
         }
+      </div>
+      <div className='final'>
+    </div>
+    </div>
+
       </div>
     )
   }

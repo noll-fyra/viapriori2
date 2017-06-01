@@ -133,10 +133,12 @@ class PlannedActivities extends React.Component {
     })
 
     return (
-      <div>
-        <Planned plannedKeys={this.state.plannedKeys} plannedTrips={this.state.plannedTrips} />
-
-        <h1> Saved Activities</h1>
+      <div className='plannedContainer'>
+              <div className='planned'>
+                <Planned plannedKeys={this.state.plannedKeys} plannedTrips={this.state.plannedTrips} />
+              </div>
+            <div className='saved'>
+        {/* <h3> Saved Activities</h3> */}
         <SortableList
           activities={this.state.savedActivities}
           onSortEnd={this.onSortEnd}
@@ -146,7 +148,7 @@ class PlannedActivities extends React.Component {
           url={this.props.match.params.id}
           removeActivity={this.removeActivity}
         />
-
+</div>
         {/* {this.state.savedActivities &&
           this.state.savedActivities.map((activity, index) => {
             return <SavedOverview
@@ -160,7 +162,9 @@ class PlannedActivities extends React.Component {
             />
           })
         } */}
-      </div>
+        <div className='final' />
+
+    </div>
     )
   }
 }
