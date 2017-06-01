@@ -1,30 +1,33 @@
-.trips{
-  position:relative;
+.trips {
+  position: relative;
   display: flex;
-  height:100%;
-  width:85%;
+  height: 100%;
+  width: 85%;
   margin: 0 auto;
   justify-content: space-around;
   flex-wrap: wrap;
 }
+
 .tripOverview {
-  height:450px;
-  width:550px;
+  height: 450px;
+  width: 550px;
   position: relative;
   padding: 12px;
   float: left;
   display: flex;
   align-content: space-between;
 }
-.tripOverviewImage{
-  display:block;
-  height:350px;
-  width:550px;
+
+.tripOverviewImage {
+  display: block;
+  height: 350px;
+  width: 550px;
   position: relative;
   z-index: 1;
 }
+
 .tripOverviewDetails {
-  display:flex;
+  display: flex;
   justify-content: space-between;
   position: relative;
   width: 550px;
@@ -34,18 +37,20 @@
   flex-wrap: wrap;
   align-items: center;
 }
-.heading{
-  width:350px;
-  display:flex;
+
+.heading {
+  width: 350px;
+  display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-
 }
-.subheading{
-text-align: center;
+
+.subheading {
+  text-align: center;
   /*font-size: x-large;
   text-align: left;*/
 }
+
 .tripOverviewBackdrop:hover {
   position: absolute;
   width: 100%;

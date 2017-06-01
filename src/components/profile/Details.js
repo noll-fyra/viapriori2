@@ -4,6 +4,7 @@ import {Link} from 'react-router-dom'
 import fixOrientation from 'fix-orientation'
 import db, {storage, storageKey} from '../../utils/firebase'
 import updateDB from '../../utils/updateDB'
+import './details.css'
 
 class Details extends React.Component {
   constructor (props) {

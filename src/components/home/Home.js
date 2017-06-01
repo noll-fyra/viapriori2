@@ -97,11 +97,11 @@ class Home extends React.Component {
         <div className='trending'>
           <h3>Trending</h3>
           <ul>
-            <li><b>Cities</b></li>
-            {this.state.trending[1].slice(0, 10).map((tag, index) => { return <li className='trendingTag' key={tag + index}><button onClick={() => this.props.clickToSearch(tag)}>{tag}</button></li> })}
-            <li><b>Countries</b></li>
+            <li className='trendingHeading'><b>Cities</b></li>
+            {this.state.trending[1].slice(0, 10).map((tag, index) => { return <li key={tag + index}><button onClick={() => this.props.clickToSearch(tag)}>{tag}</button></li> })}
+            <li className='trendingHeading'><b>Countries</b></li>
             {this.state.trending[0].slice(0, 10).map((tag, index) => { return <li key={tag + index}><button onClick={() => this.props.clickToSearch(tag)}>{tag}</button></li> })}
-            <li><b>Tags</b></li>
+            <li className='trendingHeading'><b>Tags</b></li>
             {this.state.trending[3].slice(0, 10).map((tag, index) => { return <li key={tag + index}><button onClick={() => this.props.clickToSearch(tag)}>{tag}</button></li> })}
           </ul>
         </div>

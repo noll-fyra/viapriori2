@@ -49,15 +49,19 @@ class Profile extends React.Component {
       return <TripOverview key={this.state.keys.slice().reverse()[index]} tripID={this.state.keys.slice().reverse()[index]} trip={trip} />
     })
     return (
-      <div className='profilecontainer'>
-
-        <Details
-          currentUser={this.state.currentUser}
-          userID={this.state.userID}
-          user={this.state.user}
-          hasUpdatedProfileImage={this.state.hasUpdatedProfileImage}
-          type='profile'
+      <div className='profileContainer'>
+        <div className='detailsContainer'>
+          <div />
+          <Details
+            currentUser={this.state.currentUser}
+            userID={this.state.userID}
+            user={this.state.user}
+            hasUpdatedProfileImage={this.state.hasUpdatedProfileImage}
+            type='profile'
         />
+          <div />
+        </div>
+
         <div className='trips'>
           {reverseTrips}
         </div>

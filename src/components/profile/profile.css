@@ -1,62 +1,16 @@
-.profileWrap {
-  position:relative;
-  display: flex;
-  height:220px;
-  width:900px;
-  /*flex-flow: row;*/
-  background-color: #FCF7F8;
-  margin: 0 auto;
-  justify-content: center;
+.profileContainer {
+  width: 100%;
 }
 
-.profileImageDiv {
-  position:relative;
-  display: flex;
-  top: 30px;
-  height:200px;
-  width:200px;
-  justify-content: flex-start;
-  padding: 0 12px;
+.detailsContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  margin-top: 12px;
 }
 
-.profileDetails {
-  position:relative;
-  top:30px;
-  padding: 0 12px;
-  height:200px;
-  width: 200px;
+.trips {
+  /*width: 100%;*/
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  padding: 0px 24px;
 }
-
-.profileImage {
-  width: 160px;
-  height: 160px;
-  border: 1px solid rgba(50, 50, 50, 0.25);
-  border-radius: 80px;
-  font-size: 1.25em;
-  font-weight: 700;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-}
-
-.profileUsername {
-  font-size: 36px;
-  font-weight: 700;
-}
-
-/*
-.changeAvatar {
-  color: black;
-  width: 60%;
-  height: 15%;
-  text-align: center;
-  display: none;
-  position: relative;
-  background-color: rgba(255, 255, 255, 0.7);
-  top: 30%;
-}
-
-.profile:hover .changeAvatar {
-  display: block;
-}*/

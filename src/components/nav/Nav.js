@@ -46,10 +46,8 @@ class Nav extends React.Component {
           </Link>
         </div>
 
-        <div />
-
         <div className='searchNav'>
-          <SearchForm className='searchForm' placeholder='Search' value={this.props.searchValue} onChange={this.props.onChange} onKeyUp={this.props.onKeyUp} />
+          <SearchForm className='searchForm' placeholder='Search for anything' value={this.props.searchValue} onChange={this.props.onChange} onKeyUp={this.props.onKeyUp} />
           <Link to={'/search'} className='searchButton' ref={this.props.linkToSearch} style={{display: 'none'}} />
           {/* <img className='searchIcon' src={require('./search_by_deepz_from_noun_project.png')} alt='search_by_deepz_from_noun_project.png' /> */}
           {/* </Link> */}
