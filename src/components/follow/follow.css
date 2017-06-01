@@ -20,7 +20,7 @@
   width: 33%;
 }
 
-.detailsContainer {
+.followDetailsContainer {
   width: 100%;
   display: flex;
   flex-flow: column;

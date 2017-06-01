@@ -65,7 +65,7 @@ class Follow extends React.Component {
     })
     return (
       <div>
-        <div className='detailsContainer'>
+        <div className='followDetailsContainer'>
           <div className='topDetails'>
             <div />
             <Details
@@ -80,7 +80,7 @@ class Follow extends React.Component {
           <div />
         </div>
         <h1 className='following'>{this.state.type === 'following' ? 'Following' : 'Followers'}</h1>
-        <div className='detailsContainer'>
+        <div className='followDetailsContainer'>
           {follows}
         </div>
       </div>

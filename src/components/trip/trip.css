@@ -7,12 +7,10 @@
 .hideButtonContainer {
   margin-top: 12px;
   padding: 0 12px;
-  /*background-color: red;*/
   text-align: center;
 }
 
 .hideButton {
-  /*position: fixed;*/
   width: 100%;
 }
 

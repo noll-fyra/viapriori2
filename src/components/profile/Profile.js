@@ -50,7 +50,6 @@ class Profile extends React.Component {
       <div className='profileContainer'>
         <div className='detailsContainer'>
           <div />
-          {JSON.stringify(this.state.trips)}
           <Details
             currentUser={this.state.currentUser}
             userID={this.state.userID}

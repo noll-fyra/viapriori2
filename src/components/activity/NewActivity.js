@@ -293,10 +293,10 @@ class NewActivity extends React.Component {
           end: this.state.date
         })
       // add new trip to the user's trips and set activity count to 1
-      updateDB('users/' + window.localStorage[storageKey] + '/trips', newTripID, 1)
-    } else {
+        updateDB('users/' + window.localStorage[storageKey] + '/trips', newTripID, 1)
+      } else {
       // update existing trip and set activity count + 1
-      updateDBPlusOne('users/' + window.localStorage[storageKey] + '/trips', newTripID)
+        updateDBPlusOne('users/' + window.localStorage[storageKey] + '/trips', newTripID)
       }
     // update the tripID
       let tripID = this.state.isNewTrip ? newTripID : this.state.trips.slice()[this.state.tripIndex][0]
@@ -347,27 +347,28 @@ class NewActivity extends React.Component {
           })
 
         // add tags to all and trending
-          .then(()=>{this.state.tags.forEach((tag) => {
-            let lowerTag = tag.text.toLowerCase()
-            updateDBPlusOne('all/tags/', lowerTag)
-            updateDBPlusOne('trending/tags/' + moment().format('dddd'), lowerTag)
-          })
+          .then(() => {
+            this.state.tags.forEach((tag) => {
+              let lowerTag = tag.text.toLowerCase()
+              updateDBPlusOne('all/tags/', lowerTag)
+              updateDBPlusOne('trending/tags/' + moment().format('dddd'), lowerTag)
+            })
 
         // add locality and country to all and trending
-          let lowerLocality = this.state.locality
-          updateDBPlusOne('all/localities/', lowerLocality)
-          updateDBPlusOne('trending/localities/' + moment().format('dddd'), lowerLocality)
+            let lowerLocality = this.state.locality
+            updateDBPlusOne('all/localities/', lowerLocality)
+            updateDBPlusOne('trending/localities/' + moment().format('dddd'), lowerLocality)
 
-          let lowerCountry = this.state.country
-          updateDBPlusOne('all/countries/', lowerCountry)
-          updateDBPlusOne('trending/countries/' + moment().format('dddd'), lowerCountry)
+            let lowerCountry = this.state.country
+            updateDBPlusOne('all/countries/', lowerCountry)
+            updateDBPlusOne('trending/countries/' + moment().format('dddd'), lowerCountry)
 
           // stop loading animation
-          this.setState({
-            isUploading: false
+            this.setState({
+              isUploading: false
+            })
           })
-        })
-        .then(()=>{
+        .then(() => {
           this.resetState()
           this.props.addNewActivity(false)
           this.linkToTrip.handleClick(new window.MouseEvent('click'))
@@ -386,79 +387,80 @@ class NewActivity extends React.Component {
         <div className='backdrop' onClick={() => this.props.addNewActivity(false)} />
         {this.state.image === '' &&
         <div className='modalWrapper'>
-          <div/>
-        <div className='modal'>
-          <label className='imageLabel'>
-            <span>Post a photo</span>
-            <input className='fileInput' type='file' onChange={(e) => this.handleFile(e)} accept={'image/*'} />
-          </label>
+          <div />
+          <div className='modal'>
+            <label className='imageLabel'>
+              <span className='postAPhoto'>Post a photo</span>
+              <input className='fileInput' type='file' onChange={(e) => this.handleFile(e)} accept={'image/*'} />
+            </label>
+          </div>
+          <div />
         </div>
-        <div />
-      </div>
         }
         {this.state.image !== '' &&
         <div className='modalWrapper'>
           <div>
-        <Link to={'/trips/' + this.state.tripID} style={{display: 'none'}} onClick={() => this.props.setCurrentTrip(this.state.tripID)} ref={(link) => { this.linkToTrip = link }} />
+            <Link to={'/trips/' + this.state.tripID} style={{display: 'none'}} onClick={() => this.props.setCurrentTrip(this.state.tripID)} ref={(link) => { this.linkToTrip = link }} />
           </div>
           <div className='modal1'>
             <div className='modal2'>
-            <label className='imageLabelActive' style={{backgroundImage: `url(${this.state.image})`, objectFit:'cover', backgroundSize: 'cover'}}>
-              <span>Post a photo</span>
-              <input className='fileInput' type='file' onChange={(e) => this.handleFile(e)} accept={'image/*'} />
-            </label>
+              <label className='imageLabelActive' style={{backgroundImage: `url(${this.state.image})`, objectFit: 'cover', backgroundSize: 'cover'}}>
+                <span className='postAPhoto'>Post a photo</span>
+                <input className='fileInput' type='file' onChange={(e) => this.handleFile(e)} accept={'image/*'} />
+              </label>
             </div>
             <div className='modal3'>
-            {this.state.error &&
-            <Flash message={this.state.message} />
+              {this.state.error &&
+              <Flash message={this.state.message} />
             }
-            {this.state.trips.length === 0 &&
+              {this.state.trips.length === 0 &&
               <div><input type='text' onChange={this.handleTripTitle} placeholder='Add your first trip' /></div>
             }
 
-            {!this.state.isNewTrip && this.state.trips.length > 0 &&
-            <div className='selectTrip'>
-              <label>
+              {!this.state.isNewTrip && this.state.trips.length > 0 &&
+              <div className='selectTrip'>
+                <label>
                 Add to:
                 <select onChange={this.chooseTrip}>
                   {options}
                 </select>
-              </label>
+                </label>
                 {' '} or <button onClick={() => this.startNewTrip(true)}>Start a new trip</button>
-            </div>
+              </div>
             }
 
-            {this.state.isNewTrip && this.state.trips.length > 0 &&
+              {this.state.isNewTrip && this.state.trips.length > 0 &&
               <div className='selectTrip'>
                 <input type='text' onChange={this.handleTripTitle} placeholder='Add new trip' />
-            {' '}or <button onClick={() => this.startNewTrip(false)}>Add to existing trip</button>
-          </div>
+                {' '}or <button onClick={() => this.startNewTrip(false)}>Add to existing trip</button>
+              </div>
             }
-            <div>Activity: <input type='text' onChange={(e) => this.handleActivityTitle(e)} />{' '}</div>
-            <div>{' '}Date:{' '}<input type='date' onChange={this.handleDate} value={moment(this.state.date).format('YYYY-MM-DD')} /> {' '}</div>
-            <div>{' '}City:{' '}<input type='text' onChange={this.handleLocality} value={this.state.locality} />{' '}</div>
-            <div>Country: <input type='text' onChange={this.handleCountry} value={this.state.country} />{' '}</div>
-            <div className='caption'>Caption: <textarea onChange={(e) => this.handleCaption(e)} /></div>
-            <Rating stars={this.state.rating} starClick={this.starClick} isEnabled />
-            <div className='tags'><ReactTags tags={this.state.tags}
-              suggestions={this.state.suggestions}
-              handleDelete={this.handleTagDelete}
-              handleAddition={this.handleTagAddition}
-              autofocus={false}
+              <div>Activity: <input type='text' onChange={(e) => this.handleActivityTitle(e)} />{' '}</div>
+              <div>{' '}Date:{' '}<input type='date' onChange={this.handleDate} value={moment(this.state.date).format('YYYY-MM-DD')} /> {' '}</div>
+              <div>{' '}City:{' '}<input type='text' onChange={this.handleLocality} value={this.state.locality} />{' '}</div>
+              <div>Country: <input type='text' onChange={this.handleCountry} value={this.state.country} />{' '}</div>
+              <div className='caption'>Caption: <textarea onChange={(e) => this.handleCaption(e)} /></div>
+              <Rating stars={this.state.rating} starClick={this.starClick} isEnabled />
+              <div className='tags'><ReactTags tags={this.state.tags}
+                suggestions={this.state.suggestions}
+                handleDelete={this.handleTagDelete}
+                handleAddition={this.handleTagAddition}
+                autofocus={false}
+                placeholder='Add tags (press enter to save)'
              /></div>
-            <button className='share' onClick={this.handleActivity}>Share</button>
+              <button className='share' onClick={this.handleActivity}>Share</button>
+            </div>
+            <div />
           </div>
-          <div/>
-        </div>
 
-      <div />
-      <div className='modal1'>
-        <div/>
-        <div className={this.state.isUploading ? 'backdrop' : 'notUploading'} />
-        <Loading className={this.state.isUploading ? 'uploading' : 'notUploading'} type={'spinningBubbles'} color={'blue'} height='400px' width='400px' />
-      </div>
-      <div/>
-    </div>
+          <div />
+          <div className='modal1'>
+            <div />
+            <div className={this.state.isUploading ? 'backdrop' : 'notUploading'} />
+            <Loading className={this.state.isUploading ? 'uploading' : 'notUploading'} type={'spinningBubbles'} color={'blue'} height='400px' width='400px' />
+          </div>
+          <div />
+        </div>
     }
 
       </div>
