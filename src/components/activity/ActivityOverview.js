@@ -25,12 +25,19 @@ const ActivityOverview = (props) => {
             <div className='activityCaption'>
               {props.activity.caption || ''}
             </div>
-            <div className='activityRating'>
-              <Rating stars={props.activity.rating} isEnabled={false} />
+            <div className='bottom'>
+              <div className='activityRating'>
+                <Rating stars={props.activity.rating} isEnabled={false} />
+              </div>
+              <div className='activityTags'>
+                {props.activity.tags ? Object.keys(props.activity.tags).map((tag) => { return <Link key={tag} to='/search' onClick={() => props.clickToSearch(tag)}><i>#{tag + '  '}</i></Link> }) : []}
+              </div>
             </div>
-            <div className='activityTags'>
-              {props.activity.tags ? Object.keys(props.activity.tags).map((tag) => { return <Link key={tag} to='/search' onClick={() => props.clickToSearch(tag)}><i>#{tag + '  '}</i></Link> }) : []}
-            </div>
+          </div>
+        </div>
+        <div>
+          <div className='activityTitle'>
+            <Link to={'/users/' + props.user}><img src={props.image} alt={props.username} />{props.username || ''}</Link>
           </div>
         </div>
       </div>
