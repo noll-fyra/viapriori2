@@ -51,32 +51,37 @@ class Follow extends React.Component {
   }
   render () {
     const follows = this.state.follows.map((item) => {
-      return <Details
-        key={item[0]}
-        currentUser={this.props.currentUser}
-        userID={item[0]}
-        user={item[1]}
-        type={this.state.type}
-      />
+      return (
+        <div className='detailsThird'>
+          <Details
+            key={item[0]}
+            currentUser={this.props.currentUser}
+            userID={item[0]}
+            user={item[1]}
+            type={this.state.type}
+        />
+        </div>
+      )
     })
     return (
       <div>
         <div className='detailsContainer'>
-          <div />
-          <Details
-            key={this.state.userID}
-            currentUser={this.props.currentUser}
-            userID={this.state.userID}
-            user={this.state.user}
-            type='profile'
-          />
+          <div className='topDetails'>
+            <div />
+            <Details
+              key={this.state.userID}
+              currentUser={this.props.currentUser}
+              userID={this.state.userID}
+              user={this.state.user}
+              type='profile'
+            />
+            <div />
+          </div>
           <div />
         </div>
         <h1 className='following'>{this.state.type === 'following' ? 'Following' : 'Followers'}</h1>
         <div className='detailsContainer'>
-          <div />
           {follows}
-          <div />
         </div>
       </div>
     )

@@ -21,7 +21,8 @@ class App extends Component {
       searchQuery: '',
       addNewActivity: false,
       currentTrip: null,
-      currentUser: {}
+      currentUser: {},
+      isLogin: true
     }
     this.search = search.bind(this)
     this.addNewActivity = this.addNewActivity.bind(this)
@@ -108,7 +109,7 @@ class App extends Component {
             <Route path='/users/:id/following' component={(props) => <Follow currentUser={this.state.currentUser} type={'following'} {...props} />} />
             <Route path='/users/:id/followers' component={(props) => <Follow currentUser={this.state.currentUser} type={'followers'} {...props} />} />
             <PrivateRoute path='/planned/:id' component={(props) => <PlannedActivities clickToSearch={this.clickToSearch} {...props} />} />
-            <PrivateRoute path='/trips/:id' component={(props) => <Trip clickToSearch={this.clickToSearch} currentTrip={this.state.currentTrip} {...props} />} />
+            <Route path='/trips/:id' component={(props) => <Trip clickToSearch={this.clickToSearch} currentTrip={this.state.currentTrip} {...props} />} />
             <Route path='/auth' component={(props) => <Auth isLogin={this.state.isLogin} {...props} />} />
             <NewActivity isEnabled={this.state.addNewActivity} addNewActivity={this.addNewActivity} suggestions={suggestions} setCurrentTrip={this.setCurrentTrip} />
           </div>

@@ -1,4 +1,5 @@
-.detailsContainer {
+.topDetails {
+  width: 100%;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
 }
@@ -13,4 +14,16 @@
   color: white;
   margin-top: 12px;
   padding: 12px;
+}
+
+.detailsThird {
+  width: 33%;
+}
+
+.detailsContainer {
+  width: 100%;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
 }

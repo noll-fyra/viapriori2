@@ -114,10 +114,10 @@ class Details extends React.Component {
           </div>
           }
 
-          {this.props.userID !== window.localStorage[storageKey] && !this.state.isFollowing &&
+          {this.props.userID !== window.localStorage[storageKey] && !this.state.isFollowing && window.localStorage[storageKey] &&
             <div><button onClick={() => this.handleFollow()}>Follow</button></div>
           }
-          {this.props.userID !== window.localStorage[storageKey] && this.state.isFollowing &&
+          {this.props.userID !== window.localStorage[storageKey] && this.state.isFollowing && window.localStorage[storageKey] &&
             <div><button onClick={() => this.handleUnfollow()}>Unfollow</button></div>
           }
         </div>

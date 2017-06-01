@@ -46,10 +46,10 @@ const ActivityOverview = (props) => {
           {props.user !== window.localStorage[storageKey] &&
           <div className='activityTitle'>
             <Link to={'/users/' + props.user}><img src={props.image} alt={props.username} />{props.username || ''}</Link>
-            {(props.type === 'trip' || props.type === 'home') &&
+            {(props.type === 'trip' || props.type === 'home') && window.localStorage[storageKey] &&
             <SaveActivity activityID={props.activityID} />
             }
-            {(props.type === 'saved' || props.type === 'planned') &&
+            {(props.type === 'saved' || props.type === 'planned') && window.localStorage[storageKey] &&
             <UnsaveActivity activityID={props.activityID} />
             }
           </div>

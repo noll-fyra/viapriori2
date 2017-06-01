@@ -209,7 +209,6 @@ class Saved extends React.Component {
           <div className='saved'>
             <SearchForm placeholder='Search your saved activities and planned trips' onChange={this.search} />
             <h3 className='savedHeading'> Saved Activities</h3>
-            {JSON.stringify(this.state)}
             {this.state.savedActivities &&
           reverseSaved.map((activity, index) => {
             return <SavedOverview
@@ -220,7 +219,6 @@ class Saved extends React.Component {
               options={options}
               username={this.state.users[activity.user] && (this.state.users[activity.user]).profile ? (this.state.users[activity.user]).profile.username : ''}
               image={this.state.users[activity.user] && (this.state.users[activity.user]).profile ? (this.state.users[activity.user]).profile.profileImage : ''}
-              clickToSearch={this.props.clickToSearch}
               plannedKeys={this.state.plannedKeys}
               plannedTrips={this.state.plannedTrips}
               createNewPlanned={this.createNewPlanned}

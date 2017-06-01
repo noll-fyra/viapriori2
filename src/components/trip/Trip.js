@@ -1,7 +1,7 @@
 import React from 'react'
 import {SortableContainer, SortableElement, SortableHandle, arrayMove} from 'react-sortable-hoc'
 import ActivityOverview from '../activity/ActivityOverview'
-import db from '../../utils/firebase'
+import db, {storageKey} from '../../utils/firebase'
 import './trip.css'
 
 const DragHandle = SortableHandle(() => <div className='dragHandle'>||||</div>) // This can be any component you want
@@ -9,7 +9,9 @@ const DragHandle = SortableHandle(() => <div className='dragHandle'>||||</div>) 
 const SortableItem = SortableElement(({value, id, clickToSearch, user, username, image, areImagesHidden, type}) => {
   return (
     <li className='sortable'>
+      {window.localStorage[storageKey] && window.localStorage[storageKey] === user &&
       <DragHandle />
+      }
       <ActivityOverview
         activityID={id}
         activity={value}
@@ -137,7 +139,9 @@ class Trip extends React.Component {
         <h3>{this.state.details.title || ''}</h3>
         <div className='tripsContainer'>
           <div className='hideButtonContainer'>
+            {window.localStorage[storageKey] && window.localStorage[storageKey] === this.state.details.user &&
             <button className='hideButton' onClick={this.hideImages}>{this.state.hideImages ? 'Show images' : 'Hide images'}</button>
+            }
           </div>
 
           <SortableList
