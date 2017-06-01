@@ -30,7 +30,7 @@ class Rating extends React.Component {
 
   render () {
     return (
-      <div>
+      <div className='rating' >
         <span className={'star ' + (this.state.isEnabled ? 'starenabled' : 'stardisabled')}
           onClick={() => this.starClick(1)}>{this.state.stars >= 1 ? <img src={require('./filled_star_by_zaff_studio_from_noun_project.png')} alt='filled_star_by_zaff_studio_from_noun_project.png' /> : <img src={require('./unfilled_star_by_zaff_studio_from_noun_project.png')} alt='unfilled_star_by_zaff_studio_from_noun_project.png' />}</span>{' '}
         <span className={'star ' + (this.state.isEnabled ? 'starenabled' : 'stardisabled')}
