@@ -4,6 +4,7 @@ import SavedOverview from './SavedOverview'
 import Planned from '../planned/Planned'
 import search from '../../utils/search'
 import SearchForm from '../search/SearchForm'
+import './saved.css'
 
 class Saved extends React.Component {
   constructor (props) {
@@ -201,12 +202,13 @@ class Saved extends React.Component {
         <SearchForm placeholder='Search saved activities and planned trips' onChange={this.search}/>
         {/* <SearchForm placeholder='Search' onChange={this.search} onKeyUp={(e) => this.handleSearch(e)} /> */}
         {/* <Link to='/saved/search' className='searchButton' ref={this.props.linkToSearch} style={{display: 'none'}} /> */}
-
-
+        <div className="savedContainer">
+        <div>
         <Planned plannedKeys={this.state.plannedKeys}
           plannedTrips={this.state.plannedTrips} />
-          <h1> Saved Activities</h1>
-
+        </div>
+        <div>
+          <h3> Saved Activities</h3>
         {this.state.savedActivities &&
           reverseSaved.map((activity, index) => {
             return <SavedOverview
@@ -220,6 +222,10 @@ class Saved extends React.Component {
             />
           })
         }
+      </div>
+      <div className='final' />
+    </div>
+
       </div>
     )
   }

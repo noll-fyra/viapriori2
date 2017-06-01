@@ -13,7 +13,6 @@ import Saved from '../saved/Saved'
 import db, {auth, storageKey, isAuthenticated, logOut} from '../../utils/firebase'
 import search from '../../utils/search'
 import suggestions from '../../utils/suggestions'
-import './app.css'
 
 class App extends Component {
   constructor (props) {

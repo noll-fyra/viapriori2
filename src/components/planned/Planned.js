@@ -1,6 +1,8 @@
 import React from 'react'
 import PlannedOverview from './PlannedOverview'
 import db, {storageKey} from '../../utils/firebase'
+import './planned.css'
+
 
 class Planned extends React.Component {
   constructor (props) {
@@ -19,14 +21,15 @@ class Planned extends React.Component {
 
   render () {
     return (
-      <div>
-        <h1> Planned Trips</h1>
+  <div>
+        <h3 className='plannedHeading'> Planned </h3>
         {this.props.plannedKeys &&
             this.props.plannedTrips.map((trip, index) => {
               return <PlannedOverview key={this.props.plannedKeys[index]} tripID={this.props.plannedKeys[index]} trip={trip} removePlanned={this.removePlanned}/>
             })
           }
-      </div>
+
+    </div>
     )
   }
 }

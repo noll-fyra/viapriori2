@@ -7,10 +7,3 @@
   grid-template-columns: 1fr 1fr 1fr;
   margin-top: 12px;
 }
-
-.trips {
-  /*width: 100%;*/
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  padding: 0px 24px;
-}

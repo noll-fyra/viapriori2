@@ -6,15 +6,16 @@ import './planned.css'
 // onClick={() => props.changeTripId()}
 const PlannedOverview = (props) => {
   return (
-    <div>
+    <div className='plannedOverview'>
+      <div>
       <Link to={'/planned/' + props.tripID}>
-        <div className='plannedOverview'>
-          <p>{props.trip.title || ''}</p>
-
+          <button>{props.trip.title || ''}</button>
           {/* <img src={props.trip.image} alt={props.trip.title || ''} /> */}
-        </div>
       </Link>
-      <button onClick={() => props.removePlanned(props.tripID)}>Delete Plan</button>
+    </div>
+      <div>
+        <img onClick={() => props.removePlanned(props.tripID)} className='navIcon' src={require('./delete.png')} />
+      </div>
     </div>
   )
 }
