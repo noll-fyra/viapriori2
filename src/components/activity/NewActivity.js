@@ -403,6 +403,7 @@ class NewActivity extends React.Component {
             <Link to={'/trips/' + this.state.tripID} style={{display: 'none'}} onClick={() => this.props.setCurrentTrip(this.state.tripID)} ref={(link) => { this.linkToTrip = link }} />
           </div>
           <div className='modal1'>
+            <Loading className={this.state.isUploading ? 'uploading' : 'notUploading'} type={'spinningBubbles'} color={'blue'} height='63%' width='66.67%' />
             <div className='modal2'>
               <label className='imageLabelActive' style={{backgroundImage: `url(${this.state.image})`, objectFit: 'cover', backgroundSize: 'cover'}}>
                 <span className='postAPhoto'>Post a photo</span>
@@ -452,17 +453,11 @@ class NewActivity extends React.Component {
             </div>
             <div />
           </div>
-
-          <div />
-          <div className='modal1'>
-            <div />
-            <div className={this.state.isUploading ? 'backdrop' : 'notUploading'} />
-            <Loading className={this.state.isUploading ? 'uploading' : 'notUploading'} type={'spinningBubbles'} color={'blue'} height='400px' width='400px' />
-          </div>
           <div />
         </div>
-    }
-
+        }
+        <div />
+        <div />
       </div>
     )
   }

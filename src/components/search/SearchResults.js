@@ -23,6 +23,7 @@ class SearchResults extends React.Component {
 
   componentDidMount () {
     if (this.state.searchQuery) {
+       console.log(this.state.searchQuery)
       let filteredTrips = []
       let tripKeys = []
       let activityKeys = []
@@ -58,6 +59,10 @@ class SearchResults extends React.Component {
 
       db.ref('activities').on('value', (snapshot) => {
         for (var activityId in snapshot.val()) {
+          // console.log(snapshot.val())
+          // console.log(snapshot.val()[activityId])
+          // console.log(snapshot.val()[activityId].locality.toLowerCase())
+          // console.log(snapshot.val()[activityId].locality.toLowerCase().includes(this.state.searchQuery.toLowerCase()) )
           if (snapshot.val()[activityId].title.toLowerCase().includes(this.state.searchQuery.toLowerCase())) {
             activityKeys.push(activityId)
             tripKeys.push(snapshot.val()[activityId].trip)
