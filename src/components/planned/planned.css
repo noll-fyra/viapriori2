@@ -1,0 +1,12 @@
+.plannedOverview{
+
+}
+
+.homeContainer {
+  display: grid;
+  grid-template-columns: 1fr 4fr 1fr;
+}
+
+.trending {
+  padding: 0 12px;
+}
