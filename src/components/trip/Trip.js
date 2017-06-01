@@ -105,8 +105,6 @@ class Trip extends React.Component {
     return (
       <div>
         <h1>{this.state.details.title || ''}</h1>
-        <p>activities{JSON.stringify(this.state.activities)}</p>
-        <p>keys{JSON.stringify(this.state.keys)}</p>
         <SortableList
           url={this.props.match.params.id}
           activities={this.state.activities}
