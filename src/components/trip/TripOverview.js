@@ -14,15 +14,15 @@ const TripOverview = (props) => {
     <div className='tripOverview'>
       <Link to={'/trips/' + props.tripID}>
       <div className='tripOverviewBackdrop' />
+      <img className='tripOverviewImage' src={props.trip.image} alt={props.trip.title} />
       <div className='tripOverviewDetails'>
         {/* <div className='heading'> */}
-          <h3>{props.trip.title|| ''}</h3>
+          <h4 className='heading'>{props.trip.title|| ''} ({length()})</h4>
           {/* <h5 className='subheading'>  {length()}</h5> */}
-          <h5>{length()}</h5>
-          <h3>{averageRating()}</h3>
+          {/* <h6 className='heading'>{length()}</h6> */}
+          <h5 className='heading'>{averageRating()}</h5>
         {/* </div> */}
       </div>
-        <img className='tripOverviewImage' src={props.trip.image} alt={props.trip.title} />
       </Link>
     </div>
   )

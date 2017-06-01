@@ -46,7 +46,6 @@ class Nav extends React.Component {
           </Link>
         </div>
 
-        <div />
 
         <div className='searchNav'>
           <SearchForm className='searchForm' placeholder='Search' value={this.props.searchValue} onChange={this.props.onChange} onKeyUp={this.props.onKeyUp} />
