@@ -6,16 +6,13 @@ import RemoveActivity from '../activity/RemoveActivity'
 import Planned from './Planned'
 import db, {storageKey} from '../../utils/firebase'
 
-const DragHandle = SortableHandle(() => <span>||||||</span>) // This can be any component you want
+const DragHandle = SortableHandle(() => <div className='dragHandle'>||||</div>) // This can be any component you want
 
-const SortableItem = SortableElement(({value, id, url, removeActivity}) => {
+const SortableItem = SortableElement(({value, id, url, removeActivity, clickToSearch, user, username, image, areImagesHidden}) => {
   return (
-    <li>
-      {/* <ActivityOverview activityID={id} activity={value} clickToSearch={clickToSearch} />
-      {value.user !== window.localStorage[storageKey] &&
-      } */}
+    <li className='sortable'>
       <DragHandle />
-      <ActivityOverview activityID={id} activity={value} />
+      <ActivityOverview activityID={id} activity={value} clickToSearch={clickToSearch} user={user} username={username} image={image} areImagesHidden={areImagesHidden} />
       {value.user !== window.localStorage[storageKey] &&
         <div>
           <RemoveActivity activityID={id} activity={value} removeActivity={removeActivity} />
@@ -25,11 +22,12 @@ const SortableItem = SortableElement(({value, id, url, removeActivity}) => {
   )
 })
 
-const SortableList = SortableContainer(({activities, id, url, removeActivity}) => {
+const SortableList = SortableContainer(({activities, id, url, removeActivity, clickToSearch, user, username, image, areImagesHidden}) => {
   return (
     <ul>
       {activities.map((value, index) => (
-        <SortableItem key={`item-${index}`} index={index} value={value} id={id[index]} url={url} removeActivity={removeActivity} />
+        <SortableItem key={`item-${index}`} index={index} value={value} id={id[index]} url={url} clickToSearch={clickToSearch} removeActivity={removeActivity} user={user} username={username} image={image} areImagesHidden={areImagesHidden} />
+
       ))}
     </ul>
   )
@@ -43,12 +41,16 @@ class PlannedActivities extends React.Component {
       savedActivities: [],
       plannedTrips: [],
       plannedKeys: [],
+      username: '',
+      userImage: '',
+      hideImages: false,
       tripId: this.props.match.params.id
     }
 
-    // this.onSortEnd = this.onSortEnd.bind(this)
+    this.onSortEnd = this.onSortEnd.bind(this)
     this.componentUpdates = this.componentUpdates.bind(this)
     this.removeActivity = this.removeActivity.bind(this)
+    this.hideImages = this.hideImages.bind(this)
   }
 
   componentDidMount () {
@@ -122,6 +124,28 @@ class PlannedActivities extends React.Component {
     db.ref('planned/' + this.props.match.params.id + '/activities/' + id).remove()
   }
 
+  hideImages () {
+    this.setState({
+      hideImages: !this.state.hideImages
+    })
+  }
+
+  onSortEnd ({oldIndex, newIndex}) {
+    let activities = this.state.savedActivities
+    let keys = this.state.savedKeys
+    this.setState({
+      savedActivities: arrayMove(activities, oldIndex, newIndex),
+      savedkeys: arrayMove(keys, oldIndex, newIndex)
+    })
+    db.ref('planned/' + this.props.match.params.id + '/activities').once('value').then((snap) => {
+      let newObj = snap.val() || {}
+      this.state.savedKeys.forEach((key, index) => {
+        newObj[key] = index
+      })
+      db.ref('planned/' + this.props.match.params.id + '/activities').set(newObj)
+    })
+  }
+
   render () {
     let options = this.state.plannedTrips.map((trip, index) => {
       return <option key={this.state.plannedKeys[index]}>{trip.title}</option>
@@ -129,11 +153,12 @@ class PlannedActivities extends React.Component {
 
     return (
       <div className='plannedContainer'>
+
         <div className='planned'>
           <Planned plannedKeys={this.state.plannedKeys} plannedTrips={this.state.plannedTrips} />
         </div>
         <div className='saved'>
-          {/* <h3> Saved Activities</h3> */}
+          <h3> Saved Activities</h3>
           <SortableList
             activities={this.state.savedActivities}
             onSortEnd={this.onSortEnd}
@@ -142,22 +167,18 @@ class PlannedActivities extends React.Component {
             id={this.state.savedKeys}
             url={this.props.match.params.id}
             removeActivity={this.removeActivity}
+            clickToSearch={this.props.clickToSearch}
+          // user={this.state.details.user}
+          // username={this.state.username}
+          // image={this.state.userImage}
+            areImagesHidden={this.state.hideImages}
         />
         </div>
-        {/* {this.state.savedActivities &&
-          this.state.savedActivities.map((activity, index) => {
-            return <SavedOverview
-              key={this.state.savedKeys[index]}
-              activityID={this.state.savedKeys[index]}
-              activity={activity}
-              options={options}
-              plannedKeys={this.state.plannedKeys}
-              plannedTrips={this.state.plannedTrips}
-              createNewPlanned={this.createNewPlanned}
-            />
-          })
-        } */}
-        <div className='final' />
+
+        <div>
+          <button className='saved' onClick={this.hideImages}>{this.state.hideImages ? 'Show images' : 'Hide images'}</button>
+        </div>
+        {/* <div className='final' /> */}
 
       </div>
     )

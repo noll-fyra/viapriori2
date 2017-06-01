@@ -1,21 +1,13 @@
-/*.plannedOverview{
-  margin-top: 12px;
-  padding: 0 12px;
-  text-align: center;
-}*/
 .plannedContainer {
   display: grid;
   grid-template-columns: 1fr 4fr 1fr;
-  /*margin-bottom: 200px;*/
 }
 .plannedOverview {
   display: grid;
   grid-template-columns: 10fr 1fr;
   text-align: center;
-  /*width: 100%;*/
   padding: 0 0 0 12px;
   margin-top: 12px;
-  /*padding: 0;*/
 }
 
 .plannedOverview button {
@@ -40,3 +32,19 @@
   text-align: center;
   padding: 0 12px;
 }
+
+.dragHandle {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  justify-content: center;
+  padding-top: 12px;
+  font-size: 24px;
+  font-weight: 900;
+  cursor: grab;
+}
+
+/*.sortable {
+  display: flex;
+  flex-flow: row;
+}*/

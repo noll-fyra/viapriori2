@@ -215,6 +215,7 @@ class Saved extends React.Component {
             return <SavedOverview
               key={reverseKeys[index]}
               activityID={reverseKeys[index]}
+              clickToSearch={this.props.clickToSearch}
               activity={activity}
               options={options}
               username={this.state.users[activity.user] && (this.state.users[activity.user]).profile ? (this.state.users[activity.user]).profile.username : ''}
