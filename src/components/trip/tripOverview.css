@@ -8,37 +8,36 @@
   flex-wrap: wrap;
 }
 .tripOverview {
-  height:450px;
+  height:350px;
   width:550px;
   position: relative;
   padding: 12px;
   float: left;
   display: flex;
-  align-content: space-between;
+  /*align-content: space-between;*/
 }
 .tripOverviewImage{
-  display:block;
+  /*display:block;*/
   height:350px;
   width:550px;
-  position: relative;
+  position: absolute;
   z-index: 1;
 }
 .tripOverviewDetails {
   display:flex;
+  background-color: rgba(252,247,248, 0.8);
   justify-content: space-between;
-  position: relative;
-  width: 550px;
-  height: 50px;
+  position: absolute;
+  height: 350px;
+  width: 200px;
   color: #4E8098;
   z-index: 2;
   flex-wrap: wrap;
-  align-items: center;
+  /*align-content: space-between;*/
 }
 .heading{
-  width:350px;
   display:flex;
   flex-wrap: wrap;
-  justify-content: space-between;
 
 }
 .subheading{

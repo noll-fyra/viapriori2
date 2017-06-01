@@ -60,6 +60,7 @@ class NewActivity extends React.Component {
   }
 
   componentDidMount () {
+
     // get all the user's trips
     db.ref('users/' + window.localStorage[storageKey] + '/trips').once('value').then((snapshot) => {
       if (!snapshot.val()) {
@@ -338,7 +339,6 @@ class NewActivity extends React.Component {
 
             let currentRating = snap.val().totalRating || 0
             newObj['totalRating'] = currentRating + this.state.rating
-
             let currentStart = snap.val().start
             let currentEnd = snap.val().end
             newObj['start'] = currentStart < this.state.date ? currentStart : this.state.date
@@ -348,7 +348,7 @@ class NewActivity extends React.Component {
           })
 
         // add tags to all and trending
-          this.state.tags.forEach((tag) => {
+          .then(()=>{this.state.tags.forEach((tag) => {
             let lowerTag = tag.text.toLowerCase()
             updateDBPlusOne('all/tags/', lowerTag)
             updateDBPlusOne('trending/tags/' + moment().format('dddd'), lowerTag)
@@ -367,10 +367,12 @@ class NewActivity extends React.Component {
           this.setState({
             isUploading: false
           })
-
+        })
+        .then(()=>{
           this.resetState()
           this.props.addNewActivity(false)
           this.linkToTrip.handleClick(new window.MouseEvent('click'))
+        })
         })
       })
     }
