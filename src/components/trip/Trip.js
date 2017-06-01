@@ -3,14 +3,22 @@ import {SortableContainer, SortableElement, SortableHandle, arrayMove} from 'rea
 import ActivityOverview from '../activity/ActivityOverview'
 import SaveActivity from '../activity/SaveActivity'
 import db, {storageKey} from '../../utils/firebase'
+import './trip.css'
 
-const DragHandle = SortableHandle(() => <span>||||||</span>) // This can be any component you want
+const DragHandle = SortableHandle(() => <div className='dragHandle'>||||</div>) // This can be any component you want
 
-const SortableItem = SortableElement(({value, id, clickToSearch, url, user, username, image}) => {
+const SortableItem = SortableElement(({value, id, clickToSearch, url, user, username, image, areImagesHidden}) => {
   return (
-    <li>
+    <li className='sortable'>
       <DragHandle />
-      <ActivityOverview activityID={id} activity={value} clickToSearch={clickToSearch} user={user} username={username} image={image} />
+      <ActivityOverview
+        activityID={id}
+        activity={value}
+        clickToSearch={clickToSearch}
+        user={user} username={username}
+        image={image}
+        areImagesHidden={areImagesHidden}
+      />
       {value.user !== window.localStorage[storageKey] &&
         <div>
           <SaveActivity activityID={id} activity={value} url={url} />
@@ -20,11 +28,19 @@ const SortableItem = SortableElement(({value, id, clickToSearch, url, user, user
   )
 })
 
-const SortableList = SortableContainer(({activities, id, clickToSearch, url, user, username, image}) => {
+const SortableList = SortableContainer(({activities, id, clickToSearch, url, user, username, image, areImagesHidden}) => {
   return (
     <ul>
       {activities.map((value, index) => (
-        <SortableItem key={`item-${index}`} index={index} value={value} id={id[index]} clickToSearch={clickToSearch} url={url} user={user} username={username} image={image} />
+        <SortableItem key={`item-${index}`}
+          index={index}
+          value={value}
+          id={id[index]}
+          clickToSearch={clickToSearch}
+          url={url} user={user}
+          username={username}
+          image={image}
+          areImagesHidden={areImagesHidden} />
       ))}
     </ul>
   )
@@ -39,10 +55,12 @@ class Trip extends React.Component {
       details: {},
       currentTrip: props.currentTrip || props.match.params.id,
       username: '',
-      userImage: ''
+      userImage: '',
+      hideImages: false
     }
-    this.onSortEnd = this.onSortEnd.bind(this)
     this.updateTrip = this.updateTrip.bind(this)
+    this.onSortEnd = this.onSortEnd.bind(this)
+    this.hideImages = this.hideImages.bind(this)
   }
 
   componentDidMount () {
@@ -109,24 +127,37 @@ class Trip extends React.Component {
     })
   }
 
+  hideImages () {
+    this.setState({
+      hideImages: !this.state.hideImages
+    })
+  }
+
   render () {
     return (
       <div>
-        {JSON.stringify(this.state.details)}
-        {JSON.stringify(this.state.details.user)}
         <h1>{this.state.details.title || ''}</h1>
-        <SortableList
-          url={this.props.match.params.id}
-          activities={this.state.activities}
-          onSortEnd={this.onSortEnd}
-          useDragHandle
-          lockAxis='y'
-          id={this.state.keys}
-          clickToSearch={this.props.clickToSearch}
-          user={this.state.details.user}
-          username={this.state.username}
-          image={this.state.userImage}
+        <div className='tripsContainer'>
+          <div>
+            <button onClick={this.hideImages}>{this.state.hideImages ? 'Show images' : 'Hide images'}</button>
+          </div>
+
+          <SortableList
+            url={this.props.match.params.id}
+            activities={this.state.activities}
+            onSortEnd={this.onSortEnd}
+            useDragHandle
+            lockAxis='y'
+            id={this.state.keys}
+            clickToSearch={this.props.clickToSearch}
+            user={this.state.details.user}
+            username={this.state.username}
+            image={this.state.userImage}
+            hideImages={this.hideImages}
+            areImagesHidden={this.state.hideImages}
         />
+          <div />
+        </div>
       </div>
     )
   }

@@ -2,6 +2,7 @@ import React from 'react'
 import {Link} from 'react-router-dom'
 import moment from 'moment'
 import Rating from '../rating/Rating'
+import {storageKey} from '../../utils/firebase'
 import './activityOverview.css'
 
 const ActivityOverview = (props) => {
@@ -17,6 +18,7 @@ const ActivityOverview = (props) => {
             {moment(props.activity.date).format('YYYY-MM-DD') || ''}
           </div>
         </div>
+        {!props.areImagesHidden &&
         <div className='activityOthers'>
           <div className='activityImage'>
             <img src={props.activity.image} alt={props.activity.title} />
@@ -35,10 +37,13 @@ const ActivityOverview = (props) => {
             </div>
           </div>
         </div>
+      }
         <div>
+          {props.user !== window.localStorage[storageKey] &&
           <div className='activityTitle'>
             <Link to={'/users/' + props.user}><img src={props.image} alt={props.username} />{props.username || ''}</Link>
           </div>
+          }
         </div>
       </div>
     </div>

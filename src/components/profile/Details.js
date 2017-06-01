@@ -65,9 +65,6 @@ class Details extends React.Component {
             db.ref('users/' + window.localStorage[storageKey] + '/profile').update({
               profileImage: url
             })
-            if (self.props.currentUser.profile && self.props.currentUser.profile.username) {
-              updateDB('usernames/', self.props.currentUser.profile.username, url)
-            }
           })
         })
       })

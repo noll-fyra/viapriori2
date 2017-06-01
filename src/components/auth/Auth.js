@@ -2,6 +2,7 @@ import React from 'react'
 import {Redirect} from 'react-router-dom'
 import Flash from '../flash/Flash'
 import db, {auth} from '../../utils/firebase'
+import updateDB from '../../utils/updateDB'
 
 class Auth extends React.Component {
   constructor (props) {
@@ -91,7 +92,7 @@ class Auth extends React.Component {
       })
       return
     }
-    if (this.state.allUsernames[this.state.username]) {
+    if (Object.values(this.state.allUsername).includes(this.state.username)) {
       this.setState({
         error: true,
         message: 'That username is already taken.',
@@ -107,11 +108,7 @@ class Auth extends React.Component {
         uid: auth.currentUser.uid,
         username: this.state.username
       })
-      db.ref('usernames').once('value').then((snap) => {
-        let newObj = snap.val() || {}
-        newObj[this.state.username] = true
-        db.ref('usernames').set(newObj)
-      })
+      updateDB('usernames', auth.currentUser.uid, this.state.username)
       this.setState({
         currentUser: auth.currentUser,
         redirectToReferrer: true
