@@ -1,13 +1,12 @@
 import React from 'react'
 import {SortableContainer, SortableElement, SortableHandle, arrayMove} from 'react-sortable-hoc'
 import ActivityOverview from '../activity/ActivityOverview'
-import SaveActivity from '../activity/SaveActivity'
-import db, {storageKey} from '../../utils/firebase'
+import db from '../../utils/firebase'
 import './trip.css'
 
 const DragHandle = SortableHandle(() => <div className='dragHandle'>||||</div>) // This can be any component you want
 
-const SortableItem = SortableElement(({value, id, clickToSearch, url, user, username, image, areImagesHidden}) => {
+const SortableItem = SortableElement(({value, id, clickToSearch, user, username, image, areImagesHidden, type}) => {
   return (
     <li className='sortable'>
       <DragHandle />
@@ -19,17 +18,13 @@ const SortableItem = SortableElement(({value, id, clickToSearch, url, user, user
         username={username}
         image={image}
         areImagesHidden={areImagesHidden}
+        type={type}
       />
-      {value.user !== window.localStorage[storageKey] &&
-        <div>
-          <SaveActivity activityID={id} activity={value} url={url} />
-        </div>
-      }
     </li>
   )
 })
 
-const SortableList = SortableContainer(({activities, id, clickToSearch, url, user, username, image, areImagesHidden}) => {
+const SortableList = SortableContainer(({activities, id, clickToSearch, user, username, image, areImagesHidden, type}) => {
   return (
     <ul>
       {activities.map((value, index) => (
@@ -38,11 +33,12 @@ const SortableList = SortableContainer(({activities, id, clickToSearch, url, use
           value={value}
           id={id[index]}
           clickToSearch={clickToSearch}
-          url={url}
           user={user}
           username={username}
           image={image}
-          areImagesHidden={areImagesHidden} />
+          areImagesHidden={areImagesHidden}
+          type={type}
+        />
       ))}
     </ul>
   )
@@ -145,7 +141,6 @@ class Trip extends React.Component {
           </div>
 
           <SortableList
-            url={this.props.match.params.id}
             activities={this.state.activities}
             onSortEnd={this.onSortEnd}
             useDragHandle
@@ -156,6 +151,7 @@ class Trip extends React.Component {
             username={this.state.username}
             image={this.state.userImage}
             areImagesHidden={this.state.hideImages}
+            type={'trip'}
         />
           <div />
         </div>

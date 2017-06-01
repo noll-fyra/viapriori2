@@ -1,8 +1,7 @@
 import React from 'react'
 import moment from 'moment'
-import db, {storageKey} from '../../utils/firebase'
+import db from '../../utils/firebase'
 import ActivityOverview from '../activity/ActivityOverview'
-import RemoveActivity from '../activity/RemoveActivity'
 
 class SavedOverview extends React.Component {
   constructor (props) {
@@ -17,7 +16,6 @@ class SavedOverview extends React.Component {
     this.addActivityToNewPlanned = this.addActivityToNewPlanned.bind(this)
     this.addActivityToExisting = this.addActivityToExisting.bind(this)
     this.addSavedToAllAndTrending = this.addSavedToAllAndTrending.bind(this)
-    this.removeActivity = this.removeActivity.bind(this)
     this.chooseTrip = this.chooseTrip.bind(this)
   }
 
@@ -67,10 +65,6 @@ class SavedOverview extends React.Component {
     })
   }
 
-  removeActivity () {
-    db.ref('users/' + window.localStorage[storageKey] + '/saved/' + this.props.activityID).remove()
-  }
-
   chooseTrip (e) {
     this.setState({
       plannedIndex: e.target.selectedIndex
@@ -80,16 +74,21 @@ class SavedOverview extends React.Component {
   render () {
     return (
       <div>
-
-        <ActivityOverview clickToSearch={this.props.clickToSearch} activityID={this.props.activityID} activity={this.props.activity}/>
-          {this.props.plannedKeys.length === 0 &&
-            <div>
-            <label>
-              <input value={this.state.newPlannedTitle} type='text' placeholder='New trip title' onChange={this.handlePlannedTitle} />
-              <button onClick={() => this.addActivityToNewPlanned()}>Add activity</button>
-            </label>
-          </div>
-
+        <ActivityOverview
+          activity={this.props.activity}
+          activityID={this.props.activityID}
+          clickToSearch={this.props.clickToSearch}
+          user={this.props.activity.user}
+          username={this.props.username || 'user'}
+          image={this.props.image || ''}
+          areImagesHidden={false}
+          type='saved'
+       />
+        {this.props.plannedKeys.length === 0 &&
+        <label>
+          <input value={this.state.newPlannedTitle} type='text' placeholder='New trip title' onChange={this.handlePlannedTitle} />
+          <button onClick={() => this.addActivityToNewPlanned()}>Add activity</button>
+        </label>
           }
 
         {!this.state.isNewPlanned && this.props.plannedKeys.length > 0 &&
@@ -114,8 +113,6 @@ class SavedOverview extends React.Component {
           <p>or <button onClick={() => this.switchNewPlanned()}>Add to an existing plan</button></p>
         </div>
           }
-        <RemoveActivity activityID={this.props.activityID} activity={this.props.activity} removeActivity={this.removeActivity} />
-        {/* <button onClick={() => this.removeActivity()}>Unsave</button> */}
       </div>
     )
   }

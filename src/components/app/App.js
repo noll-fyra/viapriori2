@@ -98,17 +98,16 @@ class App extends Component {
             onKeyUp={(e) => this.handleSearch(e)}
             linkToSearch={(ref) => { this.linkToSearch = ref }}
           />
-          {/* <div className='topNav topNavBG' /> */}
 
           <div className='bodyContainer'>
-            <Route exact path='/' component={() => <Home clickToSearch={this.clickToSearch} />} />
+            <Route exact path='/' component={(props) => <Home clickToSearch={this.clickToSearch} {...props} />} />
             <Route path='/search' component={(props) => <SearchResults searchQuery={this.state.searchQuery} clickToSearch={this.clickToSearch} {...props} />} />
-            <PrivateRoute path='/saved' component={(props) => <Saved clickToSearch={this.clickToSearch} {...props}/>} />
+            <PrivateRoute path='/saved' component={(props) => <Saved clickToSearch={this.clickToSearch} {...props} />} />
             <Route exact path='/profile' component={(props) => <Profile currentUser={this.state.currentUser} {...props} />} />
             <Route exact path='/users/:id' component={(props) => <Profile currentUser={this.state.currentUser} {...props} />} />
             <Route path='/users/:id/following' component={(props) => <Follow currentUser={this.state.currentUser} type={'following'} {...props} />} />
             <Route path='/users/:id/followers' component={(props) => <Follow currentUser={this.state.currentUser} type={'followers'} {...props} />} />
-            <PrivateRoute path='/planned/:id' component={(props) => <PlannedActivities clickToSearch={this.clickToSearch} {...props}/>} />
+            <PrivateRoute path='/planned/:id' component={(props) => <PlannedActivities clickToSearch={this.clickToSearch} {...props} />} />
             <PrivateRoute path='/trips/:id' component={(props) => <Trip clickToSearch={this.clickToSearch} currentTrip={this.state.currentTrip} {...props} />} />
             <Route path='/auth' component={(props) => <Auth isLogin={this.state.isLogin} {...props} />} />
             <NewActivity isEnabled={this.state.addNewActivity} addNewActivity={this.addNewActivity} suggestions={suggestions} setCurrentTrip={this.setCurrentTrip} />

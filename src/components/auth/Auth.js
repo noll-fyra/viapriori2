@@ -92,7 +92,7 @@ class Auth extends React.Component {
       })
       return
     }
-    if (Object.values(this.state.allUsername).includes(this.state.username)) {
+    if (Object.values(this.state.allUsernames).includes(this.state.username)) {
       this.setState({
         error: true,
         message: 'That username is already taken.',

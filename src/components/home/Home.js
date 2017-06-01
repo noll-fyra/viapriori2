@@ -3,7 +3,6 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 import ActivityOverview from '../activity/ActivityOverview'
 import db, {storageKey} from '../../utils/firebase'
 import {trendingObjectToArray} from '../../utils/format'
-import SaveActivity from '../activity/SaveActivity'
 import './home.css'
 
 class Home extends React.Component {
@@ -98,12 +97,8 @@ class Home extends React.Component {
             image={activity[1].user && (this.state.users[activity[1].user]).profile && (this.state.users[activity[1].user]).profile.profileImage ? this.state.users[activity[1].user].profile.profileImage : 'yo'}
             user={activity[1].user || 'hello'}
             username={activity[1].user && this.state.users[activity[1].user] && (this.state.users[activity[1].user]).profile ? (this.state.users[activity[1].user]).profile.username : 'goodbye'}
+            type='home'
            />
-          {activity[1].user !== window.localStorage[storageKey] && window.localStorage[storageKey] &&
-            <div>
-              <SaveActivity key={activity[0]} activityID={activity[0]} activity={activity[1]} />
-            </div>
-          }
         </div>
       )
     })
