@@ -93,7 +93,7 @@ Firebase works client side to generate a unique key before pushing to the databa
 To get the data:
 ```javascript
 firebase.database().ref('/path/to/add/to').on('value', snapshot => {
-  //do something with snapshot.val()
+  // do something with snapshot.val()
 })
 ```
 Firebase is a real-time database that can push data when an event listener is set up to watch for changes to the database.
@@ -102,6 +102,12 @@ Firebase is a real-time database that can push data when an event listener is se
 Firebase storage works similarly:
 ```javascript
 firebase.storage().ref('path/to/add/to').put('itemToStore')
+```
+Retrieve files via a callback:
+```javascript
+firebase.storage().ref('path/to/add/to').getDownloadURL().then(url => {
+  // do something with the url
+})
 ```
 
 #### New Activities
