@@ -106,7 +106,8 @@ class Auth extends React.Component {
       db.ref('users/' + auth.currentUser.uid + '/profile').set({
         email: this.state.email,
         uid: auth.currentUser.uid,
-        username: this.state.username
+        username: this.state.username,
+        profileImage: 'http://www.planwallpaper.com/static/images/maxresdefault_8yZPhSS.jpg'
       })
       updateDB('usernames', auth.currentUser.uid, this.state.username)
       this.setState({

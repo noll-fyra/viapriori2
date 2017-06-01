@@ -10,7 +10,6 @@ class Profile extends React.Component {
     this.state = {
       currentUser: props.currentUser,
       user: {},
-      keys: [],
       trips: [],
       userID: props.match.params.id || window.localStorage[storageKey]
     }
@@ -23,14 +22,13 @@ class Profile extends React.Component {
       })
       if (snapshot.val() && snapshot.val().trips) {
         let keys = Object.keys(snapshot.val().trips)
-        this.setState({
-          keys: keys
-        })
-        let trips = keys.slice()
+        let trips = new Array(keys.length).fill([])
         for (var key in snapshot.val().trips) {
           let ind = keys.indexOf(key)
+          console.log(ind, key)
           db.ref('trips/' + key).once('value').then((snap) => {
-            trips[ind] = snap.val()
+            trips[ind] = [keys[ind], snap.val()]
+            console.log(trips)
             this.setState({
               trips: trips
             })
@@ -45,13 +43,14 @@ class Profile extends React.Component {
   }
 
   render () {
-    const reverseTrips = this.state.trips.slice().reverse().map((trip, index) => {
-      return <TripOverview key={this.state.keys.slice().reverse()[index]} tripID={this.state.keys.slice().reverse()[index]} trip={trip} />
+    const reverseTrips = this.state.trips.slice().reverse().map((trip) => {
+      return <TripOverview key={trip[0]} tripID={trip[0]} trip={trip[1]} />
     })
     return (
       <div className='profileContainer'>
         <div className='detailsContainer'>
           <div />
+          {JSON.stringify(this.state.trips)}
           <Details
             currentUser={this.state.currentUser}
             userID={this.state.userID}

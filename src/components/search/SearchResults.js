@@ -117,9 +117,9 @@ class SearchResults extends React.Component {
         activity={activity}
         clickToSearch={this.props.clickToSearch}
       />
-      {activity.user !== window.localStorage[storageKey] &&
+        {activity.user !== window.localStorage[storageKey] &&
         <div>
-          <SaveActivity key={index} activityID={this.state.activityId[index]} activity={activity}/>
+          <SaveActivity key={index} activityID={this.state.activityId[index]} activity={activity} />
           </div>
 
       }</div>
