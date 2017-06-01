@@ -38,29 +38,61 @@ class Nav extends React.Component {
 
   render () {
     return (
-      <nav className='topNav'>
-        <Link to='/'>Via Postale</Link>
-        <SearchForm placeholder='Search' value={this.props.searchValue} onChange={this.props.onChange} onKeyUp={this.props.onKeyUp} />
-        <Link to={'/search'} className='searchButton' ref={this.props.linkToSearch} style={{display: 'none'}} />
+      <nav>
+        <div className='logoNav'>
+          <Link to='/' className='logoNav'>
+            <img className='logo' src={require('./logo.png')} alt='Via Postale' />
+            <div className='viaPostale'>Via Postale</div>
+          </Link>
+        </div>
 
-        {!this.state.isAuthenticated &&
-          <span>
-            <Link to='/auth' onClick={() => this.props.isLogin(true)}>Login</Link>
-            <Link to='/auth' onClick={() => this.props.isLogin(false)}>Register</Link>
-          </span>
-        }
+        <div />
+
+        <div className='searchNav'>
+          <SearchForm className='searchForm' placeholder='Search' value={this.props.searchValue} onChange={this.props.onChange} onKeyUp={this.props.onKeyUp} />
+          <Link to={'/search'} className='searchButton' ref={this.props.linkToSearch} style={{display: 'none'}} />
+          {/* <img className='searchIcon' src={require('./search_by_deepz_from_noun_project.png')} alt='search_by_deepz_from_noun_project.png' /> */}
+          {/* </Link> */}
+        </div>
 
         {this.state.isAuthenticated &&
-          <span className='sideNav'>
-            <img onClick={() => this.props.addNewActivity(true)} className='newIcon' src={require('./new_by_setyo_from_noun_project.png')} />
-            <Link to='/saved'><img className='savedIcon' src={require('./saved_by_ayasofya_from_noun_project.png')} /></Link>
-            <Link to='/profile'>
-              <img className='profileIcon' src={require('./profile_by_icongeek_from_noun_project.png')} />
-            </Link>
-            <Link to='/' onClick={this.logOut}><img className='logoutIcon' src={require('./logout_by_myladkings_from_noun_project.png')} /></Link>
-
-          </span>
+        <div className='newContainer'>
+          <Link to='#' className='authenticate' onClick={() => this.props.addNewActivity(true)}>
+            {/* <img onClick={() => this.props.addNewActivity(true)} className='navIcon addNewActivity' src={require('./new_by_setyo_from_noun_project.png')} /> */}
+            +New Activity
+          </Link>
+        </div>
         }
+
+        {!this.state.isAuthenticated &&
+        <div />
+        }
+
+        <div className='sideNav'>
+          {!this.state.isAuthenticated &&
+          <div className='notAuthenticatedContainer'>
+            <Link className='authenticate' to='/auth' onClick={() => this.props.isLogin(true)}>Login</Link>
+            <Link className='authenticate' to='/auth' onClick={() => this.props.isLogin(false)}>Register</Link>
+          </div>
+        }
+
+          {this.state.isAuthenticated &&
+          <div className='authenticatedContainer'>
+            <Link className='authenticate' to='/saved'>
+              {/* <img className='navIcon' src={require('./saved_by_ayasofya_from_noun_project.png')} /> */}
+              Saved
+            </Link>
+            <Link className='authenticate' to='/profile'>
+              {/* <img className='navIcon' src={require('./profile_by_icongeek_from_noun_project.png')} /> */}
+              Profile
+            </Link>
+            <Link className='authenticate' to='/' onClick={this.logOut}>
+              {/* <img className='navIcon' src={require('./logout_by_myladkings_from_noun_project.png')} /> */}
+              Logout
+            </Link>
+          </div>
+        }
+        </div>
       </nav>
     )
   }

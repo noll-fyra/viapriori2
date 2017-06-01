@@ -93,7 +93,7 @@ Firebase works client side to generate a unique key before pushing to the databa
 To get the data:
 ```javascript
 firebase.database().ref('/path/to/add/to').on('value', snapshot => {
-  //do something with snapshot.val()
+  // do something with snapshot.val()
 })
 ```
 Firebase is a real-time database that can push data when an event listener is set up to watch for changes to the database.
@@ -102,6 +102,12 @@ Firebase is a real-time database that can push data when an event listener is se
 Firebase storage works similarly:
 ```javascript
 firebase.storage().ref('path/to/add/to').put('itemToStore')
+```
+Retrieve files via a callback:
+```javascript
+firebase.storage().ref('path/to/add/to').getDownloadURL().then(url => {
+  // do something with the url
+})
 ```
 
 #### New Activities
@@ -125,6 +131,9 @@ Because Firebase database and storage require callbacks to access the stored dat
 #### State management
 It is often unclear where state should exist, and when the component life cycle is activated. In particular, _following_ and _followers_ were moved onto their own pages to make state management easier, at the cost of user experience. The _Follow_ and _Unfollow_ buttons are especially buggy.
 
+#### Image orientation
+We have encountered problems with displaying the uploaded images correctly; a huge contributor to the issue is that the iPhone 'sanitises' EXIF data before passing it to the browser, which makes it impossible to correct the image based on its orientation value.
+
 ### Future
 This project has immense room to grow. Its primary use case will be as a native mobile app, which will have to be built with similar principles in mind. It can also use an improved recommendation engine that uses big data to predict the attractiveness of certain activities to users to improve their trip. It can also benefit from integrated social functions to help users share their trips, as well as from collaborative features for group events.
 
@@ -147,11 +156,11 @@ This is a live project; all code contributions are welcome.
 
 ### Image credits:
 - Logout: myladkings | Noun Project
-- New: setyo | Noun Project
+- New: Setyo Ari Wibowo | Noun Project
 - Profile: icongeek | Noun Project
 - Profile: jivan | Noun Project
-- Saved: ayasofya | Noun Project
-- Search: deepz | Noun Project
+- Saved: Aya Sofya | Noun Project
+- Search: Deepz | Noun Project
 - Logo: Max Alexander Ng
 
 ### Inspirations:
