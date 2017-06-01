@@ -15,7 +15,7 @@ class Home extends React.Component {
       activities: [],
       trending: [[], [], [], []],
       numberToShow: 5,
-      total: 100,
+      total: 0,
       hasMore: true,
       filter: '',
       filteredKeys: [],
@@ -79,10 +79,10 @@ class Home extends React.Component {
 
   render () {
     // sort latest first and show top 30 trending activities, your own activities and those from users you follow
-    const reverseActivities = this.state.activities.filter((activity) => { return this.state.filter.includes(activity[1].user) || this.state.trending[2].slice(0, 30).includes(activity[0]) }).slice(0, this.state.numberToShow).reverse().map((activity, index) => {
+    const reverseActivities = this.state.activities.filter((activity) => { return this.state.filter.includes(activity[1].user) || this.state.trending[2].slice(0, 30).includes(activity[0]) }).reverse().slice(0, this.state.numberToShow).map((activity, index) => {
       return (
         <div className='homeActivityOverview'>
-          <ActivityOverview key={activity[0]} activityID={activity[0]} activity={activity[1]} clickToSearch={this.props.clickToSearch} />
+          <ActivityOverview key={activity[0]} activityID={activity[0]} activity={activity[1]} clickToSearch={this.props.clickToSearch} areImagesHidden={false} />
           {activity[1].user !== window.localStorage[storageKey] && window.localStorage[storageKey] &&
             <div>
               <SaveActivity key={activity[0]} activityID={activity[0]} activity={activity[1]} />

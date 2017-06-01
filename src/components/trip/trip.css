@@ -1,0 +1,20 @@
+.tripsContainer {
+  display: grid;
+  grid-template-columns: 1fr 4fr 1fr;
+}
+
+.dragHandle {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  justify-content: center;
+  padding-top: 12px;
+  font-size: 24px;
+  font-weight: 900;
+  cursor: grab;
+}
+
+.sortable {
+  display: flex;
+  flex-flow: row;
+}
