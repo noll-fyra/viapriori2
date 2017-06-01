@@ -25,10 +25,10 @@ class Profile extends React.Component {
         let trips = new Array(keys.length).fill([])
         for (var key in snapshot.val().trips) {
           let ind = keys.indexOf(key)
-          console.log(ind, key);
+          console.log(ind, key)
           db.ref('trips/' + key).once('value').then((snap) => {
             trips[ind] = [keys[ind], snap.val()]
-            console.log(trips);
+            console.log(trips)
             this.setState({
               trips: trips
             })
