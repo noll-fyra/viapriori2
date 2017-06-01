@@ -1,28 +1,14 @@
-.searchbar {
-  height: 50px;
-  width: 400px;
-  margin-top: auto;
-  margin-bottom: auto;
-  position:relative;
+.searchContainer {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-flow: row;
+  align-items: center;
 }
-/*.searchwrap{
-  display: inline-block;
-  margin-top: auto;
-  margin-bottom: auto;
-}*/
-.search {
-  height:40px;
-  width:40px;
-  margin-top: auto;
-  margin-bottom: auto;
-  position:relative;
-  left:5px;
-}
-.search-container{
-  height:50px;
-  width:450px;
-  display:flex;
-  /*margin-top: auto;
-  margin-bottom: auto;*/
-  /*display: inline-block;*/
+
+.searchBar {
+  height: 100%;
+  width: 100%;
+  margin: 0 auto;
+  font-size: 24px;
 }

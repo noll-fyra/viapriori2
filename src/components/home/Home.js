@@ -5,6 +5,7 @@ import db, {storageKey} from '../../utils/firebase'
 import {trendingObjectToArray} from '../../utils/format'
 import SaveActivity from '../activity/SaveActivity'
 import LinkToTrips from '../activity/LinkToTrips'
+import './home.css'
 
 class Home extends React.Component {
   constructor (props) {
@@ -77,7 +78,6 @@ class Home extends React.Component {
   }
 
   render () {
-    console.log(window.localStorage[storageKey])
     // sort latest first and show top 30 trending activities, your own activities and those from users you follow
     const reverseActivities = this.state.activities.filter((activity) => { return this.state.filter.includes(activity[1].user) || this.state.trending[2].slice(0, 30).includes(activity[0]) }).slice(0, this.state.numberToShow).reverse().map((activity, index) => {
       return (
@@ -93,15 +93,15 @@ class Home extends React.Component {
     })
 
     return (
-      <div>
+      <div className='homeContainer'>
         <div className='trending'>
-          <b>Trending</b>
+          <h3>Trending</h3>
           <ul>
-            <li><b>countries</b></li>
+            <li><b>Cities</b></li>
+            {this.state.trending[1].slice(0, 10).map((tag, index) => { return <li className='trendingTag' key={tag + index}><button onClick={() => this.props.clickToSearch(tag)}>{tag}</button></li> })}
+            <li><b>Countries</b></li>
             {this.state.trending[0].slice(0, 10).map((tag, index) => { return <li key={tag + index}><button onClick={() => this.props.clickToSearch(tag)}>{tag}</button></li> })}
-            <li><b>cities</b></li>
-            {this.state.trending[1].slice(0, 10).map((tag, index) => { return <li key={tag + index}><button onClick={() => this.props.clickToSearch(tag)}>{tag}</button></li> })}
-            <li><b>tags</b></li>
+            <li><b>Tags</b></li>
             {this.state.trending[3].slice(0, 10).map((tag, index) => { return <li key={tag + index}><button onClick={() => this.props.clickToSearch(tag)}>{tag}</button></li> })}
           </ul>
         </div>

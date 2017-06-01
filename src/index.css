@@ -3,19 +3,15 @@
 }
 
 body {
-  background-color: red;
   margin: 0;
   padding: 0;
-  font-family: sans-serif;
 }
 
 .bodyContainer {
   top: 75px;
-  height:800px;
-
+  height: 800px;
   position: relative;
   background-color: #FCF7F8;
-
 }
 
 img {
@@ -64,7 +60,6 @@ img {
   color: rgba(0, 0, 0, 0);
   background-color: rgba(0, 0, 0, 0);
 }
-
 
 
 /*.profileDiv .profile {

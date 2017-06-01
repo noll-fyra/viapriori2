@@ -13,6 +13,7 @@ import Saved from '../saved/Saved'
 import db, {auth, storageKey, isAuthenticated, logOut} from '../../utils/firebase'
 import search from '../../utils/search'
 import suggestions from '../../utils/suggestions'
+import './app.css'
 
 class App extends Component {
   constructor (props) {
@@ -87,7 +88,7 @@ class App extends Component {
   render () {
     return (
       <Router>
-        <div>
+        <div className='router'>
           <Nav
             addNewActivity={this.addNewActivity}
             isAuthenticated={isAuthenticated()}
@@ -98,7 +99,7 @@ class App extends Component {
             onKeyUp={(e) => this.handleSearch(e)}
             linkToSearch={(ref) => { this.linkToSearch = ref }}
           />
-          <div className='topNav topNavBG' />
+          {/* <div className='topNav topNavBG' /> */}
 
           <div className='bodyContainer'>
             <Route exact path='/' component={() => <Home clickToSearch={this.clickToSearch} />} />

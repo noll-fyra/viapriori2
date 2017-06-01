@@ -1,19 +1,15 @@
 import React from 'react'
-import {Link} from 'react-router-dom'
-import db, {storageKey} from '../../utils/firebase'
+import {storageKey} from '../../utils/firebase'
+import updateDB, {updateDBPlusOne} from '../../utils/updateDB'
 
 const SaveActivity = (props) => {
   function saveActivity () {
-    db.ref('users/' + window.localStorage[storageKey] + '/saved').once('value').then((snap) => {
-      let newObj = snap.val() || {}
-      newObj[props.activityID] = true
-      db.ref('users/' + window.localStorage[storageKey] + '/saved').set(newObj)
-    })
+    updateDB('users/' + window.localStorage[storageKey] + '/saved', props.activityID, true)
+    updateDBPlusOne('activities/' + props.activityID, 'saved')
   }
   return (
-
     <div>
-        <button name={props.activityID} onClick={saveActivity}>Save Activity</button>
+      <button name={props.activityID} onClick={saveActivity}>Save Activity</button>
     </div>
   )
 }
