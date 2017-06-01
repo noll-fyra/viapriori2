@@ -72,6 +72,10 @@ nav {
   align-items: center;
 }
 
+.newContainer a {
+  color: #ed2025;
+}
+
 .sideNav {
   width: 100%;
   height: 100%;
