@@ -52,7 +52,7 @@ This project is heavily designed with React thinking in mind, and attempts to pr
 ### Objective
 Our aim was to introduce an application to save travel photos with context. A trip is made up of many experiences, all of which contribute to the overall satisfaction with the trip. We wanted to show a timeline of our activities, complete with description and opinion, to better understand how each experience was defined by, and shaped, the previous and the next activity respectively.
 
-We were inspired by Instagram in setting up our flow, as we focussed on making it simple to upload activities, refer back to your trips, and find activities that interest you.
+We were inspired by Instagram in setting up our flow, as we focused on making it simple to upload activities, refer back to your trips, and find activities that interest you.
 
 ---
 

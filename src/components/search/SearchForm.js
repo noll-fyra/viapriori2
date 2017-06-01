@@ -1,5 +1,5 @@
 import React from 'react'
-import './searchForm.css'
+import './searchform.css'
 
 // require('./search_by_deepz_from_noun_project.png')
 const SearchForm = (props) => (
