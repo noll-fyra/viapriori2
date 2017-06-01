@@ -60,7 +60,6 @@ class NewActivity extends React.Component {
   }
 
   componentDidMount () {
-
     // get all the user's trips
     db.ref('users/' + window.localStorage[storageKey] + '/trips').once('value').then((snapshot) => {
       if (!snapshot.val()) {

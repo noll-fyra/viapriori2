@@ -3,31 +3,28 @@ import {SortableContainer, SortableElement, SortableHandle, arrayMove} from 'rea
 import ActivityOverview from '../activity/ActivityOverview'
 import SaveActivity from '../activity/SaveActivity'
 import db, {storageKey} from '../../utils/firebase'
-import RemoveActivity from '../activity/RemoveActivity'
 
 const DragHandle = SortableHandle(() => <span>||||||</span>) // This can be any component you want
 
-const SortableItem = SortableElement(({value, id, clickToSearch, url}) => {
+const SortableItem = SortableElement(({value, id, clickToSearch, url, user, username, image}) => {
   return (
     <li>
       <DragHandle />
-      <ActivityOverview activityID={id} activity={value} clickToSearch={clickToSearch} />
+      <ActivityOverview activityID={id} activity={value} clickToSearch={clickToSearch} user={user} username={username} image={image} />
       {value.user !== window.localStorage[storageKey] &&
         <div>
-
-          <SaveActivity activityID={id} activity={value} url={url}/>
+          <SaveActivity activityID={id} activity={value} url={url} />
         </div>
-
       }
     </li>
   )
 })
 
-const SortableList = SortableContainer(({activities, id, clickToSearch, url}) => {
+const SortableList = SortableContainer(({activities, id, clickToSearch, url, user, username, image}) => {
   return (
     <ul>
       {activities.map((value, index) => (
-        <SortableItem key={`item-${index}`} index={index} value={value} id={id[index]} clickToSearch={clickToSearch} url={url} />
+        <SortableItem key={`item-${index}`} index={index} value={value} id={id[index]} clickToSearch={clickToSearch} url={url} user={user} username={username} image={image} />
       ))}
     </ul>
   )
@@ -40,7 +37,9 @@ class Trip extends React.Component {
       activities: [],
       keys: [],
       details: {},
-      currentTrip: props.currentTrip || props.match.params.id
+      currentTrip: props.currentTrip || props.match.params.id,
+      username: '',
+      userImage: ''
     }
     this.onSortEnd = this.onSortEnd.bind(this)
     this.updateTrip = this.updateTrip.bind(this)
@@ -56,7 +55,7 @@ class Trip extends React.Component {
 
   updateTrip () {
     this.setState({
-      currentUser: this.props.currentTrip || this.props.match.params.id
+      currentTrip: this.props.currentTrip || this.props.match.params.id
     })
     db.ref('trips/' + this.state.currentTrip).on('value', snapshot => {
       if (snapshot.val()) {
@@ -81,6 +80,15 @@ class Trip extends React.Component {
             })
           })
         }
+
+        db.ref('users/' + tripDetails.user).once('value').then((snapshot) => {
+          let user = snapshot.val() || {}
+          this.setState({
+            username: user.profile && user.profile.username ? user.profile.username : '',
+            userImage: user.profile && user.profile.profileImage ? user.profile.profileImage : ''
+          })
+          console.log(this.state.userImage)
+        })
       }
     })
   }
@@ -104,6 +112,8 @@ class Trip extends React.Component {
   render () {
     return (
       <div>
+        {JSON.stringify(this.state.details)}
+        {JSON.stringify(this.state.details.user)}
         <h1>{this.state.details.title || ''}</h1>
         <SortableList
           url={this.props.match.params.id}
@@ -113,6 +123,9 @@ class Trip extends React.Component {
           lockAxis='y'
           id={this.state.keys}
           clickToSearch={this.props.clickToSearch}
+          user={this.state.details.user}
+          username={this.state.username}
+          image={this.state.userImage}
         />
       </div>
     )
