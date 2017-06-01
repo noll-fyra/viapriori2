@@ -196,19 +196,21 @@ class Saved extends React.Component {
     let options = this.state.plannedTrips.map((trip, index) => {
       return <option key={this.state.plannedKeys[index]}>{trip.title || ''}</option>
     })
-
+console.log(this.state.searchQuery)
     return (
       <div>
-        <SearchForm placeholder='Search saved activities and planned trips' onChange={this.search}/>
         {/* <SearchForm placeholder='Search' onChange={this.search} onKeyUp={(e) => this.handleSearch(e)} /> */}
         {/* <Link to='/saved/search' className='searchButton' ref={this.props.linkToSearch} style={{display: 'none'}} /> */}
         <div className="savedContainer">
         <div>
+          {/* {this.state.plannedTrips.length > 0 &&  */}
         <Planned plannedKeys={this.state.plannedKeys}
           plannedTrips={this.state.plannedTrips} />
+        {/* } */}
         </div>
-        <div>
-          <h3> Saved Activities</h3>
+        <div className="saved">
+          <SearchForm placeholder='Search your saved activities and planned trips' onChange={this.search}/>
+          <h3 className='savedHeading'> Saved Activities</h3>
         {this.state.savedActivities &&
           reverseSaved.map((activity, index) => {
             return <SavedOverview
@@ -223,7 +225,8 @@ class Saved extends React.Component {
           })
         }
       </div>
-      <div className='final' />
+      <div className='final'>
+    </div>
     </div>
 
       </div>
