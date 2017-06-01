@@ -448,12 +448,16 @@ class NewActivity extends React.Component {
              /></div>
             <button className='share' onClick={this.handleActivity}>Share</button>
           </div>
-          <div className={this.state.isUploading ? 'backdrop' : 'notUploading'} />
-          <Loading className={this.state.isUploading ? 'uploading' : 'notUploading'} type={'spinningBubbles'} color={'blue'} height='400px' width='400px' />
+          <div/>
         </div>
 
       <div />
-
+      <div className='modal1'>
+        <div/>
+        <div className={this.state.isUploading ? 'backdrop' : 'notUploading'} />
+        <Loading className={this.state.isUploading ? 'uploading' : 'notUploading'} type={'spinningBubbles'} color={'blue'} height='400px' width='400px' />
+      </div>
+      <div/>
     </div>
     }
 

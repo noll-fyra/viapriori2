@@ -85,10 +85,11 @@
   display:inline-block;
 }
 .uploading {
-  position: absolute;
-  display: block;
   z-index: 9005;
   background: rgba(0, 0, 0, 0.3);
+  width: 100%;
+  height: auto;
+  min-height: 60%;
 }
 
 .notUploading {
