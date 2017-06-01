@@ -31,16 +31,16 @@ class Rating extends React.Component {
   render () {
     return (
       <div>
-        <span className={'star ' + (this.state.stars >= 1 ? 'bright ' : 'dull ') + (this.state.isEnabled ? 'starenabled' : 'stardisabled')}
-          onClick={() => this.starClick(1)}>Star</span>{' '}
-        <span className={'star ' + (this.state.stars >= 2 ? 'bright ' : 'dull ') + (this.state.isEnabled ? 'starenabled' : 'stardisabled')}
-          onClick={() => this.starClick(2)}>Star</span>{' '}
-        <span className={'star ' + (this.state.stars >= 3 ? 'bright ' : 'dull ') + (this.state.isEnabled ? 'starenabled' : 'stardisabled')}
-          onClick={() => this.starClick(3)}>Star</span>{' '}
-        <span className={'star ' + (this.state.stars >= 4 ? 'bright ' : 'dull ') + (this.state.isEnabled ? 'starenabled' : 'stardisabled')}
-          onClick={() => this.starClick(4)}>Star</span>{' '}
-        <span className={'star ' + (this.state.stars >= 5 ? 'bright ' : 'dull ') + (this.state.isEnabled ? 'starenabled' : 'stardisabled')}
-          onClick={() => this.starClick(5)}>Star</span>{' '}
+        <span className={'star ' + (this.state.isEnabled ? 'starenabled' : 'stardisabled')}
+          onClick={() => this.starClick(1)}>{this.state.stars >= 1 ? <img src={require('./filled_star_by_zaff_studio_from_noun_project.png')} alt='filled_star_by_zaff_studio_from_noun_project.png' /> : <img src={require('./unfilled_star_by_zaff_studio_from_noun_project.png')} alt='unfilled_star_by_zaff_studio_from_noun_project.png' />}</span>{' '}
+        <span className={'star ' + (this.state.isEnabled ? 'starenabled' : 'stardisabled')}
+          onClick={() => this.starClick(2)}>{this.state.stars >= 2 ? <img src={require('./filled_star_by_zaff_studio_from_noun_project.png')} alt='filled_star_by_zaff_studio_from_noun_project.png' /> : <img src={require('./unfilled_star_by_zaff_studio_from_noun_project.png')} alt='unfilled_star_by_zaff_studio_from_noun_project.png' />}</span>{' '}
+        <span className={'star ' + (this.state.isEnabled ? 'starenabled' : 'stardisabled')}
+          onClick={() => this.starClick(3)}>{this.state.stars >= 3 ? <img src={require('./filled_star_by_zaff_studio_from_noun_project.png')} alt='filled_star_by_zaff_studio_from_noun_project.png' /> : <img src={require('./unfilled_star_by_zaff_studio_from_noun_project.png')} alt='unfilled_star_by_zaff_studio_from_noun_project.png' />}</span>{' '}
+        <span className={'star ' + (this.state.isEnabled ? 'starenabled' : 'stardisabled')}
+          onClick={() => this.starClick(4)}>{this.state.stars >= 4 ? <img src={require('./filled_star_by_zaff_studio_from_noun_project.png')} alt='filled_star_by_zaff_studio_from_noun_project.png' /> : <img src={require('./unfilled_star_by_zaff_studio_from_noun_project.png')} alt='unfilled_star_by_zaff_studio_from_noun_project.png' />}</span>{' '}
+        <span className={'star ' + (this.state.isEnabled ? 'starenabled' : 'stardisabled')}
+          onClick={() => this.starClick(5)}>{this.state.stars >= 5 ? <img src={require('./filled_star_by_zaff_studio_from_noun_project.png')} alt='filled_star_by_zaff_studio_from_noun_project.png' /> : <img src={require('./unfilled_star_by_zaff_studio_from_noun_project.png')} alt='unfilled_star_by_zaff_studio_from_noun_project.png' />}</span>{' '}
       </div>
     )
   }

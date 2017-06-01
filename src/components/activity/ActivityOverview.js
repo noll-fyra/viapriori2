@@ -21,7 +21,9 @@ const ActivityOverview = (props) => {
         {!props.areImagesHidden &&
         <div className='activityOthers'>
           <div className='activityImage'>
-            <img src={props.activity.image} alt={props.activity.title} />
+            <Link to={'/trips/' + props.activity.trip}>
+              <img src={props.activity.image} alt={props.activity.title} />
+            </Link>
           </div>
           <div className='activityDetails'>
             <div className='activityCaption'>

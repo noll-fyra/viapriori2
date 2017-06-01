@@ -2,7 +2,6 @@ import React from 'react'
 import {SortableContainer, SortableElement, SortableHandle, arrayMove} from 'react-sortable-hoc'
 import ActivityOverview from '../activity/ActivityOverview'
 import RemoveActivity from '../activity/RemoveActivity'
-import LinkToTrips from '../activity/LinkToTrips'
 
 import Planned from './Planned'
 import db, {storageKey} from '../../utils/firebase'
@@ -16,9 +15,8 @@ const SortableItem = SortableElement(({value, id, url, removeActivity, clickToSe
       <ActivityOverview activityID={id} activity={value} clickToSearch={clickToSearch} user={user} username={username} image={image} areImagesHidden={areImagesHidden}/>
       {value.user !== window.localStorage[storageKey] &&
         <div>
-        <RemoveActivity activityID={id} activity={value} removeActivity={removeActivity}/>
-        <LinkToTrips activity={value}/>
-      </div>
+          <RemoveActivity activityID={id} activity={value} removeActivity={removeActivity} />
+        </div>
       }
     </li>
   )
@@ -29,6 +27,7 @@ const SortableList = SortableContainer(({activities, id, url, removeActivity, cl
     <ul>
       {activities.map((value, index) => (
         <SortableItem key={`item-${index}`} index={index} value={value} id={id[index]} url={url} clickToSearch={clickToSearch} removeActivity={removeActivity} user={user} username={username} image={image} areImagesHidden={areImagesHidden}/>
+
       ))}
     </ul>
   )
@@ -54,6 +53,7 @@ class PlannedActivities extends React.Component {
     this.hideImages = this.hideImages.bind(this)
 
 
+
   }
 
   componentDidMount () {
@@ -63,7 +63,7 @@ class PlannedActivities extends React.Component {
   componentDidUpdate () {
     if (this.props.match.params.id !== this.state.tripId) {
       this.setState({
-        tripId:this.props.match.params.id
+        tripId: this.props.match.params.id
       })
       this.componentUpdates()
     }
@@ -122,7 +122,7 @@ class PlannedActivities extends React.Component {
       }
     })
   }
-  removeActivity(id){
+  removeActivity (id) {
     console.log(id)
     console.log('planned/' + this.props.match.params.id + '/activities/' + id)
     db.ref('planned/' + this.props.match.params.id + '/activities/' + id).remove()
@@ -132,6 +132,7 @@ class PlannedActivities extends React.Component {
     this.setState({
       hideImages: !this.state.hideImages
     })
+
   }
 
 
@@ -153,13 +154,13 @@ class PlannedActivities extends React.Component {
 
 
   render () {
-
     let options = this.state.plannedTrips.map((trip, index) => {
       return <option key={this.state.plannedKeys[index]}>{trip.title}</option>
     })
 
     return (
       <div className='plannedContainer'>
+
               <div className='planned'>
                 <Planned plannedKeys={this.state.plannedKeys} plannedTrips={this.state.plannedTrips} />
               </div>
@@ -186,7 +187,8 @@ class PlannedActivities extends React.Component {
 </div>
         {/* <div className='final' /> */}
 
-    </div>
+
+      </div>
     )
   }
 }

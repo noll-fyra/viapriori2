@@ -4,13 +4,13 @@ import ActivityOverview from '../activity/ActivityOverview'
 import db, {storageKey} from '../../utils/firebase'
 import {trendingObjectToArray} from '../../utils/format'
 import SaveActivity from '../activity/SaveActivity'
-import LinkToTrips from '../activity/LinkToTrips'
 import './home.css'
 
 class Home extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
+      users: {},
       keys: [],
       activities: [],
       trending: [[], [], [], []],
@@ -51,6 +51,14 @@ class Home extends React.Component {
       }
     })
 
+    // fetch all usernames
+    db.ref('users').on('value', snapshot => {
+      let users = snapshot.val() || {}
+      this.setState({
+        users: users
+      })
+    })
+
     // fetch user following
     if (window.localStorage[storageKey]) {
       db.ref('users/' + window.localStorage[storageKey]).on('value', snap => {
@@ -79,14 +87,21 @@ class Home extends React.Component {
 
   render () {
     // sort latest first and show top 30 trending activities, your own activities and those from users you follow
-    const reverseActivities = this.state.activities.filter((activity) => { return this.state.filter.includes(activity[1].user) || this.state.trending[2].slice(0, 30).includes(activity[0]) }).reverse().slice(0, this.state.numberToShow).map((activity, index) => {
+    const reverseActivities = this.state.activities.filter((activity, index) => { return this.state.filter.includes(activity[1].user) || this.state.trending[2].slice(0, 30).includes(activity[0]) }).reverse().slice(0, this.state.numberToShow).map((activity, index) => {
       return (
-        <div className='homeActivityOverview'>
-          <ActivityOverview key={activity[0]} activityID={activity[0]} activity={activity[1]} clickToSearch={this.props.clickToSearch} areImagesHidden={false} />
+        <div className='homeActivityOverview' key={activity[0]}>
+          <ActivityOverview
+            activityID={activity[0]}
+            activity={activity[1]}
+            clickToSearch={this.props.clickToSearch}
+            areImagesHidden={false}
+            image={activity[1].user && (this.state.users[activity[1].user]).profile && (this.state.users[activity[1].user]).profile.profileImage ? this.state.users[activity[1].user].profile.profileImage : 'yo'}
+            user={activity[1].user || 'hello'}
+            username={activity[1].user && this.state.users[activity[1].user] && (this.state.users[activity[1].user]).profile ? (this.state.users[activity[1].user]).profile.username : 'goodbye'}
+           />
           {activity[1].user !== window.localStorage[storageKey] && window.localStorage[storageKey] &&
             <div>
               <SaveActivity key={activity[0]} activityID={activity[0]} activity={activity[1]} />
-              <LinkToTrips activity={activity[1]} />
             </div>
           }
         </div>
@@ -114,7 +129,7 @@ class Home extends React.Component {
           >
           {reverseActivities}
         </InfiniteScroll>
-        <div className='final' />
+        <div />
       </div>
 
     )
