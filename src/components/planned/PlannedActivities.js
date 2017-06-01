@@ -123,8 +123,6 @@ class PlannedActivities extends React.Component {
     })
   }
   removeActivity (id) {
-    console.log(id)
-    console.log('planned/' + this.props.match.params.id + '/activities/' + id)
     db.ref('planned/' + this.props.match.params.id + '/activities/' + id).remove()
   }
 

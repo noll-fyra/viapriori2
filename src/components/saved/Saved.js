@@ -39,6 +39,7 @@ class Saved extends React.Component {
             this.setState({
               savedActivities: savedActivities
             })
+            console.log(this.state.savedActivities)
           })
         }
       } else {

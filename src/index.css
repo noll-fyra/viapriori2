@@ -45,25 +45,6 @@ img {
   z-index: -1;
 }
 
-.imageLabel, .imageLabelActive {
-  font-size: 1.25em;
-  font-weight: 700;
-  width: 100%;
-  height: 100%;
-  /*top: 0;*/
-  /*border: 1px solid rgba(50, 50, 50, 0.25);*/
-  color: rgba(50, 50, 50, 0.75);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  /*border-radius: 8px;*/
-}
-
-.imageLabelActive {
-  color: rgba(0, 0, 0, 0);
-  background-color: rgba(0, 0, 0, 0);
-}
-
 li {
   list-style: none;
 }

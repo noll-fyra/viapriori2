@@ -2,7 +2,13 @@
   outline: 1px dotted #000;
   outline: -webkit-focus-ring-color auto 5px;
 }*/
-
+.modalContainer{
+  width:100%;
+  height:100%;
+  top:0;
+  left:0;
+  position:fixed;
+}
 .backdrop {
   position: absolute;
   top: 0px;
@@ -14,42 +20,72 @@
 }
 
 .modalWrapper {
-background-color: green;
+  width:100%;
+  min-height: 60%;
+  height:auto;
+  top: 150px;
   display: grid;
   grid-template-columns: 1fr 4fr 1fr;
-  /*position: absolute;*/
-  /*padding-top: 75%;*/
-
+  position: relative;
 }
 
 .modal {
-  width: 40%;
-  height: 40%;
-  /*min-height: 40%;
-  max-height: 50%;*/
-  padding-top: 0%;
-  position: absolute;
-  top: 1%;
-  left: 20%;
-  margin-top: 16px;
+  width: 100%;
+  height: auto;
+  min-height: 60%;
   border: 1px solid rgba(50, 50, 50, 0.25);
-  /*border-radius: 8px;*/
-  /*margin-left: -25%;*/
+  z-index: 9000;
+  background-color: white;
+}
+
+.modal1 {
+  width: 100%;
+  height: auto;
+  max-height: 100%;
+  min-height: 60%;
+  border: 1px solid rgba(50, 50, 50, 0.25);
+  display:grid;
+  grid-template-columns: 2fr 1fr;
   z-index: 9000;
   background-color: white;
 }
 
 .modal2 {
-  top: 1%;
-  left: 50%;
-  width: 20%;
+  height:auto;
+  width: 100%;
+  object-fit: cover;
 }
 
+.modal3 {
+  height:auto;
+  width: 100%;
+  padding:12px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.caption{
+  height:30%;
+  width:100%;
+}
+.caption textarea{
+  width:90%;
+  height:80%;
+}
+
+.tags{
+  width:100%;
+}
+.selectTrip {
+  position:relative;
+  width:100%;
+}
+.selectTrip label{
+  position:relative;
+  display:inline-block;
+}
 .uploading {
   position: absolute;
-  top: 10%;
-  left: 50%;
-  margin-top: -25%;
   display: block;
   z-index: 9005;
   background: rgba(0, 0, 0, 0.3);
@@ -57,4 +93,29 @@ background-color: green;
 
 .notUploading {
   display: none;
+}
+
+.imageLabel, .imageLabelActive {
+  font-size: 1.25em;
+  font-weight: 700;
+  width: 100%;
+  height: 100%;
+  /*top: 0;*/
+  /*border: 1px solid rgba(50, 50, 50, 0.25);*/
+  color: rgba(50, 50, 50, 0.75);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /*border-radius: 8px;*/
+}
+
+.imageLabelActive {
+  color: rgba(0, 0, 0, 0);
+  background-color: rgba(0, 0, 0, 0);
+  object-fit: cover;
+}
+
+.share{
+  background-color: #3954A4;
+  color:white;
 }
