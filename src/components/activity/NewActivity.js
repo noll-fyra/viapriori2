@@ -382,18 +382,20 @@ class NewActivity extends React.Component {
       return <option key={index}>{trip[1].title}</option>
     })
     return (
-      <div className='modalWrapper' style={this.props.isEnabled ? {display: 'block'} : {display: 'none'}}>
+      <div className='modalContainer' style={this.props.isEnabled ? {display: 'block'} : {display: 'none'}}>
         <div className='backdrop' onClick={() => this.props.addNewActivity(false)} />
-
         {this.state.image === '' &&
+        <div className='modalWrapper'>
+          <div/>
         <div className='modal'>
           <label className='imageLabel'>
             <span>Post a photo</span>
             <input className='fileInput' type='file' onChange={(e) => this.handleFile(e)} accept={'image/*'} />
           </label>
         </div>
+        <div />
+      </div>
         }
-
         {this.state.image !== '' &&
         <div >
           <div className='modal'>
@@ -446,6 +448,7 @@ class NewActivity extends React.Component {
         }
 
         <Link to={'/trips/' + this.state.tripID} style={{display: 'none'}} onClick={() => this.props.setCurrentTrip(this.state.tripID)} ref={(link) => { this.linkToTrip = link }} />
+      <div />
       </div>
     )
   }

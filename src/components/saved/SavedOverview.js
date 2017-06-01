@@ -94,10 +94,12 @@ class SavedOverview extends React.Component {
           <Rating stars={this.props.activity.rating} isEnabled={false} /> */}
 
           {this.props.plannedKeys.length === 0 &&
+            <div>
             <label>
               <input value={this.state.newPlannedTitle} type='text' placeholder='New trip title' onChange={this.handlePlannedTitle} />
               <button onClick={() => this.addActivityToNewPlanned()}>Add activity</button>
             </label>
+          </div>
           }
 
           {!this.state.isNewPlanned && this.props.plannedKeys.length > 0 &&

@@ -136,7 +136,7 @@ class Trip extends React.Component {
   render () {
     return (
       <div>
-        <h1>{this.state.details.title || ''}</h1>
+        <h3>{this.state.details.title || ''}</h3>
         <div className='tripsContainer'>
           <div>
             <button onClick={this.hideImages}>{this.state.hideImages ? 'Show images' : 'Hide images'}</button>

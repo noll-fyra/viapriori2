@@ -57,7 +57,7 @@ class Nav extends React.Component {
         <div className='newContainer'>
           <Link to='#' className='authenticate' onClick={() => this.props.addNewActivity(true)}>
             {/* <img onClick={() => this.props.addNewActivity(true)} className='navIcon addNewActivity' src={require('./new_by_setyo_from_noun_project.png')} /> */}
-            +New Activity
+            + New Activity
           </Link>
         </div>
         }
