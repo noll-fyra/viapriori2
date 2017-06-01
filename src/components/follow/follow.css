@@ -1,0 +1,16 @@
+.detailsContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.following {
+  width: 100%;
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  justify-content: center;
+  background-color: #3954a4;
+  color: white;
+  margin-top: 12px;
+  padding: 12px;
+}

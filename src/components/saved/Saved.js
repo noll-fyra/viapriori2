@@ -14,18 +14,25 @@ class Saved extends React.Component {
       savedKeys: [],
       savedActivities: [],
       plannedTrips: [],
-      plannedKeys: []
+      plannedKeys: [],
+      users: {}
     }
     this.createNewPlanned = this.createNewPlanned.bind(this)
     this.search = search.bind(this)
   }
 
   componentDidMount () {
+    // get all users
+    db.ref('users').once('value').then(snap => {
+      let users = snap.val() || {}
+      this.setState({
+        users: users
+      })
+    })
 
     db.ref('users/' + window.localStorage[storageKey]).on('value', snapshot => {
       if (snapshot.val() && snapshot.val().saved) {
         // saved activity keys
-
         let savedKeys = Object.keys(snapshot.val().saved)
         this.setState({
           savedKeys: savedKeys
@@ -49,7 +56,6 @@ class Saved extends React.Component {
       }
 
       // check if there are any planned trips
-
       if (snapshot.val() && snapshot.val().planned) {
         // planned trip keys
         let plannedKeys = Object.keys(snapshot.val().planned)
@@ -67,8 +73,7 @@ class Saved extends React.Component {
             })
           })
         }
-      }
-      else {
+      } else {
         this.setState({
           plannedTrips: [],
           plannedKeys: []
@@ -77,98 +82,101 @@ class Saved extends React.Component {
     })
   }
 
-    componentDidUpdate (prevProps, prevState) {
+  componentDidUpdate (prevProps, prevState) {
+    if (this.state.searchQuery !== prevState.searchQuery) {
+      let activityKeys = []
+      let activityDetails = []
+      let tripKeys = []
+      let tripDetails = []
 
-      if (this.state.searchQuery !== prevState.searchQuery) {
-        let activityKeys = []
-        let activityDetails = []
-        let tripKeys = []
-        let tripDetails = []
+      // get all users
+      db.ref('users').once('value').then(snap => {
+        let users = snap.val() || {}
+        this.setState({
+          users: users
+        })
+      })
 
-        db.ref('users/' + window.localStorage[storageKey]).on('value', snapshot => {
-          if (snapshot.val() && snapshot.val().saved) {
+      db.ref('users/' + window.localStorage[storageKey]).on('value', snapshot => {
+        if (snapshot.val() && snapshot.val().saved) {
         // saved activity keys
-            let savedKeys = Object.keys(snapshot.val().saved)
-            this.setState({
-              savedKeys: savedKeys
-            })
+          let savedKeys = Object.keys(snapshot.val().saved)
+          this.setState({
+            savedKeys: savedKeys
+          })
         // saved activity details
-        // let savedActivities = new Array(savedKeys.length).fill(null)
-            for (var activity in snapshot.val().saved) {
-              let index = savedKeys.indexOf(activity)
+          for (var activity in snapshot.val().saved) {
+            let index = savedKeys.indexOf(activity)
 
-              db.ref('activities/' + activity).on('value', snap => {
+            db.ref('activities/' + activity).on('value', snap => {
             // savedActivities[ind] = snap.val()
-                if (snap.val().title.toLowerCase().includes(this.state.searchQuery.toLowerCase())) {
-                  activityKeys.push(savedKeys[index])
-                  activityDetails.push(snap.val())
-
-                } else if (snap.val().locality.toLowerCase().includes(this.state.searchQuery.toLowerCase())) {
-                  activityKeys.push(savedKeys[index])
-                  activityDetails.push(snap.val())
-                } else if (snap.val().country.toLowerCase().includes(this.state.searchQuery.toLowerCase())) {
-                  activityKeys.push(savedKeys[index])
-                  activityDetails.push(snap.val())
-                } else if (snap.val().tags) {
+              if (snap.val().title.toLowerCase().includes(this.state.searchQuery.toLowerCase())) {
+                activityKeys.push(savedKeys[index])
+                activityDetails.push(snap.val())
+              } else if (snap.val().locality.toLowerCase().includes(this.state.searchQuery.toLowerCase())) {
+                activityKeys.push(savedKeys[index])
+                activityDetails.push(snap.val())
+              } else if (snap.val().country.toLowerCase().includes(this.state.searchQuery.toLowerCase())) {
+                activityKeys.push(savedKeys[index])
+                activityDetails.push(snap.val())
+              } else if (snap.val().tags) {
                 for (var tags in snap.val().tags) {
-                if (tags.toLowerCase().includes(this.state.searchQuery.toLowerCase())) {
-                  activityKeys.push(savedKeys[index])
-                  activityDetails.push(snap.val())
+                  if (tags.toLowerCase().includes(this.state.searchQuery.toLowerCase())) {
+                    activityKeys.push(savedKeys[index])
+                    activityDetails.push(snap.val())
+                  }
                 }
               }
-            }
-            this.setState({
-              savedActivities: activityDetails,
-              activityKeys: activityKeys
-            })
+              this.setState({
+                savedActivities: activityDetails,
+                activityKeys: activityKeys
               })
-            }
-          } else {
-            this.setState({
-              savedKeys: [],
-              activityKeys: [],
-              savedActivities: []
             })
           }
+        } else {
+          this.setState({
+            savedKeys: [],
+            activityKeys: [],
+            savedActivities: []
+          })
+        }
       // check if there are any planned trips
-          if (snapshot.val() && snapshot.val().planned) {
-
+        if (snapshot.val() && snapshot.val().planned) {
         // planned trip keys
-            let plannedKeys = Object.keys(snapshot.val().planned)
-            this.setState({
-              plannedKeys: plannedKeys
-            })
+          let plannedKeys = Object.keys(snapshot.val().planned)
+          this.setState({
+            plannedKeys: plannedKeys
+          })
         // planned trip details
-        // let plannedTrips = new Array(plannedKeys.length).fill(null)
-            for (var trip in snapshot.val().planned) {
-              let ind = plannedKeys.indexOf(trip)
-              db.ref('planned/' + trip).on('value', snap => {
-                let tripEnd = new Date(snap.val().end)
-                let tripStart = new Date(snap.val().start)
-                let tripDuration = (tripEnd - tripStart) / 86400000
-                if (snap.val().title.toLowerCase().includes(this.state.searchQuery.toLowerCase())) {
-                  tripKeys.push(plannedKeys[ind])
-                  tripDetails.push(snap.val())
-                } else if (tripDuration === parseInt(this.state.searchQuery, 10)) {
-                  tripKeys.push(plannedKeys[ind])
-                  tripDetails.push(snap.val())
-                }
-              })
-            }
-            this.setState({
-              plannedTrips: tripDetails,
-              tripKeys: tripKeys
-            })
-          } else {
-            this.setState({
-              plannedTrips: [],
-              tripKeys: [],
-              plannedKeys: []
+          for (var trip in snapshot.val().planned) {
+            let ind = plannedKeys.indexOf(trip)
+            db.ref('planned/' + trip).on('value', snap => {
+              let tripEnd = new Date(snap.val().end)
+              let tripStart = new Date(snap.val().start)
+              let tripDuration = (tripEnd - tripStart) / 86400000
+              if (snap.val().title.toLowerCase().includes(this.state.searchQuery.toLowerCase())) {
+                tripKeys.push(plannedKeys[ind])
+                tripDetails.push(snap.val())
+              } else if (tripDuration === parseInt(this.state.searchQuery, 10)) {
+                tripKeys.push(plannedKeys[ind])
+                tripDetails.push(snap.val())
+              }
             })
           }
-        })
-      }
+          this.setState({
+            plannedTrips: tripDetails,
+            tripKeys: tripKeys
+          })
+        } else {
+          this.setState({
+            plannedTrips: [],
+            tripKeys: [],
+            plannedKeys: []
+          })
+        }
+      })
     }
+  }
 
   createNewPlanned (title) {
     let newRef = db.ref('planned').push()
@@ -185,49 +193,42 @@ class Saved extends React.Component {
     return newRef.key
   }
 
-  // handleSearch (e) {
-  //   if (e.key === 'Enter') {
-  //     this.linkToSearch.handleClick(new window.MouseEvent('click'))
-  //   }
-  // }
   render () {
     let reverseSaved = this.state.savedActivities.slice().reverse()
     let reverseKeys = this.state.savedKeys.slice().reverse()
     let options = this.state.plannedTrips.map((trip, index) => {
       return <option key={this.state.plannedKeys[index]}>{trip.title || ''}</option>
     })
-console.log(this.state.searchQuery)
     return (
       <div>
-        {/* <SearchForm placeholder='Search' onChange={this.search} onKeyUp={(e) => this.handleSearch(e)} /> */}
-        {/* <Link to='/saved/search' className='searchButton' ref={this.props.linkToSearch} style={{display: 'none'}} /> */}
-        <div className="savedContainer">
-        <div>
-          {/* {this.state.plannedTrips.length > 0 &&  */}
-        <Planned plannedKeys={this.state.plannedKeys}
-          plannedTrips={this.state.plannedTrips} />
-        {/* } */}
-        </div>
-        <div className="saved">
-          <SearchForm placeholder='Search your saved activities and planned trips' onChange={this.search}/>
-          <h3 className='savedHeading'> Saved Activities</h3>
-        {this.state.savedActivities &&
+        <div className='savedContainer'>
+          <div>
+            <Planned plannedKeys={this.state.plannedKeys}
+              plannedTrips={this.state.plannedTrips} />
+          </div>
+          <div className='saved'>
+            <SearchForm placeholder='Search your saved activities and planned trips' onChange={this.search} />
+            <h3 className='savedHeading'> Saved Activities</h3>
+            {JSON.stringify(this.state)}
+            {this.state.savedActivities &&
           reverseSaved.map((activity, index) => {
             return <SavedOverview
               key={reverseKeys[index]}
               activityID={reverseKeys[index]}
               activity={activity}
               options={options}
+              username={this.state.users[activity.user] && (this.state.users[activity.user]).profile ? (this.state.users[activity.user]).profile.username : ''}
+              image={this.state.users[activity.user] && (this.state.users[activity.user]).profile ? (this.state.users[activity.user]).profile.profileImage : ''}
+              clickToSearch={this.props.clickToSearch}
               plannedKeys={this.state.plannedKeys}
               plannedTrips={this.state.plannedTrips}
               createNewPlanned={this.createNewPlanned}
             />
           })
         }
-      </div>
-      <div className='final'>
-    </div>
-    </div>
+          </div>
+          <div />
+        </div>
 
       </div>
     )

@@ -5,12 +5,13 @@
 body {
   margin: 0;
   padding: 0;
+  background-color: #FCF7F8;
 }
 
 .bodyContainer {
   top: 80px;
   position: relative;
-  background-color: #FCF7F8;
+  min-height: 100%;
 }
 
 a {

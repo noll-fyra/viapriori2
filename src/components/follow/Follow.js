@@ -2,6 +2,7 @@ import React from 'react'
 // import {Link} from 'react-router-dom'
 import Details from '../profile/Details'
 import db from '../../utils/firebase'
+import './follow.css'
 
 class Follow extends React.Component {
   constructor (props) {
@@ -60,15 +61,23 @@ class Follow extends React.Component {
     })
     return (
       <div>
-        <Details
-          key={this.state.userID}
-          currentUser={this.props.currentUser}
-          userID={this.state.userID}
-          user={this.state.user}
-          type='profile'
-        />
-        <h1>{this.state.type === 'following' ? 'Following' : 'Followers'}</h1>
-        {follows}
+        <div className='detailsContainer'>
+          <div />
+          <Details
+            key={this.state.userID}
+            currentUser={this.props.currentUser}
+            userID={this.state.userID}
+            user={this.state.user}
+            type='profile'
+          />
+          <div />
+        </div>
+        <h1 className='following'>{this.state.type === 'following' ? 'Following' : 'Followers'}</h1>
+        <div className='detailsContainer'>
+          <div />
+          {follows}
+          <div />
+        </div>
       </div>
     )
   }

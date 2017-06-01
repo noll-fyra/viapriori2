@@ -6,6 +6,8 @@ const SaveActivity = (props) => {
   function saveActivity () {
     updateDB('users/' + window.localStorage[storageKey] + '/saved', props.activityID, true)
     updateDBPlusOne('activities/' + props.activityID, 'saved')
+    console.log('saved');
+    console.log(props.activityID);
   }
   return (
     <div>

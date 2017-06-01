@@ -2,6 +2,8 @@ import React from 'react'
 import {Link} from 'react-router-dom'
 import moment from 'moment'
 import Rating from '../rating/Rating'
+import SaveActivity from './SaveActivity'
+import UnsaveActivity from './UnsaveActivity'
 import {storageKey} from '../../utils/firebase'
 import './activityOverview.css'
 
@@ -44,6 +46,12 @@ const ActivityOverview = (props) => {
           {props.user !== window.localStorage[storageKey] &&
           <div className='activityTitle'>
             <Link to={'/users/' + props.user}><img src={props.image} alt={props.username} />{props.username || ''}</Link>
+            {(props.type === 'trip' || props.type === 'home') &&
+            <SaveActivity activityID={props.activityID} />
+            }
+            {(props.type === 'saved' || props.type === 'planned') &&
+            <UnsaveActivity activityID={props.activityID} />
+            }
           </div>
           }
         </div>
