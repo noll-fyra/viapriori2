@@ -9,14 +9,14 @@ import db, {storageKey} from '../../utils/firebase'
 
 const DragHandle = SortableHandle(() => <span>||||||</span>) // This can be any component you want
 
-const SortableItem = SortableElement(({value, id, url, removeActivity}) => {
+const SortableItem = SortableElement(({value, id, url, removeActivity, clickToSearch}) => {
   return (
     <li>
       {/* <ActivityOverview activityID={id} activity={value} clickToSearch={clickToSearch} />
       {value.user !== window.localStorage[storageKey] &&
       } */}
       <DragHandle />
-      <ActivityOverview activityID={id} activity={value} />
+      <ActivityOverview activityID={id} activity={value} clickToSearch={clickToSearch}/>
       {value.user !== window.localStorage[storageKey] &&
         <div>
         <RemoveActivity activityID={id} activity={value} removeActivity={removeActivity}/>
@@ -27,11 +27,11 @@ const SortableItem = SortableElement(({value, id, url, removeActivity}) => {
   )
 })
 
-const SortableList = SortableContainer(({activities, id, url, removeActivity}) => {
+const SortableList = SortableContainer(({activities, id, url, removeActivity, clickToSearch}) => {
   return (
     <ul>
       {activities.map((value, index) => (
-        <SortableItem key={`item-${index}`} index={index} value={value} id={id[index]} url={url} removeActivity={removeActivity}/>
+        <SortableItem key={`item-${index}`} index={index} value={value} id={id[index]} url={url} clickToSearch={clickToSearch} removeActivity={removeActivity}/>
       ))}
     </ul>
   )
@@ -147,6 +147,7 @@ class PlannedActivities extends React.Component {
           id={this.state.savedKeys}
           url={this.props.match.params.id}
           removeActivity={this.removeActivity}
+          clickToSearch={this.props.clickToSearch}
         />
 </div>
         {/* {this.state.savedActivities &&

@@ -153,7 +153,6 @@ class Trip extends React.Component {
             user={this.state.details.user}
             username={this.state.username}
             image={this.state.userImage}
-            hideImages={this.hideImages}
             areImagesHidden={this.state.hideImages}
         />
           <div />

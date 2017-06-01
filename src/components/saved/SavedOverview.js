@@ -82,7 +82,8 @@ class SavedOverview extends React.Component {
   render () {
     return (
       <div>
-        <ActivityOverview activity={this.props.activity}/>
+        <ActivityOverview clickToSearch={this.props.clickToSearch} activityID={this.props.activityID} activity={this.props.activity}/>
+
         {/* <div className='activityOverview'>
           <p>Activity: {this.props.activity.title || ''}</p>
           <img src={this.props.activity.image} alt={this.props.activity.title} />

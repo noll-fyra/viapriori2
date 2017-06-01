@@ -216,6 +216,7 @@ console.log(this.state.searchQuery)
             return <SavedOverview
               key={reverseKeys[index]}
               activityID={reverseKeys[index]}
+              clickToSearch={this.props.clickToSearch}
               activity={activity}
               options={options}
               plannedKeys={this.state.plannedKeys}
