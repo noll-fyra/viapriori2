@@ -2,7 +2,6 @@ import React from 'react'
 import {SortableContainer, SortableElement, SortableHandle, arrayMove} from 'react-sortable-hoc'
 import ActivityOverview from '../activity/ActivityOverview'
 import RemoveActivity from '../activity/RemoveActivity'
-import LinkToTrips from '../activity/LinkToTrips'
 
 import Planned from './Planned'
 import db, {storageKey} from '../../utils/firebase'
@@ -19,9 +18,8 @@ const SortableItem = SortableElement(({value, id, url, removeActivity}) => {
       <ActivityOverview activityID={id} activity={value} />
       {value.user !== window.localStorage[storageKey] &&
         <div>
-        <RemoveActivity activityID={id} activity={value} removeActivity={removeActivity}/>
-        <LinkToTrips activity={value}/>
-      </div>
+          <RemoveActivity activityID={id} activity={value} removeActivity={removeActivity} />
+        </div>
       }
     </li>
   )
@@ -31,7 +29,7 @@ const SortableList = SortableContainer(({activities, id, url, removeActivity}) =
   return (
     <ul>
       {activities.map((value, index) => (
-        <SortableItem key={`item-${index}`} index={index} value={value} id={id[index]} url={url} removeActivity={removeActivity}/>
+        <SortableItem key={`item-${index}`} index={index} value={value} id={id[index]} url={url} removeActivity={removeActivity} />
       ))}
     </ul>
   )
@@ -51,7 +49,6 @@ class PlannedActivities extends React.Component {
     // this.onSortEnd = this.onSortEnd.bind(this)
     this.componentUpdates = this.componentUpdates.bind(this)
     this.removeActivity = this.removeActivity.bind(this)
-
   }
 
   componentDidMount () {
@@ -61,7 +58,7 @@ class PlannedActivities extends React.Component {
   componentDidUpdate () {
     if (this.props.match.params.id !== this.state.tripId) {
       this.setState({
-        tripId:this.props.match.params.id
+        tripId: this.props.match.params.id
       })
       this.componentUpdates()
     }
@@ -120,35 +117,33 @@ class PlannedActivities extends React.Component {
       }
     })
   }
-  removeActivity(id){
+  removeActivity (id) {
     console.log(id)
     console.log('planned/' + this.props.match.params.id + '/activities/' + id)
     db.ref('planned/' + this.props.match.params.id + '/activities/' + id).remove()
-
   }
   render () {
-
     let options = this.state.plannedTrips.map((trip, index) => {
       return <option key={this.state.plannedKeys[index]}>{trip.title}</option>
     })
 
     return (
       <div className='plannedContainer'>
-              <div className='planned'>
-                <Planned plannedKeys={this.state.plannedKeys} plannedTrips={this.state.plannedTrips} />
-              </div>
-            <div className='saved'>
-        {/* <h3> Saved Activities</h3> */}
-        <SortableList
-          activities={this.state.savedActivities}
-          onSortEnd={this.onSortEnd}
-          useDragHandle
-          lockAxis='y'
-          id={this.state.savedKeys}
-          url={this.props.match.params.id}
-          removeActivity={this.removeActivity}
+        <div className='planned'>
+          <Planned plannedKeys={this.state.plannedKeys} plannedTrips={this.state.plannedTrips} />
+        </div>
+        <div className='saved'>
+          {/* <h3> Saved Activities</h3> */}
+          <SortableList
+            activities={this.state.savedActivities}
+            onSortEnd={this.onSortEnd}
+            useDragHandle
+            lockAxis='y'
+            id={this.state.savedKeys}
+            url={this.props.match.params.id}
+            removeActivity={this.removeActivity}
         />
-</div>
+        </div>
         {/* {this.state.savedActivities &&
           this.state.savedActivities.map((activity, index) => {
             return <SavedOverview
@@ -164,7 +159,7 @@ class PlannedActivities extends React.Component {
         } */}
         <div className='final' />
 
-    </div>
+      </div>
     )
   }
 }

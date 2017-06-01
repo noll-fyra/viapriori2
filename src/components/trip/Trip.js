@@ -15,7 +15,8 @@ const SortableItem = SortableElement(({value, id, clickToSearch, url, user, user
         activityID={id}
         activity={value}
         clickToSearch={clickToSearch}
-        user={user} username={username}
+        user={user}
+        username={username}
         image={image}
         areImagesHidden={areImagesHidden}
       />
@@ -37,7 +38,8 @@ const SortableList = SortableContainer(({activities, id, clickToSearch, url, use
           value={value}
           id={id[index]}
           clickToSearch={clickToSearch}
-          url={url} user={user}
+          url={url}
+          user={user}
           username={username}
           image={image}
           areImagesHidden={areImagesHidden} />
@@ -138,8 +140,8 @@ class Trip extends React.Component {
       <div>
         <h1>{this.state.details.title || ''}</h1>
         <div className='tripsContainer'>
-          <div>
-            <button onClick={this.hideImages}>{this.state.hideImages ? 'Show images' : 'Hide images'}</button>
+          <div className='hideButtonContainer'>
+            <button className='hideButton' onClick={this.hideImages}>{this.state.hideImages ? 'Show images' : 'Hide images'}</button>
           </div>
 
           <SortableList
@@ -153,7 +155,6 @@ class Trip extends React.Component {
             user={this.state.details.user}
             username={this.state.username}
             image={this.state.userImage}
-            hideImages={this.hideImages}
             areImagesHidden={this.state.hideImages}
         />
           <div />

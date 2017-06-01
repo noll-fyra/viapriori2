@@ -1,6 +1,19 @@
 .tripsContainer {
   display: grid;
   grid-template-columns: 1fr 4fr 1fr;
+  width: 100%;
+}
+
+.hideButtonContainer {
+  margin-top: 12px;
+  padding: 0 12px;
+  /*background-color: red;*/
+  text-align: center;
+}
+
+.hideButton {
+  /*position: fixed;*/
+  width: 100%;
 }
 
 .dragHandle {
@@ -17,4 +30,5 @@
 .sortable {
   display: flex;
   flex-flow: row;
+  width: 100%;
 }
