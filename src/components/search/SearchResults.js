@@ -124,6 +124,7 @@ class SearchResults extends React.Component {
         activityID={this.state.activityId[index]}
         activity={activity}
         clickToSearch={this.props.clickToSearch}
+        
       />
         {activity.user !== window.localStorage[storageKey] &&
         <div className='saveActivityButton'>

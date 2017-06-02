@@ -40,7 +40,7 @@ class Home extends React.Component {
         let activities = new Array(keys.length).fill(null)
         for (var key in snapshot.val()) {
           let ind = keys.indexOf(key)
-          activities[ind] = [key, snapshot.val()[key]]
+          activities[ind] = [keys[ind], snapshot.val()[keys[ind]]]
         }
         this.setState({
           keys: keys,
