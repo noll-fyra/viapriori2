@@ -16,14 +16,30 @@
 .searchContainer {
   height: 100%;
   width: 100%;
-  /*background-color: green;*/
-  display: grid;
-  grid-template-columns: 1fr 4fr 3fr;
+  display: flex;
+  /*grid-template-columns: 1fr 1fr 1fr;*/
+}
+.searchActivitySection{
+  width:100%;
+  
+}
+.searchUserSection{
+  width:100%;
+}
+.searchTripSection{
+  width:100%;
 }
 .searchheading{
+  /*padding:0 12px;*/
+  margin:0 6px;
   background-color: #3954a4;
   color: white;
+  text-align: center;
 }
 .nilquery{
+  position:relative;
+  top:50px;
+  font-size: 24px;
+  font-weight: 500;
   text-align: center;
 }
