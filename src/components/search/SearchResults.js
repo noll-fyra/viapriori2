@@ -1,7 +1,7 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
 import TripOverview from '../trip/TripOverview'
-import UserOverview from '../profile/UserOverview'
+import Details from '../profile/Details'
 import ActivityOverview from '../activity/ActivityOverview'
 import SaveActivity from '../activity/SaveActivity'
 import db, {storageKey} from '../../utils/firebase'
@@ -133,7 +133,13 @@ class SearchResults extends React.Component {
       }</div>
     })
     let userSearched = this.state.userDetails.map((user, index) => {
-      return <UserOverview key={this.state.userId[index]} userID={this.state.userId[index]} user={user} />
+      return <Details
+        key={this.state.userId[index]}
+        currentUser={this.props.currentUser}
+        userID={this.state.userId[index]}
+        user={user}
+        type='search'
+      />
     })
 
     return (
@@ -145,37 +151,34 @@ class SearchResults extends React.Component {
         </div>
       }
         {this.state.searchQuery && userSearched.length === 0 && tripsSearched.length === 0 && activitySearched.length === 0 &&
-        <div className='nilqu'>
+        <div className='nilquery'>
           <p>Sorry, no results found. How about seeing what's <Link to='/'>trending</Link>?</p>
         </div>
-      }
-{this.state.searchQuery && userSearched.length === 0 && tripsSearched.length === 0 && activitySearched.length === 0 &&
-        <h3>Search Results</h3>
       }
 
         <div className='searchContainer'>
           {userSearched.length > 0 &&
-          <div>
+          <div className='searchUserSection'>
               <div>
                 <h4 className='searchheading'>Users</h4>
                 {userSearched}
               </div>
           </div>
         }
-        {tripsSearched.length > 0 &&
-          <div>
-              <div>
-                <h4 className='searchheading'>Trips</h4>
-                {tripsSearched}
-              </div>
+        {activitySearched.length > 0 &&
+          <div className='searchActivitySection'>
+            <div>
+              <h4 className='searchheading'>Activity</h4>
+              {activitySearched}
+            </div>
 
           </div>
         }
-        {activitySearched.length > 0 &&
-          <div>
+        {tripsSearched.length > 0 &&
+          <div className='searchTripSection'>
               <div>
-                <h4 className='searchheading'>Activity</h4>
-                {activitySearched}
+                <h4 className='searchheading'>Trips</h4>
+                {tripsSearched}
               </div>
 
           </div>
