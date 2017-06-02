@@ -119,14 +119,14 @@ class SearchResults extends React.Component {
       return <TripOverview key={this.state.tripId[index]} tripID={this.state.tripId[index]} trip={trip} />
     })
     let activitySearched = this.state.activityFiltered.map((activity, index) => {
-      return <div><ActivityOverview
+      return <div className='activityWrap'><ActivityOverview
         key={this.state.activityId[index]}
         activityID={this.state.activityId[index]}
         activity={activity}
         clickToSearch={this.props.clickToSearch}
       />
         {activity.user !== window.localStorage[storageKey] &&
-        <div>
+        <div className='saveActivityButton'>
           <SaveActivity key={index} activityID={this.state.activityId[index]} activity={activity} />
           </div>
 
@@ -160,7 +160,7 @@ class SearchResults extends React.Component {
           {userSearched.length > 0 &&
           <div className='searchUserSection'>
               <div>
-                <h4 className='searchheading'>Users</h4>
+                <h4 className='searchUserHeading'>Users</h4>
                 {userSearched}
               </div>
           </div>
