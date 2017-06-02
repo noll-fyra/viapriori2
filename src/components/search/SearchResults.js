@@ -98,6 +98,10 @@ class SearchResults extends React.Component {
           type='search'
       />
       })
+      let searchResults=false
+      if(userSearched.length ||tripsSearched.length||final.length){
+        searchResults=true
+      }
 
     return (
       <div>
@@ -107,11 +111,12 @@ class SearchResults extends React.Component {
           <p>Please enter a search query...</p>
         </div>
       }
-        {this.props.searchQuery && userSearched.length === 0 && tripsSearched.length === 0 && activitySearched.length === 0 &&
+        {this.props.searchQuery && !searchResults &&
         <div className='nilquery'>
           <p>Sorry, no results found. How about seeing what's <Link to='/'>trending</Link>?</p>
         </div>
       }
+        {this.props.searchQuery && searchResults &&
         <div className='searchContainer'>
           {userSearched.length > 0 &&
           <div className='searchUserSection'>
@@ -140,6 +145,7 @@ class SearchResults extends React.Component {
         }
 
         </div>
+      }
       </div>
     )
   }
