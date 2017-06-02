@@ -1,11 +1,21 @@
 import React from 'react'
-import {storageKey} from '../../utils/firebase'
+import moment from 'moment'
+import db, {storageKey} from '../../utils/firebase'
 import updateDB, {updateDBPlusOne} from '../../utils/updateDB'
 
 const SaveActivity = (props) => {
   function saveActivity () {
     updateDB('users/' + window.localStorage[storageKey] + '/saved', props.activityID, true)
     updateDBPlusOne('activities/' + props.activityID, 'saved')
+    addSavedToAllAndTrending()
+  }
+  function addSavedToAllAndTrending () {
+    db.ref('all/saved/' + this.props.activityID).once('value').then((snap) => {
+      db.ref('all/saved/' + this.props.activityID).set(snap.val ? (snap.val() + 1) : 1)
+    })
+    db.ref('trending/saved/' + moment().format('dddd') + '/' + this.props.activityID).once('value').then((snap) => {
+      db.ref('trending/saved/' + moment().format('dddd') + '/' + this.props.activityID).set(snap.val ? (snap.val() + 1) : 1)
+    })
   }
   return (
     <div>

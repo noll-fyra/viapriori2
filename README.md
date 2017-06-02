@@ -155,12 +155,15 @@ This is a live project; all code contributions are welcome.
 - [Cara Chew](https://github.com/smilesandcocktails)
 
 ### Image credits:
+- Filled Star: Zaff Studio | Noun Project
 - Logout: myladkings | Noun Project
 - New: Setyo Ari Wibowo | Noun Project
 - Profile: icongeek | Noun Project
 - Profile: jivan | Noun Project
 - Saved: Aya Sofya | Noun Project
 - Search: Deepz | Noun Project
+- Unfilled Star: Zaff Studio | Noun Project
+- Delete: Google Images
 - Logo: Max Alexander Ng
 
 ### Inspirations:

@@ -1,4 +1,5 @@
 import React from 'react'
+import {Link} from 'react-router-dom'
 import TripOverview from '../trip/TripOverview'
 import UserOverview from '../profile/UserOverview'
 import ActivityOverview from '../activity/ActivityOverview'
@@ -10,7 +11,7 @@ class SearchResults extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      searchQuery: props.searchQuery,
+      searchQuery: props.match.params.query || props.searchQuery,
       tripFiltered: [],
       activityFiltered: [],
       tripId: [],
@@ -23,7 +24,6 @@ class SearchResults extends React.Component {
 
   componentDidMount () {
     if (this.state.searchQuery) {
-       console.log(this.state.searchQuery)
       let filteredTrips = []
       let tripKeys = []
       let activityKeys = []
@@ -59,10 +59,6 @@ class SearchResults extends React.Component {
 
       db.ref('activities').on('value', (snapshot) => {
         for (var activityId in snapshot.val()) {
-          // console.log(snapshot.val())
-          // console.log(snapshot.val()[activityId])
-          // console.log(snapshot.val()[activityId].locality.toLowerCase())
-          // console.log(snapshot.val()[activityId].locality.toLowerCase().includes(this.state.searchQuery.toLowerCase()) )
           if (snapshot.val()[activityId].title.toLowerCase().includes(this.state.searchQuery.toLowerCase())) {
             activityKeys.push(activityId)
             tripKeys.push(snapshot.val()[activityId].trip)
@@ -142,7 +138,7 @@ class SearchResults extends React.Component {
 
     return (
       <div>
-        <h1>Search Results {this.props.searchQuery ? 'for ' + this.props.searchQuery : ''}</h1>
+        <h1>Search Results</h1>
         <div className='searchContainer'>
           {userSearched.length > 0 &&
           <div>
@@ -170,7 +166,7 @@ class SearchResults extends React.Component {
         }
           {this.state.searchQuery && userSearched.length === 0 && tripsSearched.length === 0 && activitySearched.length === 0 &&
           <div>
-            <p>Sorry, no results found. How about seeing what's trending?</p>
+            <p>Sorry, no results found. How about seeing what's <Link to='/'>trending</Link>?</p>
           </div>
         }
         </div>

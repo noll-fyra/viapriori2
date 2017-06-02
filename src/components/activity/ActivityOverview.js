@@ -4,6 +4,7 @@ import moment from 'moment'
 import Rating from '../rating/Rating'
 import SaveActivity from './SaveActivity'
 import UnsaveActivity from './UnsaveActivity'
+import UnplanActivity from './UnplanActivity'
 import {storageKey} from '../../utils/firebase'
 import './activityOverview.css'
 
@@ -49,8 +50,11 @@ const ActivityOverview = (props) => {
             {(props.type === 'trip' || props.type === 'home') && window.localStorage[storageKey] &&
             <SaveActivity activityID={props.activityID} />
             }
-            {(props.type === 'saved' || props.type === 'planned') && window.localStorage[storageKey] &&
+            {(props.type === 'saved') && window.localStorage[storageKey] &&
             <UnsaveActivity activityID={props.activityID} />
+            }
+            {(props.type === 'planned') && window.localStorage[storageKey] &&
+            <UnplanActivity activityID={props.activityID} plannedID={props.plannedID} />
             }
           </div>
           }

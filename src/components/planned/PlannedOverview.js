@@ -8,11 +8,10 @@ const PlannedOverview = (props) => {
   return (
     <div className='plannedOverview'>
       <div>
-      <Link to={'/planned/' + props.tripID}>
+        <Link to={'/planned/' + props.tripID}>
           <button>{props.trip.title || ''}</button>
-          {/* <img src={props.trip.image} alt={props.trip.title || ''} /> */}
-      </Link>
-    </div>
+        </Link>
+      </div>
       <div>
         <img onClick={() => props.removePlanned(props.tripID)} className='navIcon' src={require('./delete.png')} />
       </div>
