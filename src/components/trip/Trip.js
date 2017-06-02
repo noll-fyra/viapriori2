@@ -136,27 +136,28 @@ class Trip extends React.Component {
   render () {
     return (
       <div>
-        <h3>{this.state.details.title || ''}</h3>
         <div className='tripsContainer'>
           <div className='hideButtonContainer'>
             {window.localStorage[storageKey] && window.localStorage[storageKey] === this.state.details.user &&
             <button className='hideButton' onClick={this.hideImages}>{this.state.hideImages ? 'Show images' : 'Hide images'}</button>
             }
           </div>
-
-          <SortableList
-            activities={this.state.activities}
-            onSortEnd={this.onSortEnd}
-            useDragHandle
-            lockAxis='y'
-            id={this.state.keys}
-            clickToSearch={this.props.clickToSearch}
-            user={this.state.details.user}
-            username={this.state.username}
-            image={this.state.userImage}
-            areImagesHidden={this.state.hideImages}
-            type='trip'
-        />
+          <div>
+            <h3>{this.state.details.title || ''}</h3>
+            <SortableList
+              activities={this.state.activities}
+              onSortEnd={this.onSortEnd}
+              useDragHandle
+              lockAxis='y'
+              id={this.state.keys}
+              clickToSearch={this.props.clickToSearch}
+              user={this.state.details.user}
+              username={this.state.username}
+              image={this.state.userImage}
+              areImagesHidden={this.state.hideImages}
+              type='trip'
+            />
+          </div>
           <div />
         </div>
       </div>

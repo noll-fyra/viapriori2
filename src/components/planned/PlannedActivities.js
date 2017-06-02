@@ -6,7 +6,7 @@ import db, {storageKey} from '../../utils/firebase'
 
 const DragHandle = SortableHandle(() => <div className='dragHandle'>||||</div>) // This can be any component you want
 
-const SortableItem = SortableElement(({value, id, url, removeActivity, clickToSearch, users, areImagesHidden, type, plannedID}) => {
+const SortableItem = SortableElement(({value, id, clickToSearch, users, areImagesHidden, type, plannedID}) => {
   return (
     <li className='sortable'>
       <DragHandle />
@@ -25,7 +25,7 @@ const SortableItem = SortableElement(({value, id, url, removeActivity, clickToSe
   )
 })
 
-const SortableList = SortableContainer(({activities, id, url, removeActivity, clickToSearch, users, areImagesHidden, type, plannedID}) => {
+const SortableList = SortableContainer(({activities, id, clickToSearch, users, areImagesHidden, type, plannedID}) => {
   return (
     <ul>
       {activities.map((value, index) => (
@@ -34,9 +34,7 @@ const SortableList = SortableContainer(({activities, id, url, removeActivity, cl
           index={index}
           value={value}
           id={id[index]}
-          url={url}
           clickToSearch={clickToSearch}
-          removeActivity={removeActivity}
           users={users}
           areImagesHidden={areImagesHidden}
           type={type}
@@ -184,7 +182,6 @@ class PlannedActivities extends React.Component {
             lockAxis='y'
             id={this.state.savedKeys}
             clickToSearch={this.props.clickToSearch}
-            removeActivity={this.removeActivity}
             users={this.state.users}
             areImagesHidden={this.state.hideImages}
             type='planned'

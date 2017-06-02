@@ -3,7 +3,7 @@
 
 ## Description
 
-**_Via Priori_** is a travel-focussed social media site that is best described as Instagram x Pinterest x TripAdvisor. Users post their travel experiences in the form of _activities_ - which are combined into _trips_ - describing what happened and providing their rating of the event. Other users can in turn search for activities and places and save those that interest them to plan their own trip, utilising the combined wisdom of the internet to decide what activities to pursue.
+**_Via Priori_** is a travel-focused social media site that is best described as Instagram x Pinterest x TripAdvisor. Users post their travel experiences in the form of _activities_ - which are combined into _trips_ - describing what happened(travel tips, budgeting, reviews) and providing their rating of the event. Other users can in turn search for activities and places, and save those that interest or are helpful to them, to plan their future trips, thus utilising the combined wisdom of the internet to decide what activities to pursue.
 
 While Instagram is ephemeral and fleeting, Pinterest is inspirational but not functional, and TripAdvisor is convoluted and lacking context, **_Via Priori_** aims to be helpful as a record of your travels and a tool to prepare for future experiences.
 
@@ -137,7 +137,7 @@ We have encountered problems with displaying the uploaded images correctly; a hu
 ### Future
 This project has immense room to grow. Its primary use case will be as a native mobile app, which will have to be built with similar principles in mind. It can also use an improved recommendation engine that uses big data to predict the attractiveness of certain activities to users to improve their trip. It can also benefit from integrated social functions to help users share their trips, as well as from collaborative features for group events.
 
-![Locavorus Landing Page](http://i.imgur.com/KEQb77r.png)
+<!-- ![Locavorus Landing Page](http://i.imgur.com/KEQb77r.png) -->
 
 ---
 
