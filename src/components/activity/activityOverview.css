@@ -11,7 +11,7 @@
 
 .activityTitle {
   width: 95%;
-  height: 32px;
+  height: auto;
   color: #3954a4;
   font-weight: 600;
   font-size: 24px;

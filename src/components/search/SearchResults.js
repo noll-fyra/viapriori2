@@ -59,10 +59,6 @@ class SearchResults extends React.Component {
 
       db.ref('activities').on('value', (snapshot) => {
         for (var activityId in snapshot.val()) {
-          // console.log(snapshot.val())
-          // console.log(snapshot.val()[activityId])
-          // console.log(snapshot.val()[activityId].locality.toLowerCase())
-          // console.log(snapshot.val()[activityId].locality.toLowerCase().includes(this.state.searchQuery.toLowerCase()) )
           if (snapshot.val()[activityId].title.toLowerCase().includes(this.state.searchQuery.toLowerCase())) {
             activityKeys.push(activityId)
             tripKeys.push(snapshot.val()[activityId].trip)
@@ -142,37 +138,47 @@ class SearchResults extends React.Component {
 
     return (
       <div>
-        <h1>Search Results {this.props.searchQuery ? 'for ' + this.props.searchQuery : ''}</h1>
+        {!this.state.searchQuery &&
+
+        <div className='nilquery'>
+          <p>Please enter a search query...</p>
+        </div>
+      }
+        {this.state.searchQuery && userSearched.length === 0 && tripsSearched.length === 0 && activitySearched.length === 0 &&
+        <div className='nilqu'>
+          <p>Sorry, no results found. How about seeing what's trending?</p>
+        </div>
+      }
+{this.state.searchQuery && userSearched.length === 0 && tripsSearched.length === 0 && activitySearched.length === 0 &&
+        <h3>Search Results {this.props.searchQuery ? 'for ' + this.props.searchQuery : ''}</h3>
+      }
         <div className='searchContainer'>
           {userSearched.length > 0 &&
           <div>
-            <h2>Users</h2>
-            {userSearched}
+              <div>
+                <h4 className='searchheading'>Users</h4>
+                {userSearched}
+              </div>
           </div>
         }
-          {tripsSearched.length > 0 &&
+        {tripsSearched.length > 0 &&
           <div>
-            <h2>Trips</h2>
-            {tripsSearched}
+              <div>
+                <h4 className='searchheading'>Trips</h4>
+                {tripsSearched}
+              </div>
+
+          </div>
+        }
+        {activitySearched.length > 0 &&
+          <div>
+              <div>
+                <h4 className='searchheading'>Activity</h4>
+                {activitySearched}
+              </div>
           </div>
         }
 
-          {activitySearched.length > 0 &&
-          <div>
-            <h2>Activity</h2>
-            {activitySearched}
-          </div>
-        }
-          {!this.state.searchQuery &&
-          <div>
-            <p>Please enter a search query...</p>
-          </div>
-        }
-          {this.state.searchQuery && userSearched.length === 0 && tripsSearched.length === 0 && activitySearched.length === 0 &&
-          <div>
-            <p>Sorry, no results found. How about seeing what's trending?</p>
-          </div>
-        }
         </div>
       </div>
     )
