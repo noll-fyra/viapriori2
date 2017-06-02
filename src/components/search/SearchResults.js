@@ -9,19 +9,13 @@ class SearchResults extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      searchQuery: props.searchQuery,
-      tripFiltered: [],
-      tripId: [],
-      activityId: [],
       users: [],
-      activities: []
+      activities: [],
+      trips: []
     }
   }
 
   componentDidMount () {
-    let filteredTrips = []
-    let tripKeys = []
-
     db.ref('users').on('value', (snapshot) => {
       let users = []
       for (var key in snapshot.val()) {
@@ -43,32 +37,30 @@ class SearchResults extends React.Component {
     })
 
     db.ref('trips').on('value', (snapshot) => {
+      let trips = []
       for (var key in snapshot.val()) {
-        let tripEnd = new Date(snapshot.val()[key].end)
-        let tripStart = new Date(snapshot.val()[key].start)
-        let tripDuration = (tripEnd - tripStart) / 86400000
-        if (snapshot.val()[key].title.toLowerCase().includes(this.state.searchQuery.toLowerCase())) {
-          tripKeys.push(key)
-        } else if (tripDuration === parseInt(this.state.searchQuery, 10)) {
-          tripKeys.push(key)
-        }
+        trips.push([key, snapshot.val()[key]])
+        this.setState({
+          trips: trips
+        })
       }
-      let uniqueTripKeys = tripKeys.filter((id, i) => {
-        return tripKeys.indexOf(id) === i
-      })
-      uniqueTripKeys.forEach((trip) => {
-        filteredTrips.push(snapshot.val()[trip])
-      })
-      this.setState({
-        tripId: uniqueTripKeys,
-        tripFiltered: filteredTrips
-      })
     })
   }
 
+  duration (trip) {
+    let tripEnd = new Date(trip.end)
+    let tripStart = new Date(trip.start)
+    let tripDuration = Math.round((tripEnd - tripStart) / 86400000)
+    return tripDuration
+  }
+
   render () {
-    let tripsSearched = this.state.tripFiltered.map((trip, index) => {
-      return <TripOverview key={this.state.tripId[index]} tripID={this.state.tripId[index]} trip={trip} />
+    let tripsSearched = this.state.trips.filter((trip) => {
+      return (trip[1].title ? trip[1].title.toLowerCase().includes(this.props.searchQuery) : false) ||
+      (!isNaN(parseInt(this.props.searchQuery)) ? this.duration(trip[1]) === parseInt(this.props.searchQuery) : false)
+    })
+    .map((trip, index) => {
+      return <TripOverview key={trip[0]} tripID={trip[0]} trip={trip[1]} />
     })
 
     let activitySearched = this.state.activities.map((item) => { return [item[0], item[1], (item[1].tags ? Object.keys(item[1].tags) : [])] })
