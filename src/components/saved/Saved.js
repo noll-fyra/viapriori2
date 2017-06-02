@@ -1,9 +1,11 @@
 import React from 'react'
-import db, {storageKey} from '../../utils/firebase'
-import SavedOverview from './SavedOverview'
+import ActivityOverview from '../activity/ActivityOverview'
 import Planned from '../planned/Planned'
-import search from '../../utils/search'
 import SearchForm from '../search/SearchForm'
+import PlanActivity from '../activity/PlanActivity'
+import db, {storageKey} from '../../utils/firebase'
+import search from '../../utils/search'
+import updateDB from '../../utils/updateDB'
 import './saved.css'
 
 class Saved extends React.Component {
@@ -186,11 +188,7 @@ class Saved extends React.Component {
       user: window.localStorage[storageKey],
       title: title
     })
-    db.ref('users/' + window.localStorage[storageKey] + '/planned').once('value', snap => {
-      let newObj = snap.val() || {}
-      newObj[newPlannedTripID] = true
-      db.ref('users/' + window.localStorage[storageKey] + '/planned').set(newObj)
-    })
+    updateDB('users/' + window.localStorage[storageKey] + '/planned', newPlannedTripID, true)
     return newRef.key
   }
 
@@ -212,18 +210,20 @@ class Saved extends React.Component {
             <h3 className='savedHeading'> Saved Activities</h3>
             {this.state.savedActivities &&
           reverseSaved.map((activity, index) => {
-            return <SavedOverview
-              key={reverseKeys[index]}
-              activityID={reverseKeys[index]}
-              clickToSearch={this.props.clickToSearch}
-              activity={activity}
-              options={options}
-              username={this.state.users[activity.user] && (this.state.users[activity.user]).profile ? (this.state.users[activity.user]).profile.username : ''}
-              image={this.state.users[activity.user] && (this.state.users[activity.user]).profile ? (this.state.users[activity.user]).profile.profileImage : ''}
-              plannedKeys={this.state.plannedKeys}
-              plannedTrips={this.state.plannedTrips}
-              createNewPlanned={this.createNewPlanned}
-            />
+            return (<div key={reverseKeys[index]}>
+              <ActivityOverview
+                activity={activity}
+                activityID={reverseKeys[index]}
+                clickToSearch={this.props.clickToSearch}
+                user={activity.user}
+                username={this.state.users[activity.user] && (this.state.users[activity.user]).profile ? (this.state.users[activity.user]).profile.username : ''}
+                image={this.state.users[activity.user] && (this.state.users[activity.user]).profile ? (this.state.users[activity.user]).profile.profileImage : ''}
+                areImagesHidden={false}
+                type='saved'
+             />
+              <PlanActivity activityID={reverseKeys[index]} plannedKeys={this.state.plannedKeys} createNewPlanned={this.createNewPlanned} options={options} />
+            </div>
+            )
           })
         }
           </div>

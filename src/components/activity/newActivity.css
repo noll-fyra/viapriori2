@@ -1,7 +1,3 @@
-/*label:focus {
-  outline: 1px dotted #000;
-  outline: -webkit-focus-ring-color auto 5px;
-}*/
 .modalContainer{
   width:100%;
   height:100%;
@@ -9,6 +5,7 @@
   left:0;
   position:fixed;
 }
+
 .backdrop {
   position: absolute;
   top: 0px;
@@ -129,4 +126,13 @@
   font-size: 32px;
   font-weight: 600;
   color: #3954A4;
+}
+
+.fileInput {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
 }

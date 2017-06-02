@@ -1,4 +1,5 @@
 import React from 'react'
+import {Link} from 'react-router-dom'
 import TripOverview from '../trip/TripOverview'
 import UserOverview from '../profile/UserOverview'
 import ActivityOverview from '../activity/ActivityOverview'
@@ -10,7 +11,7 @@ class SearchResults extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      searchQuery: props.searchQuery,
+      searchQuery: props.match.params.query || props.searchQuery,
       tripFiltered: [],
       activityFiltered: [],
       tripId: [],
@@ -23,7 +24,6 @@ class SearchResults extends React.Component {
 
   componentDidMount () {
     if (this.state.searchQuery) {
-       console.log(this.state.searchQuery)
       let filteredTrips = []
       let tripKeys = []
       let activityKeys = []
@@ -146,12 +146,13 @@ class SearchResults extends React.Component {
       }
         {this.state.searchQuery && userSearched.length === 0 && tripsSearched.length === 0 && activitySearched.length === 0 &&
         <div className='nilqu'>
-          <p>Sorry, no results found. How about seeing what's trending?</p>
+          <p>Sorry, no results found. How about seeing what's <Link to='/'>trending</Link>?</p>
         </div>
       }
 {this.state.searchQuery && userSearched.length === 0 && tripsSearched.length === 0 && activitySearched.length === 0 &&
-        <h3>Search Results {this.props.searchQuery ? 'for ' + this.props.searchQuery : ''}</h3>
+        <h3>Search Results</h3>
       }
+
         <div className='searchContainer'>
           {userSearched.length > 0 &&
           <div>
@@ -176,6 +177,7 @@ class SearchResults extends React.Component {
                 <h4 className='searchheading'>Activity</h4>
                 {activitySearched}
               </div>
+
           </div>
         }
 

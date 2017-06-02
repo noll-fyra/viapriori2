@@ -13,7 +13,7 @@ import latLng, {getLocation} from '../../utils/geocoding'
 import tagsArrayToObject from '../../utils/format'
 import updateDB, {updateDBPlusOne} from '../../utils/updateDB'
 import './tags.css'
-import './modal.css'
+import './newActivity.css'
 
 class NewActivity extends React.Component {
   constructor (props) {

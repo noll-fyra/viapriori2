@@ -1,0 +1,17 @@
+.planActivity{
+  width: 95%;
+  display: flex;
+  flex-flow: row;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid grey;
+  margin-left: 12px;
+  padding: 0;
+  border-radius: 12px;
+}
+
+.planDiv {
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+}
