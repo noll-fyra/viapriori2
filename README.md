@@ -137,10 +137,20 @@ We have encountered problems with displaying the uploaded images correctly; a hu
 ### Future
 This project has immense room to grow. Its primary use case will be as a native mobile app, which will have to be built with similar principles in mind. It can also use an improved recommendation engine that uses big data to predict the attractiveness of certain activities to users to improve their trip. It can also benefit from integrated social functions to help users share their trips, as well as from collaborative features for group events.
 
+### Sample screenshots
+Home Landing Page
 ![Via-Priori Home Landing Page](https://github.com/noll-fyra/viapriori2/blob/develop/public/home.PNG)
+
+Adding New Posts
 ![Via-Priori Adding New Posts](https://github.com/noll-fyra/viapriori2/blob/develop/public/newactivity.PNG)
+
+Saved Activities
 ![Via-Priori Saved Activities](https://github.com/noll-fyra/viapriori2/blob/develop/public/saved.PNG)
+
+User Profile
 ![Via-Priori Profile](https://github.com/noll-fyra/viapriori2/blob/develop/public/profile.PNG)
+
+User Planned Trips
 ![Via-Priori Planned Trips](https://github.com/noll-fyra/viapriori2/blob/develop/public/planned.PNG)
 
 ---
