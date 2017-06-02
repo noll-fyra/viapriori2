@@ -98,11 +98,11 @@ class SearchResults extends React.Component {
           type='search'
       />
       })
+      let searchResults=false
+      if(userSearched.length ||tripsSearched.length||final.length){
+        searchResults=true
+      }
 
-    let searchResults = false
-    if (userSearched.length || tripsSearched.length || final.length) {
-      searchResults = true
-    }
     return (
       <div>
         {!this.props.searchQuery &&
