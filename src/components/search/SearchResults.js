@@ -5,7 +5,6 @@ import UserOverview from '../profile/UserOverview'
 import ActivityOverview from '../activity/ActivityOverview'
 import SaveActivity from '../activity/SaveActivity'
 import db, {storageKey} from '../../utils/firebase'
-import {trendingObjectToArray} from '../../utils/format'
 
 class SearchResults extends React.Component {
   constructor (props) {
@@ -17,8 +16,7 @@ class SearchResults extends React.Component {
       tripId: [],
       activityId: [],
       userId: [],
-      userDetails: [],
-      trending: []
+      userDetails: []
     }
   }
 
@@ -31,15 +29,11 @@ class SearchResults extends React.Component {
       let userDetails = []
       let filteredActivities = []
 
-      db.ref('trending').on('value', snapshot => {
-        if (snapshot.val()) {
-          this.setState({
-            trending: trendingObjectToArray(snapshot.val())
-          })
-        }
-      })
-
       db.ref('users').on('value', (snapshot) => {
+        
+
+        let keys = Object.keys(snapshot.val())
+
         for (var user in snapshot.val()) {
           if (snapshot.val()[user].profile.username && snapshot.val()[user].profile.username.toLowerCase().includes(this.state.searchQuery.toLowerCase())) {
             userId.push(user)
@@ -51,9 +45,10 @@ class SearchResults extends React.Component {
         uniqueUsers.forEach((user) => {
           userDetails.push(snapshot.val()[user])
         })
+
         this.setState({
-          userId: uniqueUsers,
-          userDetails: userDetails
+          userId: Object.keys(snapshot.val()),
+          userDetails: Object.values(snapshot.val())
         })
       })
 
@@ -149,34 +144,34 @@ class SearchResults extends React.Component {
           <p>Sorry, no results found. How about seeing what's <Link to='/'>trending</Link>?</p>
         </div>
       }
-{this.state.searchQuery && userSearched.length === 0 && tripsSearched.length === 0 && activitySearched.length === 0 &&
+        {this.state.searchQuery && userSearched.length === 0 && tripsSearched.length === 0 && activitySearched.length === 0 &&
         <h3>Search Results</h3>
       }
 
         <div className='searchContainer'>
           {userSearched.length > 0 &&
           <div>
-              <div>
-                <h4 className='searchheading'>Users</h4>
-                {userSearched}
-              </div>
+            <div>
+              <h4 className='searchheading'>Users</h4>
+              {userSearched}
+            </div>
           </div>
         }
-        {tripsSearched.length > 0 &&
+          {tripsSearched.length > 0 &&
           <div>
-              <div>
-                <h4 className='searchheading'>Trips</h4>
-                {tripsSearched}
-              </div>
+            <div>
+              <h4 className='searchheading'>Trips</h4>
+              {tripsSearched}
+            </div>
 
           </div>
         }
-        {activitySearched.length > 0 &&
+          {activitySearched.length > 0 &&
           <div>
-              <div>
-                <h4 className='searchheading'>Activity</h4>
-                {activitySearched}
-              </div>
+            <div>
+              <h4 className='searchheading'>Activity</h4>
+              {activitySearched}
+            </div>
 
           </div>
         }

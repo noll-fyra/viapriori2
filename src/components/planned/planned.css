@@ -16,20 +16,27 @@
   white-space: normal;
   color: white;
   width: 100%;
-  height:auto;
+  height: auto;
+  margin-top: 12px;
 }
 
-.plannedHeading{
+.navIcon {
+  margin-top: 12px;
+}
+
+.plannedHeading {
   text-align: center;
   margin-top: 12px;
   padding: 0 12px;
-    /*background-color: #3954a4;
+  /*background-color: #3954a4;
     color: white;*/
 }
-.saved{
+
+.saved {
   margin-top: 12px;
 }
-.niltrip{
+
+.niltrip {
   text-align: center;
   padding: 0 12px;
 }
@@ -44,8 +51,3 @@
   font-weight: 900;
   cursor: grab;
 }
-
-/*.sortable {
-  display: flex;
-  flex-flow: row;
-}*/

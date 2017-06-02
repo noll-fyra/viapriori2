@@ -143,7 +143,8 @@ class NewActivity extends React.Component {
 
   startNewTrip (bool) {
     this.setState({
-      isNewTrip: bool
+      isNewTrip: bool,
+      tripIndex: 0
     })
   }
 
@@ -369,9 +370,9 @@ class NewActivity extends React.Component {
             })
           })
         .then(() => {
-          this.resetState()
-          this.props.addNewActivity(false)
           this.linkToTrip.handleClick(new window.MouseEvent('click'))
+          this.props.addNewActivity(false)
+          this.resetState()
         })
         })
       })
@@ -403,10 +404,9 @@ class NewActivity extends React.Component {
             <Link to={'/trips/' + this.state.tripID} style={{display: 'none'}} onClick={() => this.props.setCurrentTrip(this.state.tripID)} ref={(link) => { this.linkToTrip = link }} />
           </div>
           <div className='modal1'>
-            <Loading className={this.state.isUploading ? 'uploading' : 'notUploading'} type={'spinningBubbles'} color={'blue'} height='63%' width='66.67%' />
+            <Loading className={this.state.isUploading ? 'uploading' : 'notUploading'} type={'spinningBubbles'} color={'#3954A4'} height='33%' width='33%' />
             <div className='modal2'>
               <label className='imageLabelActive' style={{backgroundImage: `url(${this.state.image})`, objectFit: 'cover', backgroundSize: 'cover'}}>
-                <span className='postAPhoto'>Post a photo</span>
                 <input className='fileInput' type='file' onChange={(e) => this.handleFile(e)} accept={'image/*'} />
               </label>
             </div>
