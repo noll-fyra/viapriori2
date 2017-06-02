@@ -58,7 +58,7 @@ class SearchResults extends React.Component {
   render () {
     let tripsSearched = this.state.trips.filter((trip) => {
       return (trip[1].title ? trip[1].title.toLowerCase().includes(this.props.searchQuery) : false) ||
-      (!isNaN(parseInt(this.props.searchQuery)) ? this.duration(trip[1]) === parseInt(this.props.searchQuery) : false)
+      (!isNaN(parseInt(this.props.searchQuery, 0)) ? this.duration(trip[1]) === parseInt(this.props.searchQuery, 0) : false)
     })
     .map((trip, index) => {
       return <TripOverview key={trip[0]} tripID={trip[0]} trip={trip[1]} />
@@ -108,7 +108,7 @@ class SearchResults extends React.Component {
         {!this.props.searchQuery &&
 
         <div className='nilquery'>
-          <p>Please enter a search query...</p>
+          <p>Please enter a search query</p>
         </div>
       }
         {this.props.searchQuery && !searchResults &&
@@ -129,7 +129,7 @@ class SearchResults extends React.Component {
           {final.length > 0 &&
           <div className='searchActivitySection'>
             <div>
-              <h4 className='searchheading'>Activity</h4>
+              <h4 className='searchheading'>Activities</h4>
               {final}
             </div>
 

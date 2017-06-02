@@ -10,11 +10,11 @@ const SaveActivity = (props) => {
     addSavedToAllAndTrending()
   }
   function addSavedToAllAndTrending () {
-    db.ref('all/saved/' + this.props.activityID).once('value').then((snap) => {
-      db.ref('all/saved/' + this.props.activityID).set(snap.val ? (snap.val() + 1) : 1)
+    db.ref('all/saved/' + props.activityID).once('value').then((snap) => {
+      db.ref('all/saved/' + props.activityID).set(snap.val ? (snap.val() + 1) : 1)
     })
-    db.ref('trending/saved/' + moment().format('dddd') + '/' + this.props.activityID).once('value').then((snap) => {
-      db.ref('trending/saved/' + moment().format('dddd') + '/' + this.props.activityID).set(snap.val ? (snap.val() + 1) : 1)
+    db.ref('trending/saved/' + moment().format('dddd') + '/' + props.activityID).once('value').then((snap) => {
+      db.ref('trending/saved/' + moment().format('dddd') + '/' + props.activityID).set(snap.val ? (snap.val() + 1) : 1)
     })
   }
   return (

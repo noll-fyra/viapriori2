@@ -13,7 +13,7 @@ const PlannedOverview = (props) => {
         </Link>
       </div>
       <div>
-        <img onClick={() => props.removePlanned(props.tripID)} className='navIcon' src={require('./delete.png')} />
+        <img onClick={() => props.removePlanned(props.tripID)} alt='delete.png' className='navIcon' src={require('./delete.png')} />
       </div>
     </div>
   )

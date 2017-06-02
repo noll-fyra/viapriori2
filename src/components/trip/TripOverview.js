@@ -14,7 +14,7 @@ const TripOverview = (props) => {
     <div className='tripOverview'>
       <Link to={'/trips/' + props.tripID}>
         <div className='tripOverviewBackdrop' />
-        <img className='tripOverviewImage' src={props.trip.image} alt={props.trip.title} />
+        <img className='tripOverviewImage' src={props.trip.image || ''} alt={props.trip.title} />
         <div className='tripOverviewDetails'>
           <h4 className='heading'>{props.trip.title || ''} ({length()})</h4>
           <h5 className='heading'>{averageRating()}</h5>

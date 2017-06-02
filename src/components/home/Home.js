@@ -94,9 +94,9 @@ class Home extends React.Component {
             activity={activity[1]}
             clickToSearch={this.props.clickToSearch}
             areImagesHidden={false}
-            image={activity[1].user && (this.state.users[activity[1].user]).profile && (this.state.users[activity[1].user]).profile.profileImage ? this.state.users[activity[1].user].profile.profileImage : 'yo'}
+            image={activity[1].user && (this.state.users[activity[1].user]).profile && (this.state.users[activity[1].user]).profile.profileImage ? this.state.users[activity[1].user].profile.profileImage : ''}
             user={activity[1].user || 'hello'}
-            username={activity[1].user && this.state.users[activity[1].user] && (this.state.users[activity[1].user]).profile ? (this.state.users[activity[1].user]).profile.username : 'goodbye'}
+            username={activity[1].user && this.state.users[activity[1].user] && (this.state.users[activity[1].user]).profile ? (this.state.users[activity[1].user]).profile.username : ''}
             type='home'
            />
         </div>

@@ -3,7 +3,7 @@ import db from '../../utils/firebase'
 
 const UnplanActivity = (props) => {
   function unplanActivity () {
-    db.ref('planned/' + this.props.plannedID + '/activities/' + props.activityID).remove()
+    db.ref('planned/' + props.plannedID + '/activities/' + props.activityID).remove()
   }
   return (
     <div>

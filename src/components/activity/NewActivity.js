@@ -295,15 +295,17 @@ class NewActivity extends React.Component {
         })
       // add new trip to the user's trips and set activity count to 1
         updateDB('users/' + window.localStorage[storageKey] + '/trips', newTripID, 1)
-      } else {
-      // update existing trip and set activity count + 1
-        updateDBPlusOne('users/' + window.localStorage[storageKey] + '/trips', newTripID)
       }
     // update the tripID
       let tripID = this.state.isNewTrip ? newTripID : this.state.trips.slice()[this.state.tripIndex][0]
       this.setState({
         tripID: tripID
       })
+
+      if (!this.state.isNewTrip) {
+     // update existing trip and set activity count + 1
+        updateDBPlusOne('users/' + window.localStorage[storageKey] + '/trips', tripID)
+      }
     // save photo
       storage.ref(window.localStorage[storageKey] + '/' + tripID + '/images/' + this.state.imageName).putString(this.state.image, 'data_url').then(() => {
       // get image url

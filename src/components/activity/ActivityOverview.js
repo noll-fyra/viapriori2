@@ -14,7 +14,7 @@ const ActivityOverview = (props) => {
       <div className='activityOverview'>
         <div className='activityTitle'>
           <div className='front'>
-            {props.activity.title || ''},&nbsp;
+            {props.activity && props.activity.title ? props.activity.title : ''},&nbsp;
           {<Link to='/search' onClick={() => props.clickToSearch(props.activity.locality)}>{props.activity.locality}</Link> || ''},&nbsp;{<Link to='/search' onClick={() => props.clickToSearch(props.activity.country)}>{props.activity.country}</Link> || ''}
           </div>
           <div className='back'>
