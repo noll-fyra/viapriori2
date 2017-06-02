@@ -1,11 +1,11 @@
-# _Via Priori_
-<http://via-priori.firebaseapp.com/>
+# _Via Postale_
+<http://via-Postale.firebaseapp.com/>
 
 ## Description
 
-**_Via Priori_** is a travel-focused social media site that is best described as Instagram x Pinterest x TripAdvisor. Users post their travel experiences in the form of _activities_ - which are combined into _trips_ - describing what happened(travel tips, budgeting, reviews) and providing their rating of the event. Other users can in turn search for activities and places, and save those that interest or are helpful to them, to plan their future trips, thus utilising the combined wisdom of the internet to decide what activities to pursue.
+**_Via Postale_** is a travel-focused social media site that is best described as Instagram x Pinterest x TripAdvisor. Users post their travel experiences in the form of _activities_ - which are combined into _trips_ - describing what happened(travel tips, budgeting, reviews) and providing their rating of the event. Other users can in turn search for activities and places, and save those that interest or are helpful to them, to plan their future trips, thus utilising the combined wisdom of the internet to decide what activities to pursue.
 
-While Instagram is ephemeral and fleeting, Pinterest is inspirational but not functional, and TripAdvisor is convoluted and lacking context, **_Via Priori_** aims to be helpful as a record of your travels and a tool to prepare for future experiences.
+While Instagram is ephemeral and fleeting, Pinterest is inspirational but not functional, and TripAdvisor is convoluted and lacking context, **_Via Postale_** aims to be helpful as a record of your travels and a tool to prepare for future experiences.
 
 ---
 
@@ -141,23 +141,23 @@ This project has immense room to grow. Its primary use case will be as a native 
 
 #### Home Landing Page
 
-![Via-Priori Home Landing Page](https://github.com/noll-fyra/viapriori2/blob/develop/public/home.PNG)
+![Via-Postale Home Landing Page](http://i.imgur.com/6OwwM9u.png)
 
 #### Adding New Posts
 
-![Via-Priori Adding New Posts](https://github.com/noll-fyra/viapriori2/blob/develop/public/newactivity.PNG)
+![Via-Postale Adding New Posts](http://i.imgur.com/Acs6znn.png)
 
 #### Saved Activities
 
-![Via-Priori Saved Activities](https://github.com/noll-fyra/viapriori2/blob/develop/public/saved.PNG)
+![Via-Postale Saved Activities](http://i.imgur.com/oR5PR31.png)
 
 #### User Profile
 
-![Via-Priori Profile](https://github.com/noll-fyra/viapriori2/blob/develop/public/profile.PNG)
+![Via-Postale Profile](http://i.imgur.com/Hmgnwz4.png)
 
 #### User Planned Trips
 
-![Via-Priori Planned Trips](https://github.com/noll-fyra/viapriori2/blob/develop/public/planned.PNG)
+![Via-Postale Planned Trips](http://i.imgur.com/Hw4HkEc.png)
 
 ---
 
