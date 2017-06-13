@@ -51,3 +51,9 @@
   font-weight: 900;
   cursor: grab;
 }
+
+.sortable {
+  display: flex;
+  flex-flow: row;
+  width: 100%;
+}

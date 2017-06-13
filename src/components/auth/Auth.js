@@ -39,13 +39,14 @@ class Auth extends React.Component {
     this.setState({
       email: e.target.value
     })
+
   }
 
   handlePassword (e) {
     this.setState({
       password: e.target.value
     })
-  }
+    }
 
   handleUsername (e) {
     this.setState({
@@ -54,6 +55,7 @@ class Auth extends React.Component {
   }
 
   handleLogin () {
+
     if (!this.state.email || !this.state.password) {
       this.setState({
         error: true,
@@ -73,13 +75,12 @@ class Auth extends React.Component {
       })
     })
     .catch((error) => {
-      // console.log(error.message)
       this.setState({
         error: true,
         message: error.message,
         username: null,
-        password: null,
-        email: null
+        password: this.state.password,
+        email: this.state.email
       })
     })
   }

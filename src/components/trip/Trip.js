@@ -58,8 +58,8 @@ class Trip extends React.Component {
       userImage: '',
       hideImages: false
     }
-    this.updateTrip = this.updateTrip.bind(this)
     this.onSortEnd = this.onSortEnd.bind(this)
+    this.updateTrip = this.updateTrip.bind(this)
     this.hideImages = this.hideImages.bind(this)
   }
 
